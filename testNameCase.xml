@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+ 
+    <!-- =============================== -->
+    <!-- HttpService Tests (20)         -->
+    <!-- =============================== -->
+    <property
+        name="HttpService should be created"
+        value="HttpService should be created"
+    />
+    <property
+        name="HttpService should register a patient"
+        value="HttpService should register a patient"
+    />
+    <property
+        name="HttpService should register a doctor"
+        value="HttpService should register a doctor"
+    />
+    <property
+        name="HttpService should register a receptionist"
+        value="HttpService should register a receptionist"
+    />
+    <property
+        name="HttpService should retrieve doctors"
+        value="HttpService should retrieve doctors"
+    />
+    <property
+        name="HttpService should schedule an appointment"
+        value="HttpService should schedule an appointment"
+    />
+    <property
+        name="HttpService should schedule an appointment by receptionist"
+        value="HttpService should schedule an appointment by receptionist"
+    />
+    <property
+        name="HttpService should reschedule an appointment"
+        value="HttpService should reschedule an appointment"
+    />
+    <property
+        name="HttpService should get all appointments"
+        value="HttpService should get all appointments"
+    />
+    <property
+        name="HttpService should get appointments by doctor"
+        value="HttpService should get appointments by doctor"
+    />
+    <property
+        name="HttpService should get appointments by patient"
+        value="HttpService should get appointments by patient"
+    />
+    <property
+        name="HttpService should update doctor availability"
+        value="HttpService should update doctor availability"
+    />
+    <property
+        name="HttpService should login user"
+        value="HttpService should login user"
+    />
+    <property
+        name="HttpService should get medical records by patient"
+        value="HttpService should get medical records by patient"
+    />
+    <property
+        name="HttpService should send POST request with correct content type for login"
+        value="HttpService should send POST request with correct content type for login"
+    />
+    <property
+        name="HttpService should send POST request with correct content type for register patient"
+        value="HttpService should send POST request with correct content type for register patient"
+    />
+    <property
+        name="HttpService should send POST request with correct content type for register doctor"
+        value="HttpService should send POST request with correct content type for register doctor"
+    />
+    <property
+        name="HttpService should send POST request with correct content type for register receptionist"
+        value="HttpService should send POST request with correct content type for register receptionist"
+    />
+    <property
+        name="HttpService should send Authorization header when getting doctors"
+        value="HttpService should send Authorization header when getting doctors"
+    />
+    <property
+        name="HttpService should send Authorization header when getting appointments by doctor"
+        value="HttpService should send Authorization header when getting appointments by doctor"
+    />
+ 
+    <!-- =============================== -->
+    <!-- LoginComponent Tests (9)       -->
+    <!-- =============================== -->
+    <property
+        name="LoginComponent should have invalid form if username and password are empty"
+        value="LoginComponent should have invalid form if username and password are empty"
+    />
+    <property
+        name="LoginComponent should have invalid form if username or password is empty"
+        value="LoginComponent should have invalid form if username or password is empty"
+    />
+    <property
+        name="LoginComponent should have valid form if username and password are provided"
+        value="LoginComponent should have valid form if username and password are provided"
+    />
+    <property
+        name="LoginComponent should call httpService.Login on valid form submit"
+        value="LoginComponent should call httpService.Login on valid form submit"
+    />
+    <property
+        name="LoginComponent should show error message on wrong credentials"
+        value="LoginComponent should show error message on wrong credentials"
+    />
+    <property
+        name="LoginComponent should mark form as touched if form is invalid on submit"
+        value="LoginComponent should mark form as touched if form is invalid on submit"
+    />
+    <property
+        name="LoginComponent should initialize showError as false"
+        value="LoginComponent should initialize showError as false"
+    />
+    <property
+        name="LoginComponent should initialize errorMessage as undefined"
+        value="LoginComponent should initialize errorMessage as undefined"
+    />
+    <property
+        name="LoginComponent should have formModel initialized with empty values"
+        value="LoginComponent should have formModel initialized with empty values"
+    />
+ 
+    <!-- =============================== -->
+    <!-- RegistrationComponent Tests(11)-->
+    <!-- =============================== -->
+    <property
+        name="RegistrationComponent should have invalid form if any field is empty"
+        value="RegistrationComponent should have invalid form if any field is empty"
+    />
+    <property
+        name="RegistrationComponent should have invalid form if email is invalid"
+        value="RegistrationComponent should have invalid form if email is invalid"
+    />
+    <property
+        name="RegistrationComponent should have valid form if all fields are filled correctly"
+        value="RegistrationComponent should have valid form if all fields are filled correctly"
+    />
+    <property
+        name="RegistrationComponent should set specialty and availability validators when role is DOCTOR"
+        value="RegistrationComponent should set specialty and availability validators when role is DOCTOR"
+    />
+    <property
+        name="RegistrationComponent should clear specialty and availability validators when role is not DOCTOR"
+        value="RegistrationComponent should clear specialty and availability validators when role is not DOCTOR"
+    />
+    <property
+        name="RegistrationComponent should initialize showMessage as false"
+        value="RegistrationComponent should initialize showMessage as false"
+    />
+    <property
+        name="RegistrationComponent should mark all fields as touched when form is invalid on submit"
+        value="RegistrationComponent should mark all fields as touched when form is invalid on submit"
+    />
+    <property
+        name="RegistrationComponent should have specialty and availability as optional for PATIENT role"
+        value="RegistrationComponent should have specialty and availability as optional for PATIENT role"
+    />
+    <property
+        name="RegistrationComponent should have specialty and availability as optional for RECEPTIONIST role"
+        value="RegistrationComponent should have specialty and availability as optional for RECEPTIONIST role"
+    />
+    <property
+        name="RegistrationComponent should initialize responseMessage as undefined"
+        value="RegistrationComponent should initialize responseMessage as undefined"
+    />
+    <property
+        name="RegistrationComponent should have formModel with null role initially"
+        value="RegistrationComponent should have formModel with null role initially"
+    />
+ 
+    <!-- =============================== -->
+    <!-- ScheduleAppointmentComponent (12)-->
+    <!-- =============================== -->
+    <property
+        name="ScheduleAppointmentComponent should create"
+        value="ScheduleAppointmentComponent should create"
+    />
+    <property
+        name="ScheduleAppointmentComponent should have an invalid form when empty"
+        value="ScheduleAppointmentComponent should have an invalid form when empty"
+    />
+    <property
+        name="ScheduleAppointmentComponent should validate patientId as required"
+        value="ScheduleAppointmentComponent should validate patientId as required"
+    />
+    <property
+        name="ScheduleAppointmentComponent should validate doctorId as required"
+        value="ScheduleAppointmentComponent should validate doctorId as required"
+    />
+    <property
+        name="ScheduleAppointmentComponent should validate time as required"
+        value="ScheduleAppointmentComponent should validate time as required"
+    />
+    <property
+        name="ScheduleAppointmentComponent should have a valid form when all fields are filled"
+        value="ScheduleAppointmentComponent should have a valid form when all fields are filled"
+    />
+    <property
+        name="ScheduleAppointmentComponent should initialize doctorList as empty array"
+        value="ScheduleAppointmentComponent should initialize doctorList as empty array"
+    />
+    <property
+        name="ScheduleAppointmentComponent should initialize isAdded as false"
+        value="ScheduleAppointmentComponent should initialize isAdded as false"
+    />
+    <property
+        name="ScheduleAppointmentComponent should set isAdded to true when addAppointment is called"
+        value="ScheduleAppointmentComponent should set isAdded to true when addAppointment is called"
+    />
+    <property
+        name="ScheduleAppointmentComponent should set doctorId and patientId when addAppointment is called"
+        value="ScheduleAppointmentComponent should set doctorId and patientId when addAppointment is called"
+    />
+    <property
+        name="ScheduleAppointmentComponent should initialize responseMessage as undefined"
+        value="ScheduleAppointmentComponent should initialize responseMessage as undefined"
+    />
+    <property
+        name="ScheduleAppointmentComponent should initialize formModel as empty object"
+        value="ScheduleAppointmentComponent should initialize formModel as empty object"
+    />
+ 
+    <!-- =============================== -->
+    <!-- ReceptionistAppointments (6)   -->
+    <!-- =============================== -->
+    <property
+        name="ReceptionistAppointmentsComponent should create"
+        value="ReceptionistAppointmentsComponent should create"
+    />
+    <property
+        name="ReceptionistAppointmentsComponent should have an invalid form when empty"
+        value="ReceptionistAppointmentsComponent should have an invalid form when empty"
+    />
+    <property
+        name="ReceptionistAppointmentsComponent should validate form when id and time are provided"
+        value="ReceptionistAppointmentsComponent should validate form when id and time are provided"
+    />
+    <property
+        name="ReceptionistAppointmentsComponent should initialize appointmentList as empty array"
+        value="ReceptionistAppointmentsComponent should initialize appointmentList as empty array"
+    />
+    <property
+        name="ReceptionistAppointmentsComponent should initialize isAdded as false"
+        value="ReceptionistAppointmentsComponent should initialize isAdded as false"
+    />
+    <property
+        name="ReceptionistAppointmentsComponent should set isAdded to true when editAppointment is called"
+        value="ReceptionistAppointmentsComponent should set isAdded to true when editAppointment is called"
+    />
+ 
+    <!-- =============================== -->
+    <!-- ReceptionistSchedule (6)       -->
+    <!-- =============================== -->
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should create"
+        value="ReceptionistScheduleAppointmentsComponent should create"
+    />
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should have an invalid form when empty"
+        value="ReceptionistScheduleAppointmentsComponent should have an invalid form when empty"
+    />
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should validate form when all fields are provided"
+        value="ReceptionistScheduleAppointmentsComponent should validate form when all fields are provided"
+    />
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should initialize isAdded as false"
+        value="ReceptionistScheduleAppointmentsComponent should initialize isAdded as false"
+    />
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should initialize responseMessage as undefined"
+        value="ReceptionistScheduleAppointmentsComponent should initialize responseMessage as undefined"
+    />
+    <property
+        name="ReceptionistScheduleAppointmentsComponent should have doctorId and patientId as required fields"
+        value="ReceptionistScheduleAppointmentsComponent should have doctorId and patientId as required fields"
+    />
+ 
+    <!-- =============================== -->
+    <!-- DoctorAppointmentComponent (6) -->
+    <!-- =============================== -->
+    <property
+        name="DoctorAppointmentComponent should create"
+        value="DoctorAppointmentComponent should create"
+    />
+    <property
+        name="DoctorAppointmentComponent should initialize appointmentList as empty array"
+        value="DoctorAppointmentComponent should initialize appointmentList as empty array"
+    />
+    <property
+        name="DoctorAppointmentComponent should fetch appointments on init"
+        value="DoctorAppointmentComponent should fetch appointments on init"
+    />
+    <property
+        name="DoctorAppointmentComponent should call getAppointmentByDoctor with userId from localStorage"
+        value="DoctorAppointmentComponent should call getAppointmentByDoctor with userId from localStorage"
+    />
+    <property
+        name="DoctorAppointmentComponent should set appointmentList from service response"
+        value="DoctorAppointmentComponent should set appointmentList from service response"
+    />
+ 
+    <!-- =============================== -->
+    <!-- DoctorAvailabilityComponent (8)-->
+    <!-- =============================== -->
+    <property
+        name="DoctorAvailabilityComponent should create"
+        value="DoctorAvailabilityComponent should create"
+    />
+    <property
+        name="DoctorAvailabilityComponent should have invalid form when empty"
+        value="DoctorAvailabilityComponent should have invalid form when empty"
+    />
+    <property
+        name="DoctorAvailabilityComponent should have valid form when availability is selected"
+        value="DoctorAvailabilityComponent should have valid form when availability is selected"
+    />
+    <property
+        name="DoctorAvailabilityComponent should call updateDoctorAvailability on submit"
+        value="DoctorAvailabilityComponent should call updateDoctorAvailability on submit"
+    />
+    <property
+        name="DoctorAvailabilityComponent should reset form after successful submit"
+        value="DoctorAvailabilityComponent should reset form after successful submit"
+    />
+    <property
+        name="DoctorAvailabilityComponent should initialize isAdded as false"
+        value="DoctorAvailabilityComponent should initialize isAdded as false"
+    />
+    <property
+        name="DoctorAvailabilityComponent should have doctorId as required field"
+        value="DoctorAvailabilityComponent should have doctorId as required field"
+    />
+ 
+    <!-- =============================== -->
+    <!-- PatientAppointmentComponent (7)-->
+    <!-- =============================== -->
+    <property
+        name="PatientAppointmentComponent should create"
+        value="PatientAppointmentComponent should create"
+    />
+    <property
+        name="PatientAppointmentComponent should initialize appointmentList as empty array"
+        value="PatientAppointmentComponent should initialize appointmentList as empty array"
+    />
+    <property
+        name="PatientAppointmentComponent should fetch appointments on init"
+        value="PatientAppointmentComponent should fetch appointments on init"
+    />
+    <property
+        name="PatientAppointmentComponent should call getAppointmentByPatient with userId from localStorage"
+        value="PatientAppointmentComponent should call getAppointmentByPatient with userId from localStorage"
+    />
+    <property
+        name="PatientAppointmentComponent should set appointmentList from service response"
+        value="PatientAppointmentComponent should set appointmentList from service response"
+    />
+    <property
+        name="PatientAppointmentComponent should initialize responseMessage as undefined"
+        value="PatientAppointmentComponent should initialize responseMessage as undefined"
+    />
+ 
+    <!-- =============================== -->
+    <!-- Backend Tests (35)             -->
+    <!-- =============================== -->
+    <property
+        name="testRegisterPatient"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterPatient"
+    />
+    <property
+        name="testRegisterDoctor"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterDoctor"
+    />
+    <property
+        name="testRegisterReceptionist"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterReceptionist"
+    />
+    <property
+        name="testLoginUser"
+        value="HealthcareAppointmentManagementSystemApplicationTests testLoginUser"
+    />
+    <property
+        name="testLoginWithWrongUsernameOrPassword"
+        value="HealthcareAppointmentManagementSystemApplicationTests testLoginWithWrongUsernameOrPassword"
+    />
+    <property
+        name="testPatientCanGetDoctors"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientCanGetDoctors"
+    />
+    <property
+        name="testPatientCanScheduleAppointment"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientCanScheduleAppointment"
+    />
+    <property
+        name="testGetAppointmentsByPatientId"
+        value="HealthcareAppointmentManagementSystemApplicationTests testGetAppointmentsByPatientId"
+    />
+    <property
+        name="testGetAppointmentsByDoctorId"
+        value="HealthcareAppointmentManagementSystemApplicationTests testGetAppointmentsByDoctorId"
+    />
+    <property
+        name="testManageDoctorAvailability"
+        value="HealthcareAppointmentManagementSystemApplicationTests testManageDoctorAvailability"
+    />
+    <property
+        name="testReceptionistCanGetAllAppointments"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistCanGetAllAppointments"
+    />
+    <property
+        name="testScheduleAppointmentByReceptionist"
+        value="HealthcareAppointmentManagementSystemApplicationTests testScheduleAppointmentByReceptionist"
+    />
+    <property
+        name="testRescheduleAppointment"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRescheduleAppointment"
+    />
+    <property
+        name="testReceptionistAndDoctorShouldNotAccessPatientApi"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistAndDoctorShouldNotAccessPatientApi"
+    />
+    <property
+        name="testReceptionistAndPatientShouldNotAccessDoctorApi"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistAndPatientShouldNotAccessDoctorApi"
+    />
+    <property
+        name="testPatientAndDoctorShouldNotAccessReceptionistApi"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientAndDoctorShouldNotAccessReceptionistApi"
+    />
+    <property
+        name="testRegisterPatientWithMissingFields"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterPatientWithMissingFields"
+    />
+    <property
+        name="testRegisterDoctorWithSpecialty"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterDoctorWithSpecialty"
+    />
+    <property
+        name="testPatientCanViewMedicalRecords"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientCanViewMedicalRecords"
+    />
+    <property
+        name="testPatientMedicalRecordsEmpty"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientMedicalRecordsEmpty"
+    />
+    <property
+        name="testDoctorAvailabilityUpdatedCorrectly"
+        value="HealthcareAppointmentManagementSystemApplicationTests testDoctorAvailabilityUpdatedCorrectly"
+    />
+    <property
+        name="testRescheduleAppointmentUpdatesTime"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRescheduleAppointmentUpdatesTime"
+    />
+    <property
+        name="testLoginWithEmptyUsername"
+        value="HealthcareAppointmentManagementSystemApplicationTests testLoginWithEmptyUsername"
+    />
+    <property
+        name="testLoginWithEmptyPassword"
+        value="HealthcareAppointmentManagementSystemApplicationTests testLoginWithEmptyPassword"
+    />
+    <property
+        name="testAppointmentStatusIsScheduledAfterCreation"
+        value="HealthcareAppointmentManagementSystemApplicationTests testAppointmentStatusIsScheduledAfterCreation"
+    />
+    <property
+        name="testReceptionistScheduleAppointmentStatusIsScheduled"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistScheduleAppointmentStatusIsScheduled"
+    />
+    <property
+        name="testDoctorCannotAccessReceptionistScheduleEndpoint"
+        value="HealthcareAppointmentManagementSystemApplicationTests testDoctorCannotAccessReceptionistScheduleEndpoint"
+    />
+    <property
+        name="testPatientCannotAccessReceptionistRescheduleEndpoint"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientCannotAccessReceptionistRescheduleEndpoint"
+    />
+    <property
+        name="testPatientCannotUpdateDoctorAvailability"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientCannotUpdateDoctorAvailability"
+    />
+    <property
+        name="testReceptionistCannotUpdateDoctorAvailability"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistCannotUpdateDoctorAvailability"
+    />
+    <property
+        name="testDoctorGetAppointmentsReturnsEmptyWhenNone"
+        value="HealthcareAppointmentManagementSystemApplicationTests testDoctorGetAppointmentsReturnsEmptyWhenNone"
+    />
+    <property
+        name="testPatientGetAppointmentsReturnsEmptyWhenNone"
+        value="HealthcareAppointmentManagementSystemApplicationTests testPatientGetAppointmentsReturnsEmptyWhenNone"
+    />
+    <property
+        name="testReceptionistGetAllAppointmentsReturnsEmptyWhenNone"
+        value="HealthcareAppointmentManagementSystemApplicationTests testReceptionistGetAllAppointmentsReturnsEmptyWhenNone"
+    />
+    <property
+        name="testRegisterPatientReturnsCreatedStatus"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterPatientReturnsCreatedStatus"
+    />
+    <property
+        name="testRegisterDoctorReturnsCreatedStatus"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterDoctorReturnsCreatedStatus"
+    />
+    <property
+        name="testRegisterReceptionistReturnsCreatedStatus"
+        value="HealthcareAppointmentManagementSystemApplicationTests testRegisterReceptionistReturnsCreatedStatus"
+    />
+ 
+</properties>
+ 

@@ -1,0 +1,122 @@
+<div class="container mt-4">
+
+  <h2 class="text-center mb-4">Doctor List</h2>
+
+  <!-- Doctor Table -->
+  <div class="card shadow mb-4">
+    <div class="card-body">
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Specialty</th>
+              <th>Availability</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let doc of doctorList">
+              <td>{{ doc.id || doc.doctorId }}</td>
+
+              <td>
+                {{ doc.username || doc.name || 'Not Available' }}
+              </td>
+
+              <td>
+                {{ doc.specialty || 'Not Available' }}
+              </td>
+
+              <td>
+                
+<span
+    class="badge"
+    [ngClass]="{
+      'bg-success': doc.availability?.toLowerCase() === 'yes',
+      'bg-danger': doc.availability?.toLowerCase() !== 'yes'
+    }"
+  >
+
+                  {{ doc.availability || 'no' }}
+                </span>
+              </td>
+
+              <td>
+                <button
+                  *ngIf="doc.availability.toLowerCase() === 'yes'"
+                  class="btn btn-primary btn-sm"
+                  type="button"
+                  (click)="addAppointment(doc)"
+                >
+                  Book
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="doctorList.length === 0">
+              <td colspan="5" class="text-center text-danger">
+                No doctors found.
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Appointment Form -->
+  <div class="card shadow" *ngIf="isAdded">
+    <div class="card-body">
+
+      <h4 class="mb-3 text-primary">Schedule Appointment</h4>
+
+      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+     
+      
+
+        <!-- Date Time -->
+        <div class="mb-3">
+          <label class="form-label">Date & Time</label>
+
+          <input
+            type="datetime-local"
+            formControlName="time"
+            class="form-control"
+          />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-success">
+          Submit
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- Response Message -->
+  <div class="text-center mt-3">
+
+    <p
+      *ngIf="responseMessage"
+      [ngClass]="{
+        'text-success fw-bold': responseMessage.includes('Successfully'),
+        'text-danger fw-bold': responseMessage.includes('date')
+      }"
+    >
+      {{ responseMessage }}
+    </p>
+
+  </div>
+
+</div>

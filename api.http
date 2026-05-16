@@ -1,0 +1,10 @@
+POST https://orchardsolvemb64.lntedutech.com/project/9860/proxy/3000/api/receptionist/appointment?patientId=1&doctorId=2
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYWxhayIsInJvbGUiOiJSRUNFUFRJT05JU1QiLCJpYXQiOjE3Nzg4MzY4MTYsImV4cCI6MTc3ODkyMzIxNn0.kKTMNO4U7VNrjOIPf4NnantIbGujnUvOPgxHlL-7F11tQ_yxL_2cbW22DNx-aaIF5Ld2obuh4fJzSjNqF2AjLg
+Content-Type: application/json
+
+{
+   "time" : "2026-05-10 12:00:00"
+}
+
+
+# Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYWxhayIsInJvbGUiOiJSRUNFUFRJT05JU1QiLCJpYXQiOjE3Nzg4MjEwNDQsImV4cCI6MTc3ODkwNzQ0NH0.O7dRCPZL_IxSDFikS7ZLGQKItZUhDSkjyYZgKmIAtIdBcQHnZRJJ8Q2QOJYYAZRFRsyp1H0TnjXlwDnZyajrIw

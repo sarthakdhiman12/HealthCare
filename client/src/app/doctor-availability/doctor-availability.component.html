@@ -1,0 +1,45 @@
+<div class="container mt-4">
+
+  <h2>Doctor Availability</h2>
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group mb-3">
+      <label for="availability">Availability</label>
+
+      <select
+        id="availability"
+        class="form-control"
+        formControlName="availability">
+
+        <option value="">Select Availability</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+
+      </select>
+
+      <div
+        class="text-danger mt-1"
+        *ngIf="itemForm.get('availability')?.touched && itemForm.get('availability')?.hasError('required')">
+
+        Availability is required
+
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      Update Availability
+    </button>
+
+  </form>
+
+  <div
+    class="alert mt-3"
+    [ngClass]="isAdded ? 'alert-success' : 'alert-danger'"
+    *ngIf="responseMessage">
+
+    {{ responseMessage }}
+
+  </div>
+
+</div>

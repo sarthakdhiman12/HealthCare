@@ -1,0 +1,276 @@
+<div class="dashboard-wrapper">
+
+  <!-- BODY -->
+  <div class="dashboard-body">
+
+    <!-- ================================================ -->
+    <!-- USER INFORMATION CARD -->
+    <!-- ================================================ -->
+    <div class="info-card" *ngIf="userData">
+
+      <div class="info-card-header">
+        <h4>{{ roleName || userData.role || 'User' }} INFORMATION</h4>
+      </div>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+          <span class="info-label">ID</span>
+          <span class="info-value">
+            {{ userData.id || userData.userId || 'Not Available' }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Username</span>
+          <span class="info-value">
+            {{ userData.username || 'Not Available' }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value">
+            {{ userData.email || 'Not Available' }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">Role</span>
+          <span class="info-value role-badge">
+            {{ roleName || userData.role || 'Not Available' }}
+          </span>
+        </div>
+
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="text-center mt-3">
+        <button class="btn btn-warning me-2" (click)="toggleEditForm()">
+          {{ showEditForm ? 'Cancel Edit' : 'Edit Profile' }}
+        </button>
+
+        <button class="btn btn-danger" (click)="deleteMyAccount()" [disabled]="deleting">
+          {{ deleting ? 'Deleting...' : 'Delete My Account' }}
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ================================================ -->
+    <!-- ✅ UPDATE PROFILE SECTION (SEPARATE CARD) -->
+    <!-- ================================================ -->
+
+    <!-- ✅ PATIENT UPDATE FORM -->
+    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'PATIENT'">
+
+      <div class="info-card-header">
+        <h4>✏️ Update Patient Profile</h4>
+      </div>
+
+      <div class="p-3">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Username</label>
+            <input type="text" class="form-control" [(ngModel)]="patientForm.username" placeholder="Enter username" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="patientForm.email" placeholder="Enter email" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">New Password</label>
+            <input type="password" class="form-control" [(ngModel)]="patientForm.password" placeholder="Leave blank to keep current" />
+          </div>
+
+        </div>
+
+        <div class="text-center mt-2">
+          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
+            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+          </button>
+          <button class="btn btn-secondary" (click)="toggleEditForm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ✅ DOCTOR UPDATE FORM -->
+    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'DOCTOR'">
+
+      <div class="info-card-header">
+        <h4>✏️ Update Doctor Profile</h4>
+      </div>
+
+      <div class="p-3">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Username</label>
+            <input type="text" class="form-control" [(ngModel)]="doctorForm.username" placeholder="Enter username" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="doctorForm.email" placeholder="Enter email" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">New Password</label>
+            <input type="password" class="form-control" [(ngModel)]="doctorForm.password" placeholder="Leave blank to keep current" />
+          </div>
+
+        </div>
+
+        <div class="text-center mt-2">
+          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
+            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+          </button>
+          <button class="btn btn-secondary" (click)="toggleEditForm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ✅ RECEPTIONIST UPDATE FORM -->
+    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'RECEPTIONIST'">
+
+      <div class="info-card-header">
+        <h4>✏️ Update Receptionist Profile</h4>
+      </div>
+
+      <div class="p-3">
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Username</label>
+            <input type="text" class="form-control" [(ngModel)]="receptionistForm.username" placeholder="Enter username" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="receptionistForm.email" placeholder="Enter email" />
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold">New Password</label>
+            <input type="password" class="form-control" [(ngModel)]="receptionistForm.password" placeholder="Leave blank to keep current" />
+          </div>
+
+        </div>
+
+        <div class="text-center mt-2">
+          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
+            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+          </button>
+          <button class="btn btn-secondary" (click)="toggleEditForm()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================================================ -->
+    <!-- USER DATA NOT FOUND -->
+    <!-- ================================================ -->
+    <div class="alert alert-warning text-center" *ngIf="!userData && roleName">
+      User data not found. Please login again.
+    </div>
+
+    <!-- ================================================ -->
+    <!-- PATIENT DASHBOARD -->
+    <!-- ================================================ -->
+    <div class="role-section" *ngIf="roleName === 'PATIENT'">
+      <h3>Patient Dashboard</h3>
+      <p>Welcome {{ userData?.username || 'Patient' }} to your patient dashboard.</p>
+
+      <div class="action-grid">
+        <div class="action-card primary-card">
+          <div class="action-icon">📅</div>
+          <h4>My Appointments</h4>
+          <p>View your scheduled appointments.</p>
+          <a routerLink="/patient-appointment" class="btn btn-primary">View Appointments</a>
+        </div>
+
+        <div class="action-card success-card">
+          <div class="action-icon">➕</div>
+          <h4>Schedule Appointment</h4>
+          <p>Book a new appointment with a doctor.</p>
+          <a routerLink="/schedule-appointment" class="btn btn-success">Schedule Appointment</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- DOCTOR DASHBOARD -->
+    <!-- ================================================ -->
+    <div class="role-section" *ngIf="roleName === 'DOCTOR'">
+      <h3>Doctor Dashboard</h3>
+      <p>Welcome Dr. {{ userData?.username || 'Doctor' }} to your doctor dashboard.</p>
+
+      <div class="action-grid">
+        <div class="action-card primary-card">
+          <div class="action-icon">🩺</div>
+          <h4>Doctor Appointments</h4>
+          <p>View appointments assigned to you.</p>
+          <a routerLink="/doctor-appointment" class="btn btn-primary">View Appointments</a>
+        </div>
+
+        <div class="action-card success-card">
+          <div class="action-icon">✅</div>
+          <h4>Doctor Availability</h4>
+          <p>Update your availability status.</p>
+          <a routerLink="/doctor-availability" class="btn btn-success">Update Availability</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================ -->
+    <!-- RECEPTIONIST DASHBOARD -->
+    <!-- ================================================ -->
+    <div class="role-section" *ngIf="roleName === 'RECEPTIONIST'">
+      <h3>Receptionist Dashboard</h3>
+      <p>Welcome {{ userData?.username || 'Receptionist' }} to your receptionist dashboard.</p>
+
+      <div class="action-grid">
+        <div class="action-card primary-card">
+          <div class="action-icon">📋</div>
+          <h4>All Appointments</h4>
+          <p>View and manage all appointments.</p>
+          <a routerLink="/receptionist-appointments" class="btn btn-primary">View All Appointments</a>
+        </div>
+
+        <div class="action-card success-card">
+          <div class="action-icon">📝</div>
+          <h4>Schedule Appointment</h4>
+          <p>Schedule appointment for patients.</p>
+          <a routerLink="/receptionist-schedule-appointments" class="btn btn-success">Schedule Appointment</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- NO ROLE FOUND -->
+    <div class="empty-state" *ngIf="!roleName">
+      <h3>No Role Found</h3>
+      <p>Please login again to access the dashboard.</p>
+      <a routerLink="/login" class="btn btn-danger">Go to Login</a>
+    </div>
+
+    <!-- INVALID ROLE -->
+    <div class="empty-state"
+      *ngIf="roleName && roleName !== 'PATIENT' && roleName !== 'DOCTOR' && roleName !== 'RECEPTIONIST'">
+      <h3>Invalid Role</h3>
+      <p>Current role: <strong>{{ roleName }}</strong></p>
+      <a routerLink="/login" class="btn btn-danger">Go to Login</a>
+    </div>
+
+  </div>
+</div>

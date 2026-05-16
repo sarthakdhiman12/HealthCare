@@ -1,0 +1,124 @@
+<div class="container mt-4">
+
+  <h2 class="mb-3">Patient Appointments</h2>
+
+  <table class="table table-bordered table-striped"
+         *ngIf="appointmentList && appointmentList.length > 0">
+
+    <thead class="table-dark">
+      <tr>
+        <th>Appointment Id</th>
+        <th>Appointment Time</th>
+        <th>Status</th>
+        <th>Doctor</th>
+        <th>Patient</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <ng-container *ngFor="let appointment of appointmentList">
+
+        <tr>
+          <td>{{ appointment.id }}</td>
+
+          <td>
+            {{ appointment.appointmentTime | date:'dd-MMM-yyyy hh:mm a' }}
+          </td>
+
+          <td>
+            <span class="badge bg-primary">
+              {{ appointment.status }}
+            </span>
+          </td>
+
+          <td>
+            <strong>{{ appointment.doctor?.username }}</strong><br>
+            <small>{{ appointment.doctor?.email }}</small>
+          </td>
+
+          <td>
+            <strong>{{ appointment.patient?.username }}</strong><br>
+            <small>{{ appointment.patient?.email }}</small>
+          </td>
+
+          <td>
+            <button
+              *ngIf="appointment.status?.toLowerCase() === 'scheduled'"
+              class="btn btn-warning btn-sm"
+              (click)="openReschedule(appointment)">
+              Reschedule
+            </button>
+          </td>
+        </tr>
+
+        <!-- ✅ FIXED FORM -->
+        <tr *ngIf="showRescheduleForm && selectedAppointmentId === appointment.id">
+          <td colspan="6">
+
+            <div class="p-3 border rounded">
+
+              <form [formGroup]="rescheduleForm">
+
+                <label class="fw-bold mb-2">
+                  Select new date & time
+                </label>
+
+                <div class="row">
+
+                  <div class="col-md-6 mb-2">
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      [min]="minDateTime"
+                      formControlName="time">
+
+                    <div class="text-danger mt-1"
+                         *ngIf="rescheduleForm.controls['time'].touched &&
+                                rescheduleForm.controls['time'].hasError('required')">
+                      Time is required
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 mb-2">
+                    <button
+                      class="btn btn-success me-2"
+                      type="button"
+                      (click)="submitReschedule()">
+                      Save
+                    </button>
+
+                    <button
+                      class="btn btn-secondary"
+                      type="button"
+                      (click)="cancelReschedule()">
+                      Cancel
+                    </button>
+                  </div>
+
+                </div>
+
+              </form>
+
+            </div>
+
+          </td>
+        </tr>
+
+      </ng-container>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!appointmentList || appointmentList.length === 0"
+       class="alert alert-info text-center">
+    No appointments found.
+  </div>
+
+  <div *ngIf="responseMessage"
+       class="alert mt-3"
+       [ngClass]="isSuccess ? 'alert-success' : 'alert-danger'">
+    {{ responseMessage }}
+  </div>
+
+</div>

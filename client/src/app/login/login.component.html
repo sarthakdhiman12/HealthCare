@@ -1,0 +1,84 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h4>Login</h4>
+        </div>
+
+        <div class="card-body">
+
+          <div
+            class="alert alert-danger"
+            *ngIf="showError"
+          >
+            {{ errorMessage }}
+          </div>
+
+          <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
+
+            <div class="mb-3">
+              <label for="username" class="form-label">
+                Username
+              </label>
+
+              <input
+                type="text"
+                id="username"
+                class="form-control"
+                formControlName="username"
+                placeholder="Enter username"
+              />
+
+              <small
+                class="text-danger"
+                *ngIf="itemForm.get('username')?.touched && itemForm.get('username')?.hasError('required')"
+              >
+                Username is required
+              </small>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">
+                Password
+              </label>
+
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                formControlName="password"
+                placeholder="Enter password"
+              />
+
+              <small
+                class="text-danger"
+                *ngIf="itemForm.get('password')?.touched && itemForm.get('password')?.hasError('required')"
+              >
+                Password is required
+              </small>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+            >
+              Login
+            </button>
+
+          </form>
+
+          <div class="text-center mt-3">
+            <span>New user?</span>
+            <a routerLink="/registration">
+              Register here
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="container mt-4"> <h2 class="mb-4">Schedule Appointment</h2>
+
+  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+    <!-- Patient List -->
+    <div class="form-group mb-3">
+      <label for="patientId">Select Patient</label>
+
+      <select
+        id="patientId"
+        class="form-control"
+        formControlName="patientId">
+
+        <option value="">-- Select Patient --</option>
+
+        <option
+          *ngFor="let patient of patientList"
+          [value]="patient.patientId || patient.id">
+          {{ patient.patientId || patient.id }} -
+          {{ patient.patientName || patient.name || patient.fullName || patient.username }}
+        </option>
+
+      </select>
+
+      <div
+        class="text-danger mt-1"
+        *ngIf="itemForm.controls['patientId'].touched && itemForm.controls['patientId'].hasError('required')">
+        Please select patient
+      </div>
+    </div>
+
+    <!-- Doctor List -->
+    <div class="form-group mb-3">
+      <label for="doctorId">Select Doctor</label>
+
+      <select
+        id="doctorId"
+        class="form-control"
+        formControlName="doctorId">
+
+        <option value="">-- Select Doctor --</option>
+
+        <option
+          *ngFor="let doctor of doctorList"
+          [value]="doctor.doctorId || doctor.id">
+          {{ doctor.doctorId || doctor.id }} -
+          {{ doctor.doctorName || doctor.name || doctor.fullName || doctor.username }}--{{doctor.specialty}}
+        </option>
+
+      </select>
+
+      <div
+        class="text-danger mt-1"
+        *ngIf="itemForm.controls['doctorId'].touched && itemForm.controls['doctorId'].hasError('required')">
+        Please select doctor
+      </div>
+    </div>
+
+    <!-- Appointment Time -->
+    <div class="form-group mb-3">
+      <label for="time">Appointment Time</label>
+
+      <input
+        type="datetime-local"
+        id="time"
+        class="form-control"
+        formControlName="time">
+
+      <div
+        class="text-danger mt-1"
+        *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('required')">
+        Appointment time is required
+      </div>
+
+      <div
+        class="text-danger mt-1"
+        *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('pastTime')">
+        Appointment time should be greater than current time
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="btn btn-primary">
+      Schedule Appointment
+    </button>
+
+  </form>
+
+  <!-- Success Message -->
+  <div
+    class="alert alert-success mt-3"
+    *ngIf="responseMessage && isAdded">
+    {{ responseMessage }}
+  </div>
+
+  <!-- Error Message -->
+  <div
+    class="alert alert-danger mt-3"
+    *ngIf="responseMessage && !isAdded">
+    {{ responseMessage }}
+  </div>
+
+</div>

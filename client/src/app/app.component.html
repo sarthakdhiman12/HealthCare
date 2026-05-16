@@ -1,0 +1,86 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+  <a class="navbar-brand fw-bold" routerLink="/">
+    HAM System
+  </a>
+
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#navbarNav"
+    aria-controls="navbarNav"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+      <!-- ✅ DASHBOARD (for all logged-in users) -->
+      
+
+      <!-- PATIENT MENU -->
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
+        <a class="nav-link" routerLink="/patient-appointment">
+          Patient Appointment
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
+        <a class="nav-link" routerLink="/schedule-appointment">
+          Schedule Appointment
+        </a>
+      </li>
+
+      <!-- DOCTOR MENU -->
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
+        <a class="nav-link" routerLink="/doctor-appointment">
+          Doctor Appointment
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
+        <a class="nav-link" routerLink="/doctor-availability">
+          Doctor Availability
+        </a>
+      </li>
+
+      <!-- RECEPTIONIST MENU -->
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
+        <a class="nav-link" routerLink="/receptionist-appointments">
+          All Appointments
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
+        <a class="nav-link" routerLink="/receptionist-schedule-appointments">
+          Schedule Appointments
+        </a>
+      </li>
+
+    </ul>
+
+    <!-- LOGIN / LOGOUT MENU -->
+    <ul class="navbar-nav ms-auto">
+
+      <li class="nav-item" *ngIf="!isLoggedin">
+        <a class="nav-link" routerLink="/login">
+          Login
+        </a>
+      </li>
+
+      <li class="nav-item" *ngIf="isLoggedin">
+        <button class="btn btn-outline-light btn-sm" (click)="logout()">
+          Logout
+        </button>
+      </li>
+
+    </ul>
+
+  </div>
+</nav>
+
+<router-outlet></router-outlet>

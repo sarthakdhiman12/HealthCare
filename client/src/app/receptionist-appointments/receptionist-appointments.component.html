@@ -1,0 +1,134 @@
+<div class="container mt-4">
+
+  <h2 class="mb-4">All Appointments</h2>
+
+  <!-- ✅ Loading -->
+  <div class="alert alert-info" *ngIf="isLoading">
+    Loading appointments...
+  </div>
+
+  <!-- ✅ Empty / Info message (only when NOT loading and no data) -->
+  <div class="alert alert-warning"
+       *ngIf="!isLoading && appointmentList.length === 0 && emptyMessage">
+    {{ emptyMessage }}
+  </div>
+
+  <!-- ✅ Response Message (Success / Error) -->
+  <div *ngIf="responseMessage"
+       class="alert mt-3"
+       [ngClass]="isSuccess ? 'alert-success' : 'alert-danger'">
+    {{ responseMessage }}
+  </div>
+
+  <!-- ✅ Table -->
+  <div class="table-responsive"
+       *ngIf="appointmentList.length > 0 && !isLoading">
+
+    <table class="table table-bordered table-striped table-hover">
+
+      <thead class="table-dark">
+        <tr>
+          <th>Appointment ID</th>
+          <th>Patient</th>
+          <th>Doctor</th>
+          <th>Appointment Time</th>
+          <th>Status</th>
+          <th style="width: 220px;">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let appointment of appointmentList">
+
+          <!-- ✅ Row -->
+          <tr>
+            <td>{{ appointment.appointmentId }}</td>
+
+            <td>
+              {{ appointment.patientName }} <br>
+              <small>ID: {{ appointment.patientId }}</small>
+            </td>
+
+            <td>
+              {{ appointment.doctorName }} <br>
+              <small>ID: {{ appointment.doctorId }}</small>
+            </td>
+
+            <td>
+              {{ formatDateTime(appointment.appointmentTime) }}
+            </td>
+
+            <td>
+              <span class="badge bg-primary">
+                {{ appointment.status || 'Scheduled' }}
+              </span>
+            </td>
+
+            <td>
+              <button
+                class="btn btn-warning btn-sm"
+                type="button"
+                (click)="editAppointment(appointment)">
+                Reschedule
+              </button>
+            </td>
+          </tr>
+
+          <!-- ✅ Reschedule Form Row -->
+          <tr *ngIf="isAdded && isCurrentRow(appointment)">
+            <td colspan="6">
+
+              <div class="p-3 border rounded bg-light">
+
+                <form [formGroup]="itemForm">
+
+                  <div class="row align-items-end">
+
+                    <div class="col-md-6 mb-2">
+                      <label class="fw-bold">New Date & Time</label>
+
+                      <input
+                        type="datetime-local"
+                        class="form-control"
+                        formControlName="time">
+
+                      <div class="text-danger mt-1"
+                           *ngIf="itemForm.controls['time'].touched &&
+                                  itemForm.controls['time'].hasError('required')">
+                        Time is required
+                      </div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                      <button
+                        type="button"
+                        class="btn btn-success me-2"
+                        (click)="onSubmit()">
+                        Save
+                      </button>
+
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        (click)="cancelEdit()">
+                        Cancel
+                      </button>
+                    </div>
+
+                  </div>
+
+                </form>
+
+              </div>
+
+            </td>
+          </tr>
+
+        </ng-container>
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
