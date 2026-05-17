@@ -1,45 +1,98 @@
-<div class="container mt-4">
+  <div class="page-wrapper">
 
-  <h2>Doctor Availability</h2>
-
-  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-
-    <div class="form-group mb-3">
-      <label for="availability">Availability</label>
-
-      <select
-        id="availability"
-        class="form-control"
-        formControlName="availability">
-
-        <option value="">Select Availability</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-
-      </select>
-
-      <div
-        class="text-danger mt-1"
-        *ngIf="itemForm.get('availability')?.touched && itemForm.get('availability')?.hasError('required')">
-
-        Availability is required
-
-      </div>
+    <!-- BG -->
+    <div class="page-bg">
+      <div class="bg-circle c1"></div>
+      <div class="bg-circle c2"></div>
+      <div class="bg-circle c3"></div>
+      <div class="particle p1"></div>
+      <div class="particle p2"></div>
+      <div class="particle p3"></div>
+      <div class="particle p4"></div>
+      <div class="particle p5"></div>
+      <div class="particle p6"></div>
+      <div class="grid-overlay"></div>
     </div>
 
-    <button type="submit" class="btn btn-primary">
-      Update Availability
-    </button>
+    <div class="page-content">
 
-  </form>
+      <!-- HEADER -->
+      <div class="page-header">
+        <h2><i class="fas fa-clock me-2"></i>Doctor Availability</h2>
+        <p>Update your availability status for patients</p>
+      </div>
 
-  <div
-    class="alert mt-3"
-    [ngClass]="isAdded ? 'alert-success' : 'alert-danger'"
-    *ngIf="responseMessage">
+      <!-- ✅ AVAILABILITY CARD -->
+      <div class="avail-card">
 
-    {{ responseMessage }}
+        <div class="avail-card-header">
+          <i class="fas fa-user-md me-2"></i>Set Your Availability
+        </div>
 
+        <div class="avail-card-body">
+
+          <!-- Current Status -->
+          <div class="current-status">
+            <div class="status-icon" [ngClass]="selectedAvailability === 'Yes' ? 'status-online' : 'status-offline'">
+              <i [class]="selectedAvailability === 'Yes' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+            </div>
+            <div>
+              <label>Current Status</label>
+              <h3 [ngClass]="selectedAvailability === 'Yes' ? 'text-available' : 'text-unavailable'">
+                {{ selectedAvailability === 'Yes' ? 'Available' : selectedAvailability === 'No' ? 'Unavailable' : 'Not Set' }}
+              </h3>
+            </div>
+          </div>
+
+          <!-- ✅ TOGGLE OPTIONS -->
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+            <div class="toggle-options">
+
+              <div class="toggle-card"
+                  [class.active-yes]="selectedAvailability === 'Yes'"
+                  (click)="selectAvailability('Yes')">
+                <div class="toggle-icon yes-icon">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+                <h4>Available</h4>
+                <p>Patients can book appointments</p>
+              </div>
+
+              <div class="toggle-card"
+                  [class.active-no]="selectedAvailability === 'No'"
+                  (click)="selectAvailability('No')">
+                <div class="toggle-icon no-icon">
+                  <i class="fas fa-times-circle"></i>
+                </div>
+                <h4>Unavailable</h4>
+                <p>Pause new appointments</p>
+              </div>
+
+            </div>
+
+            <!-- Error -->
+            <small class="error-text"
+              *ngIf="itemForm.get('availability')?.touched && itemForm.get('availability')?.hasError('required')">
+              Please select availability
+            </small>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-submit" [disabled]="updating">
+              <i class="fas fa-save me-1"></i>
+              {{ updating ? 'Updating...' : 'Update Availability' }}
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- ✅ RESPONSE MESSAGE -->
+      <div *ngIf="responseMessage" class="response-msg" [ngClass]="isAdded ? 'msg-success' : 'msg-error'">
+        {{ responseMessage }}
+      </div>
+
+    </div>
   </div>
-
-</div>

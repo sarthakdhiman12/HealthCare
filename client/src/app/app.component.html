@@ -1,18 +1,17 @@
 <nav class="navbar navbar-expand-lg navbar-dark ham-navbar px-3 fixed-top">
   <div class="container-fluid">
 
-    <!-- Brand -->
-    <a class="navbar-brand fw-bold brand-logo" routerLink="/dashboard">
-      <i class="fas fa-heartbeat me-2 brand-icon"></i>HAM System
+    <a class="navbar-brand fw-bold brand-logo" [routerLink]="isLoggedin ? '/dashboard' : '/login'">
+
+      <i class="fas fa-heartbeat me-2 brand-icon"></i>
+      HAM System
+
     </a>
 
+
+
     <!-- Mobile Toggle -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-    >
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -20,13 +19,6 @@
 
       <!-- LEFT MENU -->
       <ul class="navbar-nav me-auto">
-
-        <!-- ✅ PUBLIC LINKS — HIDDEN AFTER LOGIN -->
-        <li class="nav-item" *ngIf="!isLoggedin">
-          <a class="nav-link" routerLink="/login" fragment="hero" routerLinkActive="active">
-            <i class="fas fa-home me-1"></i>Home
-          </a>
-        </li>
 
         <li class="nav-item" *ngIf="!isLoggedin">
           <a class="nav-link" routerLink="/login" fragment="about-us" routerLinkActive="active">
@@ -106,10 +98,7 @@
 
         <!-- ✅ LOGOUT — shown only when logged in -->
         <li class="nav-item" *ngIf="isLoggedin">
-          <button
-            class="btn btn-outline-danger btn-sm logout-btn"
-            (click)="logout()"
-          >
+          <button class="btn btn-outline-danger btn-sm logout-btn" (click)="logout()">
             <i class="fas fa-sign-out-alt me-1"></i>Logout
           </button>
         </li>
