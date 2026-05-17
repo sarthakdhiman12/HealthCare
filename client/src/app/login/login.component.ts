@@ -14,13 +14,13 @@ export class LoginComponent implements OnInit {
 
   itemForm!: FormGroup;
 
-  formModel: any = {
-    username: '',
-    password: ''
-  };
-
   showError: boolean = false;
   errorMessage: string = '';
+  showPassword: boolean = false;
+
+  // ✅ Added — used in template
+  isLoggedin: boolean = false;
+  roleName: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -30,44 +30,67 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // ✅ Check if already logged in
+    const token = this.authService.getToken();
+    if (token) {
+      this.isLoggedin = true;
+      this.roleName = this.authService.getRole() || '';
+    }
+
     this.itemForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
   }
 
-  onLogin(): void {
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 
+  // ✅ Smooth scroll to section
+  scrollTo(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  onLogin(): void {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched();
       return;
     }
 
-    this.formModel = this.itemForm.value;
-
     this.httpService.Login(this.itemForm.value).subscribe({
       next: (response: any) => {
-        console.log('Login Response:', response);
-
-        // ✅ USE AuthService methods (triggers BehaviorSubject → navbar updates)
         this.authService.saveToken(response.token);
         this.authService.setRole(response.role);
         this.authService.saveUserId(response.id || response.userId);
         this.authService.saveUserData(response);
 
-        // ✅ Extra IDs (if present)
         if (response.doctorId) {
           localStorage.setItem('doctorId', response.doctorId);
         }
 
-        // ✅ Navigate AFTER everything is saved
+        // ✅ Update login state
+        this.isLoggedin = true;
+        this.roleName = response.role;
+
         this.router.navigate(['/dashboard']);
       },
-      error: (error: any) => {
-        console.error('Login failed:', error);
+      error: () => {
         this.showError = true;
         this.errorMessage = 'Invalid username or password';
       }
     });
+  }
+
+  // ✅ Added — used in template
+  logout(): void {
+    // this.authService.removeToken();
+    // this.authService.removeRole();
+    this.isLoggedin = false;
+    this.roleName = '';
+    this.router.navigate(['/login']);
   }
 }

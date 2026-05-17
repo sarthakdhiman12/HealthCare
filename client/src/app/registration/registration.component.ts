@@ -6,11 +6,12 @@ import { HttpService } from '../../services/http.service';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.scss']
 })
-
-
 export class RegistrationComponent implements OnInit {
+
   itemForm!: FormGroup;
+  showPassword: boolean = false;
 
   formModel: any = {
     email: '',
@@ -54,7 +55,6 @@ export class RegistrationComponent implements OnInit {
       } else {
         specialtyControl?.clearValidators();
         availabilityControl?.clearValidators();
-
         specialtyControl?.setValue('');
         availabilityControl?.setValue('');
       }
@@ -97,8 +97,7 @@ export class RegistrationComponent implements OnInit {
       },
       error: (error: any) => {
         this.showMessage = true;
-        this.responseMessage =
-          error.error?.message || error.message || 'Registration failed';
+        this.responseMessage = error.error?.message || error.message || 'Registration failed';
       }
     });
   }
@@ -122,8 +121,7 @@ export class RegistrationComponent implements OnInit {
       },
       error: (error: any) => {
         this.showMessage = true;
-        this.responseMessage =
-          error.error?.message || error.message || 'Registration failed';
+        this.responseMessage = error.error?.message || error.message || 'Registration failed';
       }
     });
   }
@@ -139,15 +137,13 @@ export class RegistrationComponent implements OnInit {
     this.httpService.registerReceptionist(receptionistDetails).subscribe({
       next: (response: any) => {
         this.showMessage = true;
-        this.responseMessage =
-          response.message || 'Receptionist registered successfully';
+        this.responseMessage = response.message || 'Receptionist registered successfully';
         this.itemForm.reset();
         this.router.navigate(['/login']);
       },
       error: (error: any) => {
         this.showMessage = true;
-        this.responseMessage =
-          error.error?.message || error.message || 'Registration failed';
+        this.responseMessage = error.error?.message || error.message || 'Registration failed';
       }
     });
   }

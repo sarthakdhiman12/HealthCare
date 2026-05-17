@@ -13,14 +13,15 @@ import { Router } from '@angular/router';
 export class ScheduleAppointmentComponent implements OnInit {
 
   doctorList: any[] = [];
+  selectedDoctor: any = null;
 
   itemForm!: FormGroup;
-
-  // ✅ Added this because your test file expects formModel
   formModel!: FormGroup;
 
   responseMessage: string = '';
   isAdded: boolean = false;
+  submitting: boolean = false;
+  showSuccess: boolean = false;
 
   minDateTime: string = '';
   maxDateTime: string = '';
@@ -41,15 +42,11 @@ export class ScheduleAppointmentComponent implements OnInit {
       time: ['', Validators.required]
     });
 
-    // ✅ Make formModel point to the same form
     this.formModel = this.itemForm;
 
     const now = new Date();
-
-    // min = current date time
     this.minDateTime = this.formatDateForInput(now);
 
-    // max = next month same date
     const nextMonth = new Date(
       now.getFullYear(),
       now.getMonth() + 1,
@@ -57,18 +54,33 @@ export class ScheduleAppointmentComponent implements OnInit {
       now.getHours(),
       now.getMinutes()
     );
-
     this.maxDateTime = this.formatDateForInput(nextMonth);
   }
 
-  // helper for datetime-local format
+  // ✅ Doctor fees
+  getDoctorFees(specialty: string): number {
+    const feesMap: any = {
+      'cardiology': 1500,
+      'cardio': 1500,
+      'cardiac': 1500,
+      'cardic': 1500,
+      'neurology': 2000,
+      'orthopedics': 1200,
+      'dermatology': 800,
+      'pediatrics': 700,
+      'general': 500,
+      'webing': 600,
+      'ent': 900
+    };
+    const key = (specialty || 'general').toLowerCase();
+    return feesMap[key] || 500;
+  }
+
   formatDateForInput(date: Date): string {
     const pad = (n: number) => n.toString().padStart(2, '0');
-
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
-  // fetch doctors
   getDoctors(): void {
     this.httpService.getDoctors().subscribe({
       next: (res: any) => {
@@ -80,9 +92,10 @@ export class ScheduleAppointmentComponent implements OnInit {
     });
   }
 
-  // click Book
   addAppointment(doc: any): void {
     const userId = Number(localStorage.getItem('userId'));
+
+    this.selectedDoctor = doc;
 
     this.itemForm.patchValue({
       doctorId: doc.id,
@@ -92,47 +105,54 @@ export class ScheduleAppointmentComponent implements OnInit {
     this.isAdded = true;
   }
 
-  // submit
+  cancelBooking(): void {
+    this.isAdded = false;
+    this.selectedDoctor = null;
+    this.itemForm.patchValue({ time: '' });
+  }
+
   onSubmit(): void {
     if (this.itemForm.invalid) {
+      this.itemForm.markAllAsTouched();
       return;
     }
 
     const selectedDate = new Date(this.itemForm.value.time);
-
     const minDate = new Date(this.minDateTime);
     const maxDate = new Date(this.maxDateTime);
 
-    // HARD validation
     if (selectedDate < minDate || selectedDate > maxDate) {
       this.responseMessage = 'Please select a date and time from today up to one month ahead only.';
       return;
     }
 
-    const formValue = { ...this.itemForm.value };
+    this.submitting = true;
 
-    formValue.time = this.datePipe.transform(
-      formValue.time,
-      'yyyy-MM-dd HH:mm:ss'
-    );
+    const formValue = { ...this.itemForm.value };
+    formValue.time = this.datePipe.transform(formValue.time, 'yyyy-MM-dd HH:mm:ss');
 
     this.httpService.ScheduleAppointment(formValue).subscribe({
       next: () => {
+        this.isAdded = false;
+        this.submitting = false;
+
+        // ✅ Show success animation
+        this.showSuccess = true;
         this.responseMessage = 'Appointment Scheduled Successfully';
 
         this.itemForm.reset();
-        this.isAdded = false;
 
         setTimeout(() => {
+          this.showSuccess = false;
           this.responseMessage = '';
           this.router.navigate(['/dashboard']);
         }, 3000);
       },
       error: (err: any) => {
         console.error(err);
+        this.submitting = false;
         this.responseMessage = 'Failed to schedule appointment';
       }
     });
   }
 }
-``

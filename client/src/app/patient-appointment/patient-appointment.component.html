@@ -1,124 +1,262 @@
-<div class="container mt-4">
+<div class="page-wrapper">
 
-  <h2 class="mb-3">Patient Appointments</h2>
+  <!-- ✅ BG ANIMATIONS -->
+  <div class="page-bg">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="grid-overlay"></div>
+  </div>
 
-  <table class="table table-bordered table-striped"
-         *ngIf="appointmentList && appointmentList.length > 0">
+  <div class="page-content">
 
-    <thead class="table-dark">
-      <tr>
-        <th>Appointment Id</th>
-        <th>Appointment Time</th>
-        <th>Status</th>
-        <th>Doctor</th>
-        <th>Patient</th>
-        <th>Action</th>
-      </tr>
-    </thead>
+    <!-- ✅ HEADER -->
+    <div class="page-header">
+      <div>
+        <h2><i class="fas fa-calendar-check me-2"></i>My Appointments</h2>
+        <p>View and manage your scheduled appointments</p>
+      </div>
+      <div class="header-badge">
+        <i class="fas fa-list me-1"></i>{{ appointmentList.length }} Appointments
+      </div>
+    </div>
 
-    <tbody>
-      <ng-container *ngFor="let appointment of appointmentList">
+    <!-- ✅ APPOINTMENT CARDS -->
+    <div class="appointments-container" *ngIf="appointmentList && appointmentList.length > 0">
 
-        <tr>
-          <td>{{ appointment.id }}</td>
+      <div class="appointment-card" *ngFor="let appointment of appointmentList; let i = index"
+           [style.animation-delay]="(i * 0.1) + 's'">
 
-          <td>
-            {{ appointment.appointmentTime | date:'dd-MMM-yyyy hh:mm a' }}
-          </td>
+        <!-- TOP ROW -->
+        <div class="card-top">
+          <div class="card-id">#{{ appointment.id }}</div>
+          <span class="status-badge"
+            [ngClass]="{
+              'status-scheduled': appointment.status?.toLowerCase() === 'scheduled',
+              'status-completed': appointment.status?.toLowerCase() === 'completed',
+              'status-cancelled': appointment.status?.toLowerCase() === 'cancelled'
+            }">
+            {{ appointment.status }}
+          </span>
+        </div>
 
-          <td>
-            <span class="badge bg-primary">
-              {{ appointment.status }}
-            </span>
-          </td>
+        <!-- CARD BODY -->
+        <div class="card-body-content">
 
-          <td>
-            <strong>{{ appointment.doctor?.username }}</strong><br>
-            <small>{{ appointment.doctor?.email }}</small>
-          </td>
-
-          <td>
-            <strong>{{ appointment.patient?.username }}</strong><br>
-            <small>{{ appointment.patient?.email }}</small>
-          </td>
-
-          <td>
-            <button
-              *ngIf="appointment.status?.toLowerCase() === 'scheduled'"
-              class="btn btn-warning btn-sm"
-              (click)="openReschedule(appointment)">
-              Reschedule
-            </button>
-          </td>
-        </tr>
-
-        <!-- ✅ FIXED FORM -->
-        <tr *ngIf="showRescheduleForm && selectedAppointmentId === appointment.id">
-          <td colspan="6">
-
-            <div class="p-3 border rounded">
-
-              <form [formGroup]="rescheduleForm">
-
-                <label class="fw-bold mb-2">
-                  Select new date & time
-                </label>
-
-                <div class="row">
-
-                  <div class="col-md-6 mb-2">
-                    <input
-                      type="datetime-local"
-                      class="form-control"
-                      [min]="minDateTime"
-                      formControlName="time">
-
-                    <div class="text-danger mt-1"
-                         *ngIf="rescheduleForm.controls['time'].touched &&
-                                rescheduleForm.controls['time'].hasError('required')">
-                      Time is required
-                    </div>
-                  </div>
-
-                  <div class="col-md-6 mb-2">
-                    <button
-                      class="btn btn-success me-2"
-                      type="button"
-                      (click)="submitReschedule()">
-                      Save
-                    </button>
-
-                    <button
-                      class="btn btn-secondary"
-                      type="button"
-                      (click)="cancelReschedule()">
-                      Cancel
-                    </button>
-                  </div>
-
-                </div>
-
-              </form>
-
+          <!-- Doctor Info -->
+          <div class="info-row">
+            <div class="info-block">
+              <div class="info-icon blue"><i class="fas fa-user-md"></i></div>
+              <div>
+                <label>Doctor</label>
+                <p>{{ appointment.doctor?.username || 'N/A' }}</p>
+                <small>{{ appointment.doctor?.email || '' }}</small>
+              </div>
             </div>
 
-          </td>
-        </tr>
+            <div class="info-block">
+              <div class="info-icon green"><i class="fas fa-user"></i></div>
+              <div>
+                <label>Patient</label>
+                <p>{{ appointment.patient?.username || 'N/A' }}</p>
+                <small>{{ appointment.patient?.email || '' }}</small>
+              </div>
+            </div>
+          </div>
 
-      </ng-container>
-    </tbody>
+          <!-- Time + Specialty -->
+          <div class="info-row">
+            <div class="info-block">
+              <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+              <div>
+                <label>Appointment Time</label>
+                <p>{{ appointment.appointmentTime | date:'dd MMM yyyy, hh:mm a' }}</p>
+              </div>
+            </div>
 
-  </table>
+            <div class="info-block">
+              <div class="info-icon orange"><i class="fas fa-stethoscope"></i></div>
+              <div>
+                <label>Specialty</label>
+                <p>{{ appointment.doctor?.specialty || 'General' }}</p>
+              </div>
+            </div>
+          </div>
 
-  <div *ngIf="!appointmentList || appointmentList.length === 0"
-       class="alert alert-info text-center">
-    No appointments found.
+          <!-- ✅ FEES + PAYMENT STATUS -->
+          <div class="info-row">
+            <div class="info-block">
+              <div class="info-icon gold"><i class="fas fa-rupee-sign"></i></div>
+              <div>
+                <label>Consultation Fees</label>
+                <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-icon" [ngClass]="appointment.paymentStatus === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
+                <i [class]="appointment.paymentStatus === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+              </div>
+              <div>
+                <label>Payment Status</label>
+                <span class="payment-badge"
+                  [ngClass]="appointment.paymentStatus === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
+                  {{ appointment.paymentStatus || 'NOT PAID' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ✅ ACTION BUTTONS -->
+        <div class="card-actions">
+
+          <!-- Pay Now Button -->
+          <button
+            *ngIf="appointment.paymentStatus !== 'PAID'"
+            class="btn btn-pay"
+            (click)="payNow(appointment)">
+            <i class="fas fa-credit-card me-1"></i>Pay Now
+          </button>
+
+          <span *ngIf="appointment.paymentStatus === 'PAID'" class="paid-text">
+            <i class="fas fa-check-circle me-1"></i>Payment Done
+          </span>
+
+          <!-- Reschedule Button -->
+          <button
+            *ngIf="appointment.status?.toLowerCase() === 'scheduled'"
+            class="btn btn-reschedule"
+            (click)="openReschedule(appointment)">
+            <i class="fas fa-calendar-alt me-1"></i>Reschedule
+          </button>
+
+        </div>
+
+        <!-- ✅ RESCHEDULE FORM (inline) -->
+        <div class="reschedule-form" *ngIf="showRescheduleForm && selectedAppointmentId === appointment.id">
+
+          <form [formGroup]="rescheduleForm">
+            <label class="form-label">Select new date & time</label>
+            <div class="reschedule-row">
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                <input type="datetime-local" class="form-control" [min]="minDateTime" formControlName="time" />
+              </div>
+
+              <div class="reschedule-btns">
+                <button class="btn btn-save" type="button" (click)="submitReschedule()">
+                  <i class="fas fa-save me-1"></i>Save
+                </button>
+                <button class="btn btn-cancel-form" type="button" (click)="cancelReschedule()">
+                  <i class="fas fa-times me-1"></i>Cancel
+                </button>
+              </div>
+            </div>
+
+            <small class="error-text"
+              *ngIf="rescheduleForm.controls['time'].touched && rescheduleForm.controls['time'].hasError('required')">
+              Time is required
+            </small>
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ✅ EMPTY STATE -->
+    <div class="empty-state" *ngIf="!appointmentList || appointmentList.length === 0">
+      <div class="empty-icon">📅</div>
+      <h3>No Appointments Found</h3>
+      <p>You haven't booked any appointments yet.</p>
+      <a routerLink="/schedule-appointment" class="btn btn-action-primary">
+        <i class="fas fa-plus me-1"></i>Book Appointment
+      </a>
+    </div>
+
+    <!-- ✅ RESPONSE MESSAGE -->
+    <div *ngIf="responseMessage" class="response-msg" [ngClass]="isSuccess ? 'msg-success' : 'msg-error'">
+      {{ responseMessage }}
+    </div>
+
+    <!-- ✅ PAYMENT MODAL -->
+    <div class="payment-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+      <div class="payment-modal" (click)="$event.stopPropagation()">
+
+        <div class="payment-header">
+          <h4><i class="fas fa-credit-card me-2"></i>Payment</h4>
+          <button class="close-btn" (click)="closePaymentModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="payment-body">
+
+          <div class="payment-info">
+            <div class="pay-row">
+              <span>Doctor</span>
+              <strong>{{ selectedPaymentAppointment?.doctor?.username }}</strong>
+            </div>
+            <div class="pay-row">
+              <span>Specialty</span>
+              <strong>{{ selectedPaymentAppointment?.doctor?.specialty || 'General' }}</strong>
+            </div>
+            <div class="pay-row">
+              <span>Appointment</span>
+              <strong>{{ selectedPaymentAppointment?.appointmentTime | date:'dd MMM yyyy, hh:mm a' }}</strong>
+            </div>
+            <div class="pay-divider"></div>
+            <div class="pay-row total-row">
+              <span>Total Amount</span>
+              <strong class="total-amount">₹{{ selectedPaymentAppointment?.doctor?.fees || getDoctorFees(selectedPaymentAppointment?.doctor?.specialty) }}</strong>
+            </div>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="payment-options">
+            <h5>Select Payment Method</h5>
+
+            <div class="pay-option" [class.selected]="selectedPayMethod === 'card'" (click)="selectedPayMethod = 'card'">
+              <i class="fas fa-credit-card"></i>
+              <span>Credit / Debit Card</span>
+              <div class="radio-dot" *ngIf="selectedPayMethod === 'card'"></div>
+            </div>
+
+            <div class="pay-option" [class.selected]="selectedPayMethod === 'upi'" (click)="selectedPayMethod = 'upi'">
+              <i class="fas fa-mobile-alt"></i>
+              <span>UPI Payment</span>
+              <div class="radio-dot" *ngIf="selectedPayMethod === 'upi'"></div>
+            </div>
+
+            <div class="pay-option" [class.selected]="selectedPayMethod === 'netbanking'" (click)="selectedPayMethod = 'netbanking'">
+              <i class="fas fa-university"></i>
+              <span>Net Banking</span>
+              <div class="radio-dot" *ngIf="selectedPayMethod === 'netbanking'"></div>
+            </div>
+          </div>
+
+          <button class="btn btn-confirm-pay w-100" (click)="confirmPayment()" [disabled]="processingPayment">
+            <i class="fas fa-lock me-1"></i>
+            {{ processingPayment ? 'Processing...' : 'Pay ₹' + (selectedPaymentAppointment?.doctor?.fees || getDoctorFees(selectedPaymentAppointment?.doctor?.specialty)) }}
+          </button>
+
+          <p class="pay-note">
+            <i class="fas fa-shield-alt me-1"></i>
+            Secure payment · Razorpay integration coming soon
+          </p>
+
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <div *ngIf="responseMessage"
-       class="alert mt-3"
-       [ngClass]="isSuccess ? 'alert-success' : 'alert-danger'">
-    {{ responseMessage }}
-  </div>
-
 </div>

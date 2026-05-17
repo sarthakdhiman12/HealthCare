@@ -1,7 +1,39 @@
 <div class="dashboard-wrapper">
 
-  <!-- BODY -->
+  <!-- ✅ BACKGROUND ANIMATIONS -->
+  <div class="dash-bg-animations">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="bg-circle c4"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="particle p7"></div>
+    <div class="particle p8"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- ✅ DASHBOARD CONTENT -->
   <div class="dashboard-body">
+
+    <!-- ================================================ -->
+    <!-- WELCOME HEADER -->
+    <!-- ================================================ -->
+    <div class="welcome-header">
+      <div class="welcome-left">
+        <h2>Welcome back, {{ userData?.username || 'User' }} 👋</h2>
+        <p>Here's what's happening in your <span class="highlight">{{ roleName }}</span> dashboard</p>
+      </div>
+      <div class="welcome-right">
+        <div class="date-badge">
+          <i class="fas fa-calendar-alt me-2"></i>{{ today | date:'fullDate' }}
+        </div>
+      </div>
+    </div>
 
     <!-- ================================================ -->
     <!-- USER INFORMATION CARD -->
@@ -9,91 +41,110 @@
     <div class="info-card" *ngIf="userData">
 
       <div class="info-card-header">
-        <h4>{{ roleName || userData.role || 'User' }} INFORMATION</h4>
+        <div class="header-left">
+          <i class="fas fa-user-circle me-2"></i>
+          <h4>{{ roleName || userData.role || 'User' }} INFORMATION</h4>
+        </div>
+        <div class="header-right">
+          <span class="status-dot"></span> Online
+        </div>
       </div>
 
       <div class="info-grid">
 
         <div class="info-item">
-          <span class="info-label">ID</span>
-          <span class="info-value">
-            {{ userData.id || userData.userId || 'Not Available' }}
-          </span>
+          <div class="info-icon"><i class="fas fa-hashtag"></i></div>
+          <div>
+            <span class="info-label">ID</span>
+            <span class="info-value">{{ userData.id || userData.userId || 'Not Available' }}</span>
+          </div>
         </div>
 
         <div class="info-item">
-          <span class="info-label">Username</span>
-          <span class="info-value">
-            {{ userData.username || 'Not Available' }}
-          </span>
+          <div class="info-icon"><i class="fas fa-user"></i></div>
+          <div>
+            <span class="info-label">Username</span>
+            <span class="info-value">{{ userData.username || 'Not Available' }}</span>
+          </div>
         </div>
 
         <div class="info-item">
-          <span class="info-label">Email</span>
-          <span class="info-value">
-            {{ userData.email || 'Not Available' }}
-          </span>
+          <div class="info-icon"><i class="fas fa-envelope"></i></div>
+          <div>
+            <span class="info-label">Email</span>
+            <span class="info-value">{{ userData.email || 'Not Available' }}</span>
+          </div>
         </div>
 
         <div class="info-item">
-          <span class="info-label">Role</span>
-          <span class="info-value role-badge">
-            {{ roleName || userData.role || 'Not Available' }}
-          </span>
+          <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <span class="info-label">Role</span>
+            <span class="info-value role-badge">{{ roleName || userData.role || 'Not Available' }}</span>
+          </div>
         </div>
 
       </div>
 
       <!-- ACTION BUTTONS -->
-      <div class="text-center mt-3">
-        <button class="btn btn-warning me-2" (click)="toggleEditForm()">
-          {{ showEditForm ? 'Cancel Edit' : 'Edit Profile' }}
+      <div class="card-actions">
+        <button class="btn btn-edit" (click)="toggleEditForm()">
+          <i class="fas fa-pen me-1"></i>{{ showEditForm ? 'Cancel Edit' : 'Edit Profile' }}
         </button>
 
-        <button class="btn btn-danger" (click)="deleteMyAccount()" [disabled]="deleting">
-          {{ deleting ? 'Deleting...' : 'Delete My Account' }}
+        <button class="btn btn-delete" (click)="deleteMyAccount()" [disabled]="deleting">
+          <i class="fas fa-trash-alt me-1"></i>{{ deleting ? 'Deleting...' : 'Delete My Account' }}
         </button>
       </div>
 
     </div>
 
     <!-- ================================================ -->
-    <!-- ✅ UPDATE PROFILE SECTION (SEPARATE CARD) -->
+    <!-- ✅ UPDATE PROFILE SECTION -->
     <!-- ================================================ -->
 
     <!-- ✅ PATIENT UPDATE FORM -->
-    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'PATIENT'">
+    <div class="edit-card" *ngIf="showEditForm && roleName === 'PATIENT'">
 
-      <div class="info-card-header">
-        <h4>✏️ Update Patient Profile</h4>
+      <div class="edit-card-header">
+        <i class="fas fa-user-edit me-2"></i>Update Patient Profile
       </div>
 
-      <div class="p-3">
+      <div class="edit-card-body">
         <div class="row">
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Username</label>
-            <input type="text" class="form-control" [(ngModel)]="patientForm.username" placeholder="Enter username" />
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="text" class="form-control" [(ngModel)]="patientForm.username" placeholder="Enter username" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="patientForm.email" placeholder="Enter email" />
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" [(ngModel)]="patientForm.email" placeholder="Enter email" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">New Password</label>
-            <input type="password" class="form-control" [(ngModel)]="patientForm.password" placeholder="Leave blank to keep current" />
+            <label class="form-label">New Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" [(ngModel)]="patientForm.password" placeholder="Leave blank to keep current" />
+            </div>
           </div>
 
         </div>
 
-        <div class="text-center mt-2">
-          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
-            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+        <div class="edit-actions">
+          <button class="btn btn-save" (click)="updateMyAccount()" [disabled]="updating">
+            <i class="fas fa-save me-1"></i>{{ updating ? 'Updating...' : 'Save Changes' }}
           </button>
-          <button class="btn btn-secondary" (click)="toggleEditForm()">
-            Cancel
+          <button class="btn btn-cancel" (click)="toggleEditForm()">
+            <i class="fas fa-times me-1"></i>Cancel
           </button>
         </div>
       </div>
@@ -101,38 +152,47 @@
     </div>
 
     <!-- ✅ DOCTOR UPDATE FORM -->
-    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'DOCTOR'">
+    <div class="edit-card" *ngIf="showEditForm && roleName === 'DOCTOR'">
 
-      <div class="info-card-header">
-        <h4>✏️ Update Doctor Profile</h4>
+      <div class="edit-card-header">
+        <i class="fas fa-user-md me-2"></i>Update Doctor Profile
       </div>
 
-      <div class="p-3">
+      <div class="edit-card-body">
         <div class="row">
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Username</label>
-            <input type="text" class="form-control" [(ngModel)]="doctorForm.username" placeholder="Enter username" />
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="text" class="form-control" [(ngModel)]="doctorForm.username" placeholder="Enter username" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="doctorForm.email" placeholder="Enter email" />
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" [(ngModel)]="doctorForm.email" placeholder="Enter email" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">New Password</label>
-            <input type="password" class="form-control" [(ngModel)]="doctorForm.password" placeholder="Leave blank to keep current" />
+            <label class="form-label">New Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" [(ngModel)]="doctorForm.password" placeholder="Leave blank to keep current" />
+            </div>
           </div>
 
         </div>
 
-        <div class="text-center mt-2">
-          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
-            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+        <div class="edit-actions">
+          <button class="btn btn-save" (click)="updateMyAccount()" [disabled]="updating">
+            <i class="fas fa-save me-1"></i>{{ updating ? 'Updating...' : 'Save Changes' }}
           </button>
-          <button class="btn btn-secondary" (click)="toggleEditForm()">
-            Cancel
+          <button class="btn btn-cancel" (click)="toggleEditForm()">
+            <i class="fas fa-times me-1"></i>Cancel
           </button>
         </div>
       </div>
@@ -140,38 +200,47 @@
     </div>
 
     <!-- ✅ RECEPTIONIST UPDATE FORM -->
-    <div class="info-card mt-4" *ngIf="showEditForm && roleName === 'RECEPTIONIST'">
+    <div class="edit-card" *ngIf="showEditForm && roleName === 'RECEPTIONIST'">
 
-      <div class="info-card-header">
-        <h4>✏️ Update Receptionist Profile</h4>
+      <div class="edit-card-header">
+        <i class="fas fa-concierge-bell me-2"></i>Update Receptionist Profile
       </div>
 
-      <div class="p-3">
+      <div class="edit-card-body">
         <div class="row">
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Username</label>
-            <input type="text" class="form-control" [(ngModel)]="receptionistForm.username" placeholder="Enter username" />
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="text" class="form-control" [(ngModel)]="receptionistForm.username" placeholder="Enter username" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Email</label>
-            <input type="email" class="form-control" [(ngModel)]="receptionistForm.email" placeholder="Enter email" />
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" [(ngModel)]="receptionistForm.email" placeholder="Enter email" />
+            </div>
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">New Password</label>
-            <input type="password" class="form-control" [(ngModel)]="receptionistForm.password" placeholder="Leave blank to keep current" />
+            <label class="form-label">New Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" [(ngModel)]="receptionistForm.password" placeholder="Leave blank to keep current" />
+            </div>
           </div>
 
         </div>
 
-        <div class="text-center mt-2">
-          <button class="btn btn-success me-2" (click)="updateMyAccount()" [disabled]="updating">
-            {{ updating ? 'Updating...' : '💾 Save Changes' }}
+        <div class="edit-actions">
+          <button class="btn btn-save" (click)="updateMyAccount()" [disabled]="updating">
+            <i class="fas fa-save me-1"></i>{{ updating ? 'Updating...' : 'Save Changes' }}
           </button>
-          <button class="btn btn-secondary" (click)="toggleEditForm()">
-            Cancel
+          <button class="btn btn-cancel" (click)="toggleEditForm()">
+            <i class="fas fa-times me-1"></i>Cancel
           </button>
         </div>
       </div>
@@ -181,31 +250,57 @@
     <!-- ================================================ -->
     <!-- USER DATA NOT FOUND -->
     <!-- ================================================ -->
-    <div class="alert alert-warning text-center" *ngIf="!userData && roleName">
-      User data not found. Please login again.
+    <div class="alert-card" *ngIf="!userData && roleName">
+      <i class="fas fa-exclamation-triangle me-2"></i>User data not found. Please login again.
     </div>
 
     <!-- ================================================ -->
     <!-- PATIENT DASHBOARD -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'PATIENT'">
-      <h3>Patient Dashboard</h3>
-      <p>Welcome {{ userData?.username || 'Patient' }} to your patient dashboard.</p>
+      <div class="section-title">
+        <h3><i class="fas fa-heartbeat me-2"></i>Patient Dashboard</h3>
+        <p>Welcome {{ userData?.username || 'Patient' }} to your patient dashboard.</p>
+      </div>
 
       <div class="action-grid">
-        <div class="action-card primary-card">
+
+        <div class="action-card blue-glow">
           <div class="action-icon">📅</div>
           <h4>My Appointments</h4>
           <p>View your scheduled appointments.</p>
-          <a routerLink="/patient-appointment" class="btn btn-primary">View Appointments</a>
+          <a routerLink="/patient-appointment" class="btn btn-action-primary">
+            <i class="fas fa-arrow-right me-1"></i>View Appointments
+          </a>
         </div>
 
-        <div class="action-card success-card">
+        <div class="action-card green-glow">
           <div class="action-icon">➕</div>
           <h4>Schedule Appointment</h4>
           <p>Book a new appointment with a doctor.</p>
-          <a routerLink="/schedule-appointment" class="btn btn-success">Schedule Appointment</a>
+          <a routerLink="/schedule-appointment" class="btn btn-action-success">
+            <i class="fas fa-plus me-1"></i>Schedule Appointment
+          </a>
         </div>
+
+        <div class="action-card purple-glow">
+          <div class="action-icon">📋</div>
+          <h4>Medical Records</h4>
+          <p>View your medical history & reports.</p>
+          <button class="btn btn-action-purple" disabled>
+            <i class="fas fa-lock me-1"></i>Coming Soon
+          </button>
+        </div>
+
+        <div class="action-card orange-glow">
+          <div class="action-icon">🔔</div>
+          <h4>Notifications</h4>
+          <p>Check your appointment reminders.</p>
+          <button class="btn btn-action-orange" disabled>
+            <i class="fas fa-bell me-1"></i>Coming Soon
+          </button>
+        </div>
+
       </div>
     </div>
 
@@ -213,23 +308,49 @@
     <!-- DOCTOR DASHBOARD -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'DOCTOR'">
-      <h3>Doctor Dashboard</h3>
-      <p>Welcome Dr. {{ userData?.username || 'Doctor' }} to your doctor dashboard.</p>
+      <div class="section-title">
+        <h3><i class="fas fa-stethoscope me-2"></i>Doctor Dashboard</h3>
+        <p>Welcome Dr. {{ userData?.username || 'Doctor' }} to your doctor dashboard.</p>
+      </div>
 
       <div class="action-grid">
-        <div class="action-card primary-card">
+
+        <div class="action-card blue-glow">
           <div class="action-icon">🩺</div>
           <h4>Doctor Appointments</h4>
           <p>View appointments assigned to you.</p>
-          <a routerLink="/doctor-appointment" class="btn btn-primary">View Appointments</a>
+          <a routerLink="/doctor-appointment" class="btn btn-action-primary">
+            <i class="fas fa-arrow-right me-1"></i>View Appointments
+          </a>
         </div>
 
-        <div class="action-card success-card">
+        <div class="action-card green-glow">
           <div class="action-icon">✅</div>
           <h4>Doctor Availability</h4>
           <p>Update your availability status.</p>
-          <a routerLink="/doctor-availability" class="btn btn-success">Update Availability</a>
+          <a routerLink="/doctor-availability" class="btn btn-action-success">
+            <i class="fas fa-clock me-1"></i>Update Availability
+          </a>
         </div>
+
+        <div class="action-card purple-glow">
+          <div class="action-icon">📊</div>
+          <h4>Patient History</h4>
+          <p>View patient records & reports.</p>
+          <button class="btn btn-action-purple" disabled>
+            <i class="fas fa-lock me-1"></i>Coming Soon
+          </button>
+        </div>
+
+        <div class="action-card orange-glow">
+          <div class="action-icon">💬</div>
+          <h4>Messages</h4>
+          <p>Chat with patients & staff.</p>
+          <button class="btn btn-action-orange" disabled>
+            <i class="fas fa-lock me-1"></i>Coming Soon
+          </button>
+        </div>
+
       </div>
     </div>
 
@@ -237,39 +358,67 @@
     <!-- RECEPTIONIST DASHBOARD -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'RECEPTIONIST'">
-      <h3>Receptionist Dashboard</h3>
-      <p>Welcome {{ userData?.username || 'Receptionist' }} to your receptionist dashboard.</p>
+      <div class="section-title">
+        <h3><i class="fas fa-concierge-bell me-2"></i>Receptionist Dashboard</h3>
+        <p>Welcome {{ userData?.username || 'Receptionist' }} to your receptionist dashboard.</p>
+      </div>
 
       <div class="action-grid">
-        <div class="action-card primary-card">
+
+        <div class="action-card blue-glow">
           <div class="action-icon">📋</div>
           <h4>All Appointments</h4>
           <p>View and manage all appointments.</p>
-          <a routerLink="/receptionist-appointments" class="btn btn-primary">View All Appointments</a>
+          <a routerLink="/receptionist-appointments" class="btn btn-action-primary">
+            <i class="fas fa-list me-1"></i>View All Appointments
+          </a>
         </div>
 
-        <div class="action-card success-card">
+        <div class="action-card green-glow">
           <div class="action-icon">📝</div>
           <h4>Schedule Appointment</h4>
           <p>Schedule appointment for patients.</p>
-          <a routerLink="/receptionist-schedule-appointments" class="btn btn-success">Schedule Appointment</a>
+          <a routerLink="/receptionist-schedule-appointments" class="btn btn-action-success">
+            <i class="fas fa-calendar-plus me-1"></i>Schedule Appointment
+          </a>
         </div>
+
+        <div class="action-card purple-glow">
+          <div class="action-icon">👥</div>
+          <h4>Manage Patients</h4>
+          <p>View all registered patients.</p>
+          <button class="btn btn-action-purple" disabled>
+            <i class="fas fa-lock me-1"></i>Coming Soon
+          </button>
+        </div>
+
+        <div class="action-card orange-glow">
+          <div class="action-icon">📞</div>
+          <h4>Contact Doctors</h4>
+          <p>Quick contact with doctors.</p>
+          <button class="btn btn-action-orange" disabled>
+            <i class="fas fa-lock me-1"></i>Coming Soon
+          </button>
+        </div>
+
       </div>
     </div>
 
     <!-- NO ROLE FOUND -->
     <div class="empty-state" *ngIf="!roleName">
+      <div class="empty-icon">⚠️</div>
       <h3>No Role Found</h3>
       <p>Please login again to access the dashboard.</p>
-      <a routerLink="/login" class="btn btn-danger">Go to Login</a>
+      <a routerLink="/login" class="btn btn-action-primary">Go to Login</a>
     </div>
 
     <!-- INVALID ROLE -->
     <div class="empty-state"
       *ngIf="roleName && roleName !== 'PATIENT' && roleName !== 'DOCTOR' && roleName !== 'RECEPTIONIST'">
+      <div class="empty-icon">❌</div>
       <h3>Invalid Role</h3>
       <p>Current role: <strong>{{ roleName }}</strong></p>
-      <a routerLink="/login" class="btn btn-danger">Go to Login</a>
+      <a routerLink="/login" class="btn btn-action-primary">Go to Login</a>
     </div>
 
   </div>

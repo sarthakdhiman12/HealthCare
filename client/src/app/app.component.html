@@ -1,86 +1,126 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
-  <a class="navbar-brand fw-bold" routerLink="/">
-    HAM System
-  </a>
+<nav class="navbar navbar-expand-lg navbar-dark ham-navbar px-3 fixed-top">
+  <div class="container-fluid">
 
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#navbarNav"
-    aria-controls="navbarNav"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold brand-logo" routerLink="/dashboard">
+      <i class="fas fa-heartbeat me-2 brand-icon"></i>HAM System
+    </a>
 
-  <div class="collapse navbar-collapse" id="navbarNav">
+    <!-- Mobile Toggle -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <div class="collapse navbar-collapse" id="navbarNav">
 
-      <!-- ✅ DASHBOARD (for all logged-in users) -->
-      
+      <!-- LEFT MENU -->
+      <ul class="navbar-nav me-auto">
 
-      <!-- PATIENT MENU -->
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
-        <a class="nav-link" routerLink="/patient-appointment">
-          Patient Appointment
-        </a>
-      </li>
+        <!-- ✅ PUBLIC LINKS — HIDDEN AFTER LOGIN -->
+        <li class="nav-item" *ngIf="!isLoggedin">
+          <a class="nav-link" routerLink="/login" fragment="hero" routerLinkActive="active">
+            <i class="fas fa-home me-1"></i>Home
+          </a>
+        </li>
 
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
-        <a class="nav-link" routerLink="/schedule-appointment">
-          Schedule Appointment
-        </a>
-      </li>
+        <li class="nav-item" *ngIf="!isLoggedin">
+          <a class="nav-link" routerLink="/login" fragment="about-us" routerLinkActive="active">
+            <i class="fas fa-info-circle me-1"></i>About Us
+          </a>
+        </li>
 
-      <!-- DOCTOR MENU -->
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
-        <a class="nav-link" routerLink="/doctor-appointment">
-          Doctor Appointment
-        </a>
-      </li>
+        <li class="nav-item" *ngIf="!isLoggedin">
+          <a class="nav-link" routerLink="/login" fragment="services" routerLinkActive="active">
+            <i class="fas fa-briefcase-medical me-1"></i>Services
+          </a>
+        </li>
 
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
-        <a class="nav-link" routerLink="/doctor-availability">
-          Doctor Availability
-        </a>
-      </li>
+        <li class="nav-item" *ngIf="!isLoggedin">
+          <a class="nav-link" routerLink="/login" fragment="contact" routerLinkActive="active">
+            <i class="fas fa-envelope me-1"></i>Contact
+          </a>
+        </li>
 
-      <!-- RECEPTIONIST MENU -->
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
-        <a class="nav-link" routerLink="/receptionist-appointments">
-          All Appointments
-        </a>
-      </li>
+        <!-- ✅ PATIENT (visible ONLY after login) -->
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
+          <a class="nav-link" routerLink="/patient-appointment" routerLinkActive="active">
+            <i class="fas fa-calendar-check me-1"></i>My Appointments
+          </a>
+        </li>
 
-      <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
-        <a class="nav-link" routerLink="/receptionist-schedule-appointments">
-          Schedule Appointments
-        </a>
-      </li>
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
+          <a class="nav-link" routerLink="/schedule-appointment" routerLinkActive="active">
+            <i class="fas fa-calendar-plus me-1"></i>Book Appointment
+          </a>
+        </li>
 
-    </ul>
+        <!-- ✅ DOCTOR (visible ONLY after login) -->
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
+          <a class="nav-link" routerLink="/doctor-appointment" routerLinkActive="active">
+            <i class="fas fa-stethoscope me-1"></i>My Appointments
+          </a>
+        </li>
 
-    <!-- LOGIN / LOGOUT MENU -->
-    <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'DOCTOR'">
+          <a class="nav-link" routerLink="/doctor-availability" routerLinkActive="active">
+            <i class="fas fa-clock me-1"></i>Availability
+          </a>
+        </li>
 
-      <li class="nav-item" *ngIf="!isLoggedin">
-        <a class="nav-link" routerLink="/login">
-          Login
-        </a>
-      </li>
+        <!-- ✅ RECEPTIONIST (visible ONLY after login) -->
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
+          <a class="nav-link" routerLink="/receptionist-appointments" routerLinkActive="active">
+            <i class="fas fa-list-alt me-1"></i>All Appointments
+          </a>
+        </li>
 
-      <li class="nav-item" *ngIf="isLoggedin">
-        <button class="btn btn-outline-light btn-sm" (click)="logout()">
-          Logout
-        </button>
-      </li>
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'RECEPTIONIST'">
+          <a class="nav-link" routerLink="/receptionist-schedule-appointments" routerLinkActive="active">
+            <i class="fas fa-calendar-plus me-1"></i>Schedule
+          </a>
+        </li>
 
-    </ul>
+      </ul>
 
+      <!-- RIGHT SIDE -->
+      <ul class="navbar-nav ms-auto align-items-center">
+
+        <!-- ✅ LOGIN — shown only when NOT logged in -->
+        <li class="nav-item" *ngIf="!isLoggedin">
+          <a class="nav-link login-link" routerLink="/login">
+            <i class="fas fa-sign-in-alt me-1"></i>Login
+          </a>
+        </li>
+
+        <!-- ✅ ROLE BADGE — shown only when logged in -->
+        <li class="nav-item" *ngIf="isLoggedin">
+          <span class="badge role-badge me-2">
+            <i class="fas fa-user me-1"></i>{{ roleName }}
+          </span>
+        </li>
+
+        <!-- ✅ LOGOUT — shown only when logged in -->
+        <li class="nav-item" *ngIf="isLoggedin">
+          <button
+            class="btn btn-outline-danger btn-sm logout-btn"
+            (click)="logout()"
+          >
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+          </button>
+        </li>
+
+      </ul>
+
+    </div>
   </div>
 </nav>
+
+<!-- Spacer for fixed navbar -->
+<div style="height: 65px;"></div>
 
 <router-outlet></router-outlet>

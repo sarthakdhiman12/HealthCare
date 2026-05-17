@@ -1,105 +1,181 @@
-<div class="container mt-4"> <h2 class="mb-4">Schedule Appointment</h2>
+<div class="page-wrapper">
 
-  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-
-    <!-- Patient List -->
-    <div class="form-group mb-3">
-      <label for="patientId">Select Patient</label>
-
-      <select
-        id="patientId"
-        class="form-control"
-        formControlName="patientId">
-
-        <option value="">-- Select Patient --</option>
-
-        <option
-          *ngFor="let patient of patientList"
-          [value]="patient.patientId || patient.id">
-          {{ patient.patientId || patient.id }} -
-          {{ patient.patientName || patient.name || patient.fullName || patient.username }}
-        </option>
-
-      </select>
-
-      <div
-        class="text-danger mt-1"
-        *ngIf="itemForm.controls['patientId'].touched && itemForm.controls['patientId'].hasError('required')">
-        Please select patient
-      </div>
-    </div>
-
-    <!-- Doctor List -->
-    <div class="form-group mb-3">
-      <label for="doctorId">Select Doctor</label>
-
-      <select
-        id="doctorId"
-        class="form-control"
-        formControlName="doctorId">
-
-        <option value="">-- Select Doctor --</option>
-
-        <option
-          *ngFor="let doctor of doctorList"
-          [value]="doctor.doctorId || doctor.id">
-          {{ doctor.doctorId || doctor.id }} -
-          {{ doctor.doctorName || doctor.name || doctor.fullName || doctor.username }}--{{doctor.specialty}}
-        </option>
-
-      </select>
-
-      <div
-        class="text-danger mt-1"
-        *ngIf="itemForm.controls['doctorId'].touched && itemForm.controls['doctorId'].hasError('required')">
-        Please select doctor
-      </div>
-    </div>
-
-    <!-- Appointment Time -->
-    <div class="form-group mb-3">
-      <label for="time">Appointment Time</label>
-
-      <input
-        type="datetime-local"
-        id="time"
-        class="form-control"
-        formControlName="time">
-
-      <div
-        class="text-danger mt-1"
-        *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('required')">
-        Appointment time is required
-      </div>
-
-      <div
-        class="text-danger mt-1"
-        *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('pastTime')">
-        Appointment time should be greater than current time
-      </div>
-    </div>
-
-    <!-- Submit Button -->
-    <button
-      type="submit"
-      class="btn btn-primary">
-      Schedule Appointment
-    </button>
-
-  </form>
-
-  <!-- Success Message -->
-  <div
-    class="alert alert-success mt-3"
-    *ngIf="responseMessage && isAdded">
-    {{ responseMessage }}
+  <!-- BG ANIMATIONS -->
+  <div class="page-bg">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="grid-overlay"></div>
   </div>
 
-  <!-- Error Message -->
-  <div
-    class="alert alert-danger mt-3"
-    *ngIf="responseMessage && !isAdded">
-    {{ responseMessage }}
-  </div>
+  <div class="page-content">
 
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <h2><i class="fas fa-calendar-plus me-2"></i>Schedule Appointment</h2>
+        <p>Book appointment for patients — select patient, doctor, time & payment</p>
+      </div>
+    </div>
+
+    <!-- ✅ FORM CARD -->
+    <div class="form-card">
+
+      <div class="form-card-header">
+        <i class="fas fa-concierge-bell me-2"></i>New Appointment
+      </div>
+
+      <div class="form-card-body">
+
+        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+          <div class="row">
+
+            <!-- Select Patient -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-user me-1"></i>Select Patient</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <select class="form-select" formControlName="patientId">
+                    <option value="">-- Select Patient --</option>
+                    <option *ngFor="let patient of patientList" [value]="patient.patientId || patient.id">
+                      {{ patient.patientId || patient.id }} - {{ patient.patientName || patient.name || patient.fullName || patient.username }}
+                    </option>
+                  </select>
+                </div>
+                <small class="error-text"
+                  *ngIf="itemForm.controls['patientId'].touched && itemForm.controls['patientId'].hasError('required')">
+                  Please select patient
+                </small>
+              </div>
+            </div>
+
+            <!-- Select Doctor -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-user-md me-1"></i>Select Doctor</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
+                  <select class="form-select" formControlName="doctorId" (change)="onDoctorChange()">
+                    <option value="">-- Select Doctor --</option>
+                    <option *ngFor="let doctor of doctorList" [value]="doctor.doctorId || doctor.id">
+                      {{ doctor.doctorId || doctor.id }} - {{ doctor.doctorName || doctor.name || doctor.fullName || doctor.username }} — {{ doctor.specialty }}
+                    </option>
+                  </select>
+                </div>
+                <small class="error-text"
+                  *ngIf="itemForm.controls['doctorId'].touched && itemForm.controls['doctorId'].hasError('required')">
+                  Please select doctor
+                </small>
+              </div>
+            </div>
+
+            <!-- Appointment Time -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-clock me-1"></i>Appointment Time</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                  <input type="datetime-local" class="form-control" formControlName="time" />
+                </div>
+                <small class="error-text"
+                  *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('required')">
+                  Appointment time is required
+                </small>
+                <small class="error-text"
+                  *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('pastTime')">
+                  Time must be in the future
+                </small>
+              </div>
+            </div>
+
+            <!-- ✅ Payment Mode -->
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"><i class="fas fa-credit-card me-1"></i>Payment Mode</label>
+                <div class="payment-options">
+                  <div class="pay-option"
+                       [class.selected]="paymentMode === 'OFFLINE'"
+                       (click)="paymentMode = 'OFFLINE'">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Pay at Hospital (Offline)</span>
+                    <div class="radio-dot" *ngIf="paymentMode === 'OFFLINE'"></div>
+                  </div>
+                  <div class="pay-option"
+                       [class.selected]="paymentMode === 'ONLINE'"
+                       (click)="paymentMode = 'ONLINE'">
+                    <i class="fas fa-laptop"></i>
+                    <span>Pay Online</span>
+                    <div class="radio-dot" *ngIf="paymentMode === 'ONLINE'"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ✅ DOCTOR INFO CARD (shows when doctor selected) -->
+          <div class="selected-doctor-card" *ngIf="selectedDoctor">
+            <div class="sel-doc-left">
+              <div class="sel-doc-avatar">
+                <i class="fas fa-user-md"></i>
+              </div>
+              <div>
+                <h5>Dr. {{ selectedDoctor.username || selectedDoctor.name || selectedDoctor.doctorName }}</h5>
+                <p><i class="fas fa-stethoscope me-1"></i>{{ selectedDoctor.specialty || 'General' }}</p>
+              </div>
+            </div>
+            <div class="sel-doc-right">
+              <div class="fee-box">
+                <span class="fee-label">Consultation Fee</span>
+                <span class="fee-amount">₹{{ selectedDoctor.fees || getDoctorFees(selectedDoctor.specialty) }}</span>
+              </div>
+              <div class="pay-mode-badge" [ngClass]="paymentMode === 'ONLINE' ? 'badge-online' : 'badge-offline'">
+                <i [class]="paymentMode === 'ONLINE' ? 'fas fa-laptop' : 'fas fa-money-bill-wave'" class="me-1"></i>
+                {{ paymentMode === 'ONLINE' ? 'Online Payment' : 'Pay at Hospital' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-submit" [disabled]="submitting">
+            <i class="fas fa-check-circle me-1"></i>
+            {{ submitting ? 'Scheduling...' : 'Schedule Appointment' }}
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+    <!-- ✅ SUCCESS ANIMATION -->
+    <div class="success-overlay" *ngIf="showSuccess">
+      <div class="success-modal">
+        <div class="success-checkmark">
+          <div class="check-icon">
+            <span class="icon-line line-tip"></span>
+            <span class="icon-line line-long"></span>
+            <div class="icon-circle"></div>
+          </div>
+        </div>
+        <h3>Appointment Booked!</h3>
+        <p>Payment: <strong>{{ paymentMode }}</strong></p>
+        <p class="redirect-text">Redirecting to dashboard...</p>
+      </div>
+    </div>
+
+    <!-- Response Messages -->
+    <div *ngIf="responseMessage && !showSuccess" class="response-msg"
+      [ngClass]="isAdded ? 'msg-success' : 'msg-error'">
+      {{ responseMessage }}
+    </div>
+
+  </div>
 </div>

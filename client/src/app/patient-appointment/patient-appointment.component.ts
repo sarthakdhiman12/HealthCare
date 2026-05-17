@@ -13,15 +13,20 @@ export class PatientAppointmentComponent implements OnInit {
 
   appointmentList: any[] = [];
 
-  // reschedule
+  // Reschedule
   showRescheduleForm: boolean = false;
   selectedAppointmentId: number | null = null;
   rescheduleForm!: FormGroup;
 
   responseMessage: string = '';
   isSuccess: boolean = false;
-
   minDateTime: string = '';
+
+  // ✅ Payment
+  showPaymentModal: boolean = false;
+  selectedPaymentAppointment: any = null;
+  selectedPayMethod: string = 'card';
+  processingPayment: boolean = false;
 
   constructor(
     public httpService: HttpService,
@@ -38,6 +43,24 @@ export class PatientAppointmentComponent implements OnInit {
     this.getAppointments();
   }
 
+  // ✅ Doctor fees based on specialty
+  getDoctorFees(specialty: string): number {
+    const feesMap: any = {
+      'cardiology': 1500,
+      'cardio': 1500,
+      'cardiac': 1500,
+      'neurology': 2000,
+      'orthopedics': 1200,
+      'dermatology': 800,
+      'pediatrics': 700,
+      'general': 500,
+      'webing': 600,
+      'ent': 900
+    };
+    const key = (specialty || 'general').toLowerCase();
+    return feesMap[key] || 500;
+  }
+
   getAppointments() {
     const userIdString = localStorage.getItem('userId');
     const userId = userIdString ? parseInt(userIdString, 10) : null;
@@ -52,7 +75,6 @@ export class PatientAppointmentComponent implements OnInit {
       next: (data: any) => {
         const list = data?.data || data || [];
 
-        // ✅ FIX: Parse appointmentTime as LOCAL Date to avoid 6 hrs gap
         this.appointmentList = list.map((a: any) => {
           const rawTime =
             a.time ||
@@ -61,10 +83,15 @@ export class PatientAppointmentComponent implements OnInit {
             a.dateTime ||
             null;
 
+          // ✅ Check payment status from localStorage
+          const paymentKey = 'payment_' + a.id;
+          const savedPayment = localStorage.getItem(paymentKey);
+
           return {
             ...a,
-            appointmentTime: this.parseBackendDateTimeToLocal(rawTime), // Date object (safe)
-            rawAppointmentTime: rawTime
+            appointmentTime: this.parseBackendDateTimeToLocal(rawTime),
+            rawAppointmentTime: rawTime,
+            paymentStatus: savedPayment || a.paymentStatus || 'NOT PAID'
           };
         });
 
@@ -77,13 +104,52 @@ export class PatientAppointmentComponent implements OnInit {
     });
   }
 
-  // open reschedule form for a row
+  // ✅ PAYMENT
+  payNow(appointment: any): void {
+    this.selectedPaymentAppointment = appointment;
+    this.selectedPayMethod = 'card';
+    this.showPaymentModal = true;
+  }
+
+  closePaymentModal(): void {
+    this.showPaymentModal = false;
+    this.selectedPaymentAppointment = null;
+    this.processingPayment = false;
+  }
+
+  confirmPayment(): void {
+    this.processingPayment = true;
+
+    // ✅ Simulate payment processing (replace with Razorpay later)
+    setTimeout(() => {
+      const appointment = this.selectedPaymentAppointment;
+
+      if (appointment) {
+        appointment.paymentStatus = 'PAID';
+
+        // ✅ Save to localStorage (persist across refresh)
+        localStorage.setItem('payment_' + appointment.id, 'PAID');
+      }
+
+      this.processingPayment = false;
+      this.showPaymentModal = false;
+
+      this.responseMessage = 'Payment successful ✅';
+      this.isSuccess = true;
+
+      setTimeout(() => {
+        this.responseMessage = '';
+      }, 3000);
+
+    }, 2000); // 2 sec delay to simulate processing
+  }
+
+  // Reschedule
   openReschedule(appointment: any) {
     this.selectedAppointmentId = appointment.id;
     this.showRescheduleForm = true;
     this.responseMessage = '';
 
-    // ✅ current time already Date (because we parsed in getAppointments)
     const current: Date = appointment?.appointmentTime instanceof Date
       ? appointment.appointmentTime
       : new Date();
@@ -114,7 +180,6 @@ export class PatientAppointmentComponent implements OnInit {
       return;
     }
 
-    // ✅ API needs "yyyy-MM-dd HH:mm:ss" format (project spec) [1](https://ltimindtree-my.sharepoint.com/personal/sumit_10854769_ltimindtree_com/Documents/Microsoft%20Teams%20Chat%20Files/project.pdf?web=1)
     const payload = {
       time: this.datePipe.transform(selected, 'yyyy-MM-dd HH:mm:ss')
     };
@@ -123,13 +188,9 @@ export class PatientAppointmentComponent implements OnInit {
       next: () => {
         this.responseMessage = 'Appointment rescheduled successfully ✅';
         this.isSuccess = true;
-
         this.cancelReschedule();
-        this.getAppointments(); // refresh list
-        setTimeout(()=>{
-          this.responseMessage = '';
-          
-        }, 2000)
+        this.getAppointments();
+        setTimeout(() => { this.responseMessage = ''; }, 2000);
       },
       error: (err: any) => {
         console.error(err);
@@ -139,34 +200,23 @@ export class PatientAppointmentComponent implements OnInit {
     });
   }
 
-  // datetime-local helper
   private formatDateForInput(date: Date): string {
     const pad = (n: number) => n.toString().padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
-  /**
-   * ✅ MAIN FIX (NO TIMEZONE SHIFT)
-   * Backend sends "yyyy-MM-dd HH:mm:ss" without timezone.
-   * new Date(string) shifts time (UTC -> IST), so manual parse as LOCAL time.
-   */
   private parseBackendDateTimeToLocal(raw: any): Date | null {
     if (!raw) return null;
-
-    // handle ISO too: "2026-05-17T10:30:00" -> "2026-05-17 10:30:00"
     const str = String(raw).replace('T', ' ').split('.')[0];
-
-    // expected: yyyy-MM-dd HH:mm:ss OR yyyy-MM-dd HH:mm
-    const parts = str.split(/[- :]/); // [yyyy, MM, dd, HH, mm, ss]
+    const parts = str.split(/[- :]/);
 
     if (parts.length < 5) {
-      // fallback attempt
       const d = new Date(raw);
       return isNaN(d.getTime()) ? null : d;
     }
 
     const year = Number(parts[0]);
-    const month = Number(parts[1]) - 1; // 0-based
+    const month = Number(parts[1]) - 1;
     const day = Number(parts[2]);
     const hour = Number(parts[3]);
     const minute = Number(parts[4]);

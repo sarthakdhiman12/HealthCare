@@ -14,15 +14,11 @@ export class ReceptionistAppointmentsComponent implements OnInit {
 
   appointmentList: any[] = [];
 
-  // ✅ UI state
   isLoading: boolean = false;
-
-  // ✅ messages
   emptyMessage: string = '';
   responseMessage: string = '';
   isSuccess: boolean = false;
 
-  // ✅ Reschedule form
   itemForm!: FormGroup;
   isAdded: boolean = false;
 
@@ -41,15 +37,21 @@ export class ReceptionistAppointmentsComponent implements OnInit {
     this.getAppointmentsWithNames();
   }
 
-  // ✅ Load appointments + map patient/doctor names
+  // ✅ Payment helpers
+  getPaymentStatus(appointmentId: any): string {
+    return localStorage.getItem('payment_' + appointmentId) || 'NOT PAID';
+  }
+
+  getPaymentMode(appointmentId: any): string {
+    const mode = localStorage.getItem('paymode_' + appointmentId);
+    if (mode === 'ONLINE') return '💻 Online';
+    if (mode === 'OFFLINE') return '🏥 At Hospital';
+    return '—';
+  }
+
   getAppointmentsWithNames(): void {
     this.isLoading = true;
-
-    // clear messages
     this.emptyMessage = '';
-    // NOTE: responseMessage reschedule result ke liye hota hai, isko yahan clear mat karo
-    // warna reschedule success message turant gayab ho sakta hai
-    // this.responseMessage = '';
 
     forkJoin({
       appointments: this.httpService.getAllAppointments(),
@@ -69,15 +71,13 @@ export class ReceptionistAppointmentsComponent implements OnInit {
             appointment.patientId ||
             appointment.patient?.patientId ||
             appointment.patient?.id ||
-            appointment.patient?.userId ||
-            '-';
+            appointment.patient?.userId || '-';
 
           const doctorId =
             appointment.doctorId ||
             appointment.doctor?.doctorId ||
             appointment.doctor?.id ||
-            appointment.doctor?.userId ||
-            '-';
+            appointment.doctor?.userId || '-';
 
           const patient = patients.find((p: any) =>
             p.patientId == patientId || p.id == patientId || p.userId == patientId
@@ -88,47 +88,26 @@ export class ReceptionistAppointmentsComponent implements OnInit {
           );
 
           const patientName =
-            patient?.patientName ||
-            patient?.name ||
-            patient?.fullName ||
-            patient?.userName ||
-            patient?.username ||
-            patient?.firstName ||
-            '-';
+            patient?.patientName || patient?.name || patient?.fullName ||
+            patient?.userName || patient?.username || patient?.firstName || '-';
 
           const doctorName =
-            doctor?.doctorName ||
-            doctor?.name ||
-            doctor?.fullName ||
-            doctor?.userName ||
-            doctor?.username ||
-            doctor?.firstName ||
-            '-';
+            doctor?.doctorName || doctor?.name || doctor?.fullName ||
+            doctor?.userName || doctor?.username || doctor?.firstName || '-';
 
-          // ✅ RAW time from backend
           const rawTime =
-            appointment.time ||
-            appointment.appointmentTime ||
-            appointment.appointmentDateTime ||
-            appointment.dateTime ||
-            null;
+            appointment.time || appointment.appointmentTime ||
+            appointment.appointmentDateTime || appointment.dateTime || null;
 
-          // ✅ FIX: parse as LOCAL datetime to avoid 5:30/6 hrs shift
           const parsedTime = this.parseBackendDateTimeToLocal(rawTime);
 
-          const status =
-            appointment.status ||
-            appointment.appointmentStatus ||
-            'Scheduled';
+          const status = appointment.status || appointment.appointmentStatus || 'Scheduled';
 
           return {
-            appointmentId,
-            patientId,
-            patientName,
-            doctorId,
-            doctorName,
-            appointmentTime: parsedTime,     // Date object
-            rawAppointmentTime: rawTime,     // optional
+            appointmentId, patientId, patientName,
+            doctorId, doctorName,
+            appointmentTime: parsedTime,
+            rawAppointmentTime: rawTime,
             status
           };
         });
@@ -139,7 +118,6 @@ export class ReceptionistAppointmentsComponent implements OnInit {
           this.emptyMessage = 'No appointments found';
         }
       },
-
       error: (err: any) => {
         console.error('Error loading appointments:', err);
         this.isLoading = false;
@@ -148,19 +126,16 @@ export class ReceptionistAppointmentsComponent implements OnInit {
     });
   }
 
-  // ✅ helper for row match (handles string/number)
   isCurrentRow(appointment: any): boolean {
     return Number(this.itemForm.value.id) === Number(appointment.appointmentId);
   }
 
-  // ✅ Click Reschedule button
   editAppointment(appointment: any): void {
     const id = appointment?.appointmentId;
     if (!id || id === '-') return;
 
     this.isAdded = true;
 
-    // prefill current time
     const current: Date = appointment?.appointmentTime instanceof Date
       ? appointment.appointmentTime
       : new Date();
@@ -176,7 +151,6 @@ export class ReceptionistAppointmentsComponent implements OnInit {
     this.itemForm.reset();
   }
 
-  // ✅ Save Reschedule
   onSubmit(): void {
     if (this.itemForm.invalid) {
       this.itemForm.markAllAsTouched();
@@ -193,7 +167,6 @@ export class ReceptionistAppointmentsComponent implements OnInit {
       return;
     }
 
-    // ✅ payload time format must be yyyy-MM-dd HH:mm:ss [1](https://ltimindtree-my.sharepoint.com/personal/sumit_10854769_ltimindtree_com/Documents/Microsoft%20Teams%20Chat%20Files/project.pdf?web=1)
     const payload = {
       time: this.datePipe.transform(selected, 'yyyy-MM-dd HH:mm:ss')
     };
@@ -202,59 +175,44 @@ export class ReceptionistAppointmentsComponent implements OnInit {
       next: () => {
         this.responseMessage = 'Appointment rescheduled successfully ✅';
         this.isSuccess = true;
-
         this.isAdded = false;
         this.itemForm.reset();
-
         this.getAppointmentsWithNames();
-
-        setTimeout(() => {
-          this.responseMessage = '';
-        }, 2000);
+        setTimeout(() => { this.responseMessage = ''; }, 2000);
       },
       error: (err: any) => {
         console.error('Reschedule error:', err);
         this.responseMessage = 'Reschedule failed ❌';
         this.isSuccess = false;
-
-        setTimeout(() => {
-          this.responseMessage = '';
-        }, 2000);
+        setTimeout(() => { this.responseMessage = ''; }, 2000);
       }
     });
   }
 
-  // ✅ table date display
   formatDateTime(dateTime: any): string {
     if (!dateTime) return '-';
-    return this.datePipe.transform(dateTime, 'dd-MM-yyyy hh:mm a') || '-';
+    return this.datePipe.transform(dateTime, 'dd MMM yyyy, hh:mm a') || '-';
   }
 
-  // ✅ Date -> datetime-local
   private formatDateForInput(date: Date): string {
     const pad = (n: number) => n.toString().padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
-  // ✅ MAIN FIX: parse backend datetime string as LOCAL (no timezone shift)
   private parseBackendDateTimeToLocal(raw: any): Date | null {
     if (!raw) return null;
-
     const str = String(raw).replace('T', ' ').split('.')[0];
-    const parts = str.split(/[- :]/); // [yyyy, MM, dd, HH, mm, ss]
-
+    const parts = str.split(/[- :]/);
     if (parts.length < 5) {
       const d = new Date(raw);
       return isNaN(d.getTime()) ? null : d;
     }
-
     const year = Number(parts[0]);
     const month = Number(parts[1]) - 1;
     const day = Number(parts[2]);
     const hour = Number(parts[3]);
     const minute = Number(parts[4]);
     const second = parts[5] ? Number(parts[5]) : 0;
-
     const localDate = new Date(year, month, day, hour, minute, second);
     return isNaN(localDate.getTime()) ? null : localDate;
   }

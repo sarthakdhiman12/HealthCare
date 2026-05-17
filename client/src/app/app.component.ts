@@ -21,23 +21,21 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // ✅ LOGIN STATUS (with fallback)
+    // ✅ LOGIN STATUS
     this.authService.loginStatus$.subscribe((status: boolean) => {
       this.isLoggedin = status;
     });
 
-    // ✅ If BehaviorSubject missed it, check localStorage
     if (!this.isLoggedin) {
       const token = localStorage.getItem('token');
       this.isLoggedin = !!token;
     }
 
-    // ✅ ROLE (with fallback)
+    // ✅ ROLE
     this.authService.role$.subscribe((role: string | null) => {
       this.roleName = role;
     });
 
-    // ✅ If role$ is null, fallback to localStorage/userData
     if (!this.roleName) {
       const userData = this.authService.getUserData();
       this.roleName =
@@ -47,13 +45,9 @@ export class AppComponent implements OnInit {
         null;
     }
 
-    // ✅ UPPERCASE
     if (this.roleName) {
       this.roleName = this.roleName.toUpperCase();
     }
-
-    console.log('Login Status:', this.isLoggedin);
-    console.log('Role Name:', this.roleName);
   }
 
   logout(): void {

@@ -12,7 +12,7 @@ export class DashbaordComponent implements OnInit {
 
   roleName: string | null = '';
   userData: any;
-
+  today: Date = new Date();
   doctorId: any = 'Not Available';
   doctorSpecialty: any = 'Not Available';
   doctorAvailability: any = 'Not Available';

@@ -1,122 +1,195 @@
-<div class="container mt-4">
+<div class="page-wrapper">
 
-  <h2 class="text-center mb-4">Doctor List</h2>
+  <!-- BG ANIMATIONS -->
+  <div class="page-bg">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="grid-overlay"></div>
+  </div>
 
-  <!-- Doctor Table -->
-  <div class="card shadow mb-4">
-    <div class="card-body">
+  <div class="page-content">
 
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover text-center">
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <h2><i class="fas fa-calendar-plus me-2"></i>Book Appointment</h2>
+        <p>Choose a doctor and schedule your visit</p>
+      </div>
+      <div class="header-badge">
+        <i class="fas fa-user-md me-1"></i>{{ doctorList.length }} Doctors Available
+      </div>
+    </div>
 
-          <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Specialty</th>
-              <th>Availability</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+    <!-- ✅ DOCTOR CARDS -->
+    <div class="doctors-grid">
 
-          <tbody>
+      <div class="doctor-card"
+           *ngFor="let doc of doctorList; let i = index"
+           [style.animation-delay]="(i * 0.1) + 's'"
+           [class.selected-doctor]="selectedDoctor?.id === doc.id">
 
-            <tr *ngFor="let doc of doctorList">
-              <td>{{ doc.id || doc.doctorId }}</td>
+        <!-- Doctor Avatar -->
+        <div class="doc-avatar" [class.unavailable]="doc.availability?.toLowerCase() !== 'yes'">
+          <i class="fas fa-user-md"></i>
+        </div>
 
-              <td>
-                {{ doc.username || doc.name || 'Not Available' }}
-              </td>
+        <!-- Doctor Info -->
+        <div class="doc-info">
+          <h4>Dr. {{ doc.username || doc.name || 'N/A' }}</h4>
 
-              <td>
-                {{ doc.specialty || 'Not Available' }}
-              </td>
+          <div class="doc-detail">
+            <i class="fas fa-stethoscope"></i>
+            <span>{{ doc.specialty || 'General' }}</span>
+          </div>
 
-              <td>
-                
-<span
-    class="badge"
-    [ngClass]="{
-      'bg-success': doc.availability?.toLowerCase() === 'yes',
-      'bg-danger': doc.availability?.toLowerCase() !== 'yes'
-    }"
-  >
+          <div class="doc-detail">
+            <i class="fas fa-rupee-sign"></i>
+            <span class="fees-text">₹{{ doc.fees || getDoctorFees(doc.specialty) }}</span>
+          </div>
 
-                  {{ doc.availability || 'no' }}
-                </span>
-              </td>
+          <div class="doc-detail">
+            <i class="fas fa-circle"
+               [style.color]="doc.availability?.toLowerCase() === 'yes' ? '#10b981' : '#ef4444'"
+               style="font-size: 8px;"></i>
+            <span [class.avail-yes]="doc.availability?.toLowerCase() === 'yes'"
+                  [class.avail-no]="doc.availability?.toLowerCase() !== 'yes'">
+              {{ doc.availability?.toLowerCase() === 'yes' ? 'Available' : 'Unavailable' }}
+            </span>
+          </div>
+        </div>
 
-              <td>
-                <button
-                  *ngIf="doc.availability.toLowerCase() === 'yes'"
-                  class="btn btn-primary btn-sm"
-                  type="button"
-                  (click)="addAppointment(doc)"
-                >
-                  Book
-                </button>
-              </td>
-            </tr>
+        <!-- Book Button -->
+        <button
+          *ngIf="doc.availability?.toLowerCase() === 'yes'"
+          class="btn btn-book"
+          (click)="addAppointment(doc)">
+          <i class="fas fa-calendar-check me-1"></i>Book
+        </button>
 
-            <tr *ngIf="doctorList.length === 0">
-              <td colspan="5" class="text-center text-danger">
-                No doctors found.
-              </td>
-            </tr>
+        <span *ngIf="doc.availability?.toLowerCase() !== 'yes'" class="unavailable-text">
+          <i class="fas fa-ban me-1"></i>Unavailable
+        </span>
 
-          </tbody>
-
-        </table>
       </div>
 
     </div>
-  </div>
 
-  <!-- Appointment Form -->
-  <div class="card shadow" *ngIf="isAdded">
-    <div class="card-body">
+    <!-- Empty Doctors -->
+    <div class="empty-state" *ngIf="doctorList.length === 0">
+      <div class="empty-icon">🩺</div>
+      <h3>No Doctors Found</h3>
+      <p>No doctors are registered in the system yet.</p>
+    </div>
 
-      <h4 class="mb-3 text-primary">Schedule Appointment</h4>
+    <!-- ✅ BOOKING MODAL -->
+    <div class="booking-overlay" *ngIf="isAdded" (click)="cancelBooking()">
+      <div class="booking-modal" (click)="$event.stopPropagation()">
 
-      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-
-     
-      
-
-        <!-- Date Time -->
-        <div class="mb-3">
-          <label class="form-label">Date & Time</label>
-
-          <input
-            type="datetime-local"
-            formControlName="time"
-            class="form-control"
-          />
+        <!-- Modal Header -->
+        <div class="booking-header">
+          <h4><i class="fas fa-calendar-plus me-2"></i>Schedule Appointment</h4>
+          <button class="close-btn" (click)="cancelBooking()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
-        <!-- Submit -->
-        <button type="submit" class="btn btn-success">
-          Submit
-        </button>
+        <!-- Modal Body -->
+        <div class="booking-body">
 
-      </form>
+          <!-- Selected Doctor Info -->
+          <div class="selected-doc-card" *ngIf="selectedDoctor">
+            <div class="selected-doc-avatar">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="selected-doc-info">
+              <h5>Dr. {{ selectedDoctor.username || selectedDoctor.name }}</h5>
+              <p><i class="fas fa-stethoscope me-1"></i>{{ selectedDoctor.specialty || 'General' }}</p>
+              <p class="doc-fees"><i class="fas fa-rupee-sign me-1"></i>₹{{ selectedDoctor.fees || getDoctorFees(selectedDoctor.specialty) }}</p>
+            </div>
+          </div>
 
+          <!-- Date Time Form -->
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+              <label class="form-label">Select Date & Time</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  formControlName="time"
+                  [min]="minDateTime"
+                  [max]="maxDateTime"
+                />
+              </div>
+              <small class="error-text"
+                *ngIf="itemForm.get('time')?.touched && itemForm.get('time')?.hasError('required')">
+                Please select date and time
+              </small>
+            </div>
+
+            <!-- Summary -->
+            <div class="booking-summary" *ngIf="itemForm.get('time')?.value">
+              <div class="summary-row">
+                <span>Doctor</span>
+                <strong>Dr. {{ selectedDoctor?.username || selectedDoctor?.name }}</strong>
+              </div>
+              <div class="summary-row">
+                <span>Specialty</span>
+                <strong>{{ selectedDoctor?.specialty || 'General' }}</strong>
+              </div>
+              <div class="summary-row">
+                <span>Date & Time</span>
+                <strong>{{ itemForm.get('time')?.value | date:'dd MMM yyyy, hh:mm a' }}</strong>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row total-row">
+                <span>Consultation Fee</span>
+                <strong class="total-amount">₹{{ selectedDoctor?.fees || getDoctorFees(selectedDoctor?.specialty) }}</strong>
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-confirm w-100" [disabled]="submitting">
+              <i class="fas fa-check-circle me-1"></i>
+              {{ submitting ? 'Booking...' : 'Confirm Appointment' }}
+            </button>
+
+          </form>
+
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Response Message -->
-  <div class="text-center mt-3">
+    <!-- ✅ SUCCESS ANIMATION -->
+    <div class="success-overlay" *ngIf="showSuccess">
+      <div class="success-modal">
+        <div class="success-checkmark">
+          <div class="check-icon">
+            <span class="icon-line line-tip"></span>
+            <span class="icon-line line-long"></span>
+            <div class="icon-circle"></div>
+            <div class="icon-fix"></div>
+          </div>
+        </div>
+        <h3>Appointment Booked!</h3>
+        <p>Redirecting to dashboard...</p>
+      </div>
+    </div>
 
-    <p
-      *ngIf="responseMessage"
-      [ngClass]="{
-        'text-success fw-bold': responseMessage.includes('Successfully'),
-        'text-danger fw-bold': responseMessage.includes('date')
-      }"
-    >
+    <!-- Response Message -->
+    <div *ngIf="responseMessage && !showSuccess" class="response-msg"
+      [ngClass]="responseMessage.includes('Successfully') ? 'msg-success' : 'msg-error'">
       {{ responseMessage }}
-    </p>
+    </div>
 
   </div>
-
 </div>

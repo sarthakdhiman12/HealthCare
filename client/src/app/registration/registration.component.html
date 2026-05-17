@@ -1,114 +1,173 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
+<div class="register-wrapper">
 
-      <div class="card shadow">
-        <div class="card-header bg-primary text-white text-center">
-          <h4>Registration</h4>
+  <!-- ✅ BACKGROUND ANIMATIONS -->
+  <div class="reg-bg-animations">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="bg-circle c4"></div>
+    <div class="bg-circle c5"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="particle p7"></div>
+    <div class="particle p8"></div>
+    <div class="particle p9"></div>
+    <div class="particle p10"></div>
+    <div class="glow-line gl1"></div>
+    <div class="glow-line gl2"></div>
+    <div class="pulse-ring pr1"></div>
+    <div class="pulse-ring pr2"></div>
+    <span class="float-icon fi1">🩺</span>
+    <span class="float-icon fi2">💊</span>
+    <span class="float-icon fi3">🏥</span>
+    <span class="float-icon fi4">💉</span>
+    <span class="float-icon fi5">🧬</span>
+    <span class="float-icon fi6">❤️</span>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- ✅ FORM CONTAINER -->
+  <div class="register-container">
+
+    <div class="register-card">
+
+      <!-- HEADER -->
+      <div class="register-header">
+        <div class="header-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h4>Create Account</h4>
+        <p>Join HAM System today</p>
+      </div>
+
+      <!-- BODY -->
+      <div class="register-body">
+
+        <!-- Alert -->
+        <div class="alert-msg" *ngIf="showMessage">
+          <i class="fas fa-exclamation-circle me-2"></i>{{ responseMessage }}
         </div>
 
-        <div class="card-body">
+        <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
 
-          <div class="alert alert-danger" *ngIf="showMessage">
-            {{ responseMessage }}
+          <!-- Username -->
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <input type="text" class="form-control" formControlName="username" placeholder="Enter username" />
+            </div>
+            <small class="error-text"
+              *ngIf="itemForm.get('username')?.touched && itemForm.get('username')?.hasError('required')">
+              Username is required
+            </small>
           </div>
 
-          <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
-
-            <!-- Username -->
-            <div class="mb-3">
-              <label class="form-label">Username</label>
-              <input type="text" class="form-control" formControlName="username" placeholder="Enter username" />
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('username')?.touched && itemForm.get('username')?.hasError('required')">
-                Username is required
-              </small>
-            </div>
-
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label">Email</label>
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
               <input type="email" class="form-control" formControlName="email" placeholder="Enter email" />
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('required')">
-                Email is required
-              </small>
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('email')">
-                Enter a valid email
-              </small>
             </div>
+            <small class="error-text"
+              *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('required')">
+              Email is required
+            </small>
+            <small class="error-text"
+              *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('email')">
+              Enter a valid email
+            </small>
+          </div>
 
-            <!-- Password -->
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-control" formControlName="password" placeholder="Enter password" />
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('password')?.touched && itemForm.get('password')?.hasError('required')">
-                Password is required
-              </small>
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                class="form-control"
+                formControlName="password"
+                placeholder="Enter password"
+              />
+              <button type="button" class="btn eye-btn" (click)="showPassword = !showPassword">
+                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+              </button>
             </div>
+            <small class="error-text"
+              *ngIf="itemForm.get('password')?.touched && itemForm.get('password')?.hasError('required')">
+              Password is required
+            </small>
+          </div>
 
-            <!-- Role -->
-            <div class="mb-3">
-              <label class="form-label">Role</label>
+          <!-- Role -->
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
               <select class="form-select" formControlName="role">
                 <option value="">Select Role</option>
                 <option value="PATIENT">PATIENT</option>
                 <option value="DOCTOR">DOCTOR</option>
                 <option value="RECEPTIONIST">RECEPTIONIST</option>
               </select>
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('role')?.touched && itemForm.get('role')?.hasError('required')">
-                Role is required
-              </small>
             </div>
+            <small class="error-text"
+              *ngIf="itemForm.get('role')?.touched && itemForm.get('role')?.hasError('required')">
+              Role is required
+            </small>
+          </div>
 
-            <!-- Doctor Specialty -->
-            <div class="mb-3" *ngIf="itemForm.get('role')?.value === 'DOCTOR'">
-              <label class="form-label">Specialty</label>
+          <!-- Doctor Specialty -->
+          <div class="form-group" *ngIf="itemForm.get('role')?.value === 'DOCTOR'">
+            <label class="form-label">Specialty</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-stethoscope"></i></span>
               <input type="text" class="form-control" formControlName="specialty" placeholder="Enter specialty" />
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('specialty')?.touched && itemForm.get('specialty')?.hasError('required')">
-                Specialty is required
-              </small>
             </div>
+            <small class="error-text"
+              *ngIf="itemForm.get('specialty')?.touched && itemForm.get('specialty')?.hasError('required')">
+              Specialty is required
+            </small>
+          </div>
 
-            <!-- ✅ Doctor Availability -->
-            <div class="mb-3" *ngIf="itemForm.get('role')?.value === 'DOCTOR'">
-              <label class="form-label">Availability</label>
+          <!-- Doctor Availability -->
+          <div class="form-group" *ngIf="itemForm.get('role')?.value === 'DOCTOR'">
+            <label class="form-label">Availability</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-clock"></i></span>
               <select class="form-select" formControlName="availability">
                 <option value="">Select Availability</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
               </select>
-
-              <small class="text-danger"
-                *ngIf="itemForm.get('availability')?.touched && itemForm.get('availability')?.hasError('required')">
-                Availability is required
-              </small>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">
-              Register
-            </button>
-
-          </form>
-
-          <div class="text-center mt-3">
-            <span>Already registered?</span>
-            <a routerLink="/login">Login here</a>
+            <small class="error-text"
+              *ngIf="itemForm.get('availability')?.touched && itemForm.get('availability')?.hasError('required')">
+              Availability is required
+            </small>
           </div>
 
-        </div>
-      </div>
+          <!-- Register Button -->
+          <button type="submit" class="btn register-btn w-100">
+            <i class="fas fa-user-plus me-2"></i>Register
+          </button>
 
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-redirect">
+          <span>Already registered? </span>
+          <a routerLink="/login" class="login-link">Login here</a>
+        </div>
+
+      </div>
     </div>
+
   </div>
 </div>

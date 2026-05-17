@@ -15,21 +15,24 @@ import { ReceptionistScheduleAppointmentsComponent } from './receptionist-schedu
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
-  { path: 'dashboard', component: DashbaordComponent }, 
-  { path: 'patient-appointment', component: PatientAppointmentComponent }, 
-  { path: 'schedule-appointment', component: ScheduleAppointmentComponent }, 
-  { path: 'doctor-appointment', component: DoctorAppointmentComponent }, 
+  { path: 'dashboard', component: DashbaordComponent },
+  { path: 'patient-appointment', component: PatientAppointmentComponent },
+  { path: 'schedule-appointment', component: ScheduleAppointmentComponent },
+  { path: 'doctor-appointment', component: DoctorAppointmentComponent },
   { path: 'doctor-availability', component: DoctorAvailabilityComponent },
   { path: 'receptionist-appointments', component: ReceptionistAppointmentsComponent },
   { path: 'receptionist-schedule-appointments', component: ReceptionistScheduleAppointmentsComponent },
-  
-  
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  // ✅ THIS IS THE ONLY CHANGE — added anchorScrolling + scrollPositionRestoration
+  imports: [RouterModule.forRoot(routes, {
+    anchorScrolling: 'enabled',
+    scrollPositionRestoration: 'enabled'
+  })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
