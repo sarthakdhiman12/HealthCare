@@ -9,83 +9,104 @@ import { HttpService } from '../../services/http.service';
 export class DoctorAppointmentComponent implements OnInit {
 
   appointmentList: any[] = [];
+  responseMessage: string = '';
 
-  constructor(private httpService: HttpService) {}
+  // ✅ Slot labels
+  slotLabels: any = {
+    '10:00-11:00': '10:00 AM - 11:00 AM',
+    '11:00-12:00': '11:00 AM - 12:00 PM',
+    '12:00-13:00': '12:00 PM - 1:00 PM',
+    '13:00-14:00': '1:00 PM - 2:00 PM',
+    '14:00-15:00': '2:00 PM - 3:00 PM',
+    '15:00-16:00': '3:00 PM - 4:00 PM',
+    '16:00-17:00': '4:00 PM - 5:00 PM'
+  };
+
+  constructor(public httpService: HttpService) {}
 
   ngOnInit(): void {
     this.getAppointments();
   }
 
-  // ✅ Doctor fees by specialty
+  getAppointments(): void {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      this.responseMessage = 'Doctor not found. Please login again.';
+      return;
+    }
+
+    this.httpService.getAppointmentByDoctor(Number(userId)).subscribe({
+      next: (data: any) => {
+        const list = data?.data || data || [];
+
+        this.appointmentList = list.map((a: any) => {
+          const appointmentId = a.id || a.appointmentId;
+          const paymentKey = 'payment_' + appointmentId;
+          const savedPayment = localStorage.getItem(paymentKey);
+
+          return {
+            ...a,
+            paymentStatus: savedPayment || a.paymentStatus || 'NOT PAID'
+          };
+        });
+      },
+      error: (err: any) => {
+        console.error('Error loading appointments:', err);
+        this.appointmentList = [];
+        this.responseMessage = 'Failed to load appointments';
+      }
+    });
+  }
+
+  getSlotLabel(slot: string): string {
+    if (!slot) return 'N/A';
+    return this.slotLabels[slot] || slot;
+  }
+
+  getReadableDate(dateStr: string): string {
+    if (!dateStr) return 'N/A';
+    try {
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d.getTime())) return dateStr;
+      const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      };
+      return d.toLocaleDateString('en-IN', options);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   getDoctorFees(specialty: string): number {
     const feesMap: any = {
-      'cardiology': 1500, 'cardio': 1500, 'cardiac': 1500, 'cardic': 1500,
-      'neurology': 2000, 'orthopedics': 1200, 'dermatology': 800,
-      'pediatrics': 700, 'general': 500, 'webing': 600, 'ent': 900
+      'cardiology': 1500,
+      'cardio': 1500,
+      'cardiac': 1500,
+      'cardic': 1500,
+      'neurology': 2000,
+      'neuro': 2000,
+      'orthopedics': 1200,
+      'dermatology': 800,
+      'pediatrics': 700,
+      'general': 500,
+      'webing': 600,
+      'ent': 900
     };
     return feesMap[(specialty || 'general').toLowerCase()] || 500;
   }
 
-  // ✅ Payment status from localStorage
   getPaymentStatus(appointmentId: any): string {
+    if (!appointmentId) return 'NOT PAID';
     return localStorage.getItem('payment_' + appointmentId) || 'NOT PAID';
   }
 
-  // ✅ Payment mode from localStorage
   getPaymentMode(appointmentId: any): string {
+    if (!appointmentId) return '—';
     const mode = localStorage.getItem('paymode_' + appointmentId);
-    if (mode === 'ONLINE') return '💻 Paid Online';
-    if (mode === 'OFFLINE') return '🏥 Pay at Hospital';
-    const status = this.getPaymentStatus(appointmentId);
-    if (status === 'PAID') return '💻 Paid Online';
-    return '⏳ Awaiting Payment';
-  }
-
-  getAppointments(): void {
-    const userId = localStorage.getItem('userId');
-
-    if (userId) {
-      this.httpService.getAppointmentByDoctor(userId).subscribe({
-        next: (response: any) => {
-          const list = response?.data || response || [];
-
-          this.appointmentList = list.map((a: any) => {
-            const rawTime =
-              a.time || a.appointmentTime || a.appointmentDateTime || a.dateTime || null;
-
-            return {
-              ...a,
-              appointmentTime: this.parseBackendDateTimeToLocal(rawTime),
-              rawAppointmentTime: rawTime
-            };
-          });
-
-          console.log('Doctor appointments:', this.appointmentList);
-        },
-        error: (error: any) => {
-          console.error('Error fetching doctor appointments:', error);
-        }
-      });
-    } else {
-      console.error('User ID not found in localStorage');
-    }
-  }
-
-  private parseBackendDateTimeToLocal(raw: any): Date | null {
-    if (!raw) return null;
-    const str = String(raw).replace('T', ' ').split('.')[0];
-    const parts = str.split(/[- :]/);
-    if (parts.length < 5) {
-      const d = new Date(raw);
-      return isNaN(d.getTime()) ? null : d;
-    }
-    const year = Number(parts[0]);
-    const month = Number(parts[1]) - 1;
-    const day = Number(parts[2]);
-    const hour = Number(parts[3]);
-    const minute = Number(parts[4]);
-    const second = parts[5] ? Number(parts[5]) : 0;
-    const localDate = new Date(year, month, day, hour, minute, second);
-    return isNaN(localDate.getTime()) ? null : localDate;
+    if (mode === 'ONLINE') return '💻 Online';
+    if (mode === 'OFFLINE') return '🏥 Cash/Hospital';
+    return '—';
   }
 }

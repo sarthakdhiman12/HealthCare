@@ -29,31 +29,25 @@
 
     <!-- ✅ DOCTOR CARDS -->
     <div class="doctors-grid">
-
       <div class="doctor-card"
            *ngFor="let doc of doctorList; let i = index"
            [style.animation-delay]="(i * 0.1) + 's'"
            [class.selected-doctor]="selectedDoctor?.id === doc.id">
 
-        <!-- Doctor Avatar -->
         <div class="doc-avatar" [class.unavailable]="doc.availability?.toLowerCase() !== 'yes'">
           <i class="fas fa-user-md"></i>
         </div>
 
-        <!-- Doctor Info -->
         <div class="doc-info">
           <h4>Dr. {{ doc.username || doc.name || 'N/A' }}</h4>
-
           <div class="doc-detail">
             <i class="fas fa-stethoscope"></i>
             <span>{{ doc.specialty || 'General' }}</span>
           </div>
-
           <div class="doc-detail">
             <i class="fas fa-rupee-sign"></i>
             <span class="fees-text">₹{{ doc.fees || getDoctorFees(doc.specialty) }}</span>
           </div>
-
           <div class="doc-detail">
             <i class="fas fa-circle"
                [style.color]="doc.availability?.toLowerCase() === 'yes' ? '#10b981' : '#ef4444'"
@@ -65,23 +59,18 @@
           </div>
         </div>
 
-        <!-- Book Button -->
-        <button
-          *ngIf="doc.availability?.toLowerCase() === 'yes'"
-          class="btn btn-book"
-          (click)="addAppointment(doc)">
+        <button *ngIf="doc.availability?.toLowerCase() === 'yes'"
+                class="btn btn-book" (click)="addAppointment(doc)">
           <i class="fas fa-calendar-check me-1"></i>Book
         </button>
 
         <span *ngIf="doc.availability?.toLowerCase() !== 'yes'" class="unavailable-text">
           <i class="fas fa-ban me-1"></i>Unavailable
         </span>
-
       </div>
-
     </div>
 
-    <!-- Empty Doctors -->
+    <!-- Empty -->
     <div class="empty-state" *ngIf="doctorList.length === 0">
       <div class="empty-icon">🩺</div>
       <h3>No Doctors Found</h3>
@@ -92,7 +81,6 @@
     <div class="booking-overlay" *ngIf="isAdded" (click)="cancelBooking()">
       <div class="booking-modal" (click)="$event.stopPropagation()">
 
-        <!-- Modal Header -->
         <div class="booking-header">
           <h4><i class="fas fa-calendar-plus me-2"></i>Schedule Appointment</h4>
           <button class="close-btn" (click)="cancelBooking()">
@@ -100,10 +88,9 @@
           </button>
         </div>
 
-        <!-- Modal Body -->
         <div class="booking-body">
 
-          <!-- Selected Doctor Info -->
+          <!-- Selected Doctor -->
           <div class="selected-doc-card" *ngIf="selectedDoctor">
             <div class="selected-doc-avatar">
               <i class="fas fa-user-md"></i>
@@ -115,29 +102,85 @@
             </div>
           </div>
 
-          <!-- Date Time Form -->
           <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
 
+            <!-- ✅ DATE CARDS (replaces input) -->
             <div class="form-group">
-              <label class="form-label">Select Date & Time</label>
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  formControlName="time"
-                  [min]="minDateTime"
-                  [max]="maxDateTime"
-                />
+              <label class="form-label"><i class="fas fa-calendar-alt me-1"></i>Select Date</label>
+
+              <div class="date-cards-grid">
+                <div *ngFor="let dc of dateCards"
+                     class="date-card"
+                     [class.date-selected]="selectedDate === dc.value"
+                     (click)="selectDate(dc.value)">
+                  <span class="date-day-name">{{ dc.dayName }}</span>
+                  <span class="date-day-num">{{ dc.dayNum }}</span>
+                  <span class="date-month">{{ dc.month }}</span>
+                </div>
               </div>
+
               <small class="error-text"
-                *ngIf="itemForm.get('time')?.touched && itemForm.get('time')?.hasError('required')">
-                Please select date and time
+                     *ngIf="itemForm.get('date')?.touched && !selectedDate">
+                Please select a date
               </small>
             </div>
 
-            <!-- Summary -->
-            <div class="booking-summary" *ngIf="itemForm.get('time')?.value">
+            <!-- ✅ SLOT SELECTION (shows after date selected) -->
+            <div class="form-group" *ngIf="selectedDate">
+
+              <label class="form-label">
+                <i class="fas fa-clock me-1"></i>Select Time Slot
+                <span class="slot-count" *ngIf="!loadingSlots">
+                  ({{ getAvailableCount() }} available)
+                </span>
+              </label>
+
+              <!-- Loading -->
+              <div *ngIf="loadingSlots" class="text-center py-3">
+                <i class="fas fa-spinner fa-spin me-1"></i> Loading slots...
+              </div>
+
+              <!-- Slot Grid -->
+              <div class="slot-grid" *ngIf="!loadingSlots">
+
+                <div *ngFor="let slot of allSlots"
+                     class="slot-card"
+                     [class.slot-available]="isSlotAvailable(slot.value)"
+                     [class.slot-booked]="isSlotBooked(slot.value)"
+                     [class.slot-past]="isSlotPast(slot.value) && !isSlotBooked(slot.value)"
+                     [class.slot-selected]="selectedSlot === slot.value"
+                     (click)="selectSlot(slot.value)">
+
+                  <i class="fas"
+                     [ngClass]="{
+                       'fa-check-circle': selectedSlot === slot.value,
+                       'fa-clock': selectedSlot !== slot.value && isSlotAvailable(slot.value),
+                       'fa-lock': isSlotBooked(slot.value),
+                       'fa-hourglass-end': isSlotPast(slot.value) && !isSlotBooked(slot.value)
+                     }"></i>
+                  <span>{{ slot.label }}</span>
+
+                  <small *ngIf="isSlotBooked(slot.value)" class="booked-label">Booked</small>
+                  <small *ngIf="isSlotPast(slot.value) && !isSlotBooked(slot.value)" class="past-label">Passed</small>
+
+                </div>
+
+              </div>
+
+              <!-- No slots -->
+              <div *ngIf="!loadingSlots && getAvailableCount() === 0" class="no-slots-msg">
+                <i class="fas fa-exclamation-circle me-1"></i>
+                No slots available for this date. Please try another date.
+              </div>
+
+              <small class="error-text"
+                     *ngIf="itemForm.get('slot')?.touched && itemForm.get('slot')?.hasError('required')">
+                Please select a time slot
+              </small>
+            </div>
+
+            <!-- ✅ SUMMARY -->
+            <div class="booking-summary" *ngIf="selectedSlot">
               <div class="summary-row">
                 <span>Doctor</span>
                 <strong>Dr. {{ selectedDoctor?.username || selectedDoctor?.name }}</strong>
@@ -147,8 +190,12 @@
                 <strong>{{ selectedDoctor?.specialty || 'General' }}</strong>
               </div>
               <div class="summary-row">
-                <span>Date & Time</span>
-                <strong>{{ itemForm.get('time')?.value | date:'dd MMM yyyy, hh:mm a' }}</strong>
+                <span>Date</span>
+                <strong>{{ getDateLabel(selectedDate) }}</strong>
+              </div>
+              <div class="summary-row">
+                <span>Time Slot</span>
+                <strong>{{ getSlotLabel(selectedSlot) }}</strong>
               </div>
               <div class="summary-divider"></div>
               <div class="summary-row total-row">
@@ -158,13 +205,12 @@
             </div>
 
             <!-- Submit -->
-            <button type="submit" class="btn btn-confirm w-100" [disabled]="submitting">
+            <button type="submit" class="btn btn-confirm w-100" [disabled]="submitting || !selectedSlot">
               <i class="fas fa-check-circle me-1"></i>
               {{ submitting ? 'Booking...' : 'Confirm Appointment' }}
             </button>
 
           </form>
-
         </div>
       </div>
     </div>
@@ -187,7 +233,7 @@
 
     <!-- Response Message -->
     <div *ngIf="responseMessage && !showSuccess" class="response-msg"
-      [ngClass]="responseMessage.includes('Successfully') ? 'msg-success' : 'msg-error'">
+         [ngClass]="responseMessage.includes('Successfully') ? 'msg-success' : 'msg-error'">
       {{ responseMessage }}
     </div>
 

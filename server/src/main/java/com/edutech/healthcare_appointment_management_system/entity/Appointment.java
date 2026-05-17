@@ -5,6 +5,9 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"doctor_id", "appointment_date", "slot"})
+})
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +22,12 @@ public class Appointment {
     private Doctor doctor;
 
     private Date appointmentTime;
+
+    @Column(name = "appointment_date")
+    private String appointmentDate;
+
+    private String slot;
+
     private String status;
 
     public Appointment() {
@@ -71,6 +80,22 @@ public class Appointment {
         this.appointmentTime = appointmentTime;
     }
 
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public String getSlot() {
+        return slot;
+    }
+
+    public void setSlot(String slot) {
+        this.slot = slot;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -78,5 +103,4 @@ public class Appointment {
     public void setStatus(String status) {
         this.status = status;
     }
-
 }

@@ -1,6 +1,5 @@
 <div class="page-wrapper">
 
-  <!-- BG -->
   <div class="page-bg">
     <div class="bg-circle c1"></div>
     <div class="bg-circle c2"></div>
@@ -41,7 +40,8 @@
     </div>
 
     <!-- Response Message -->
-    <div *ngIf="responseMessage" class="response-msg" [ngClass]="isSuccess ? 'msg-success' : 'msg-error'">
+    <div *ngIf="responseMessage && !showSuccess" class="response-msg"
+         [ngClass]="isSuccess ? 'msg-success' : 'msg-error'">
       {{ responseMessage }}
     </div>
 
@@ -68,7 +68,6 @@
         <div class="card-body-content">
 
           <div class="info-row">
-            <!-- Patient -->
             <div class="info-block">
               <div class="info-icon blue"><i class="fas fa-user"></i></div>
               <div>
@@ -78,7 +77,6 @@
               </div>
             </div>
 
-            <!-- Doctor -->
             <div class="info-block">
               <div class="info-icon green"><i class="fas fa-user-md"></i></div>
               <div>
@@ -89,25 +87,36 @@
             </div>
           </div>
 
+          <!-- Date + Slot -->
           <div class="info-row">
-            <!-- Time -->
             <div class="info-block">
-              <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+              <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
               <div>
-                <label>Appointment Time</label>
-                <p>{{ formatDateTime(appointment.appointmentTime) }}</p>
+                <label>Appointment Date</label>
+                <p>{{ getReadableDate(appointment.appointmentDate) }}</p>
               </div>
             </div>
 
-            <!-- Payment -->
             <div class="info-block">
-              <div class="info-icon" [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
+              <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+              <div>
+                <label>Time Slot</label>
+                <p>{{ getSlotLabel(appointment.slot) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="info-row">
+            <div class="info-block">
+              <div class="info-icon"
+                   [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
                 <i [class]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
               </div>
               <div>
                 <label>Payment</label>
                 <span class="payment-badge"
-                  [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
+                      [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
                   {{ getPaymentStatus(appointment.appointmentId) }}
                 </span>
                 <br>
@@ -127,31 +136,98 @@
 
         <!-- ✅ RESCHEDULE FORM -->
         <div class="reschedule-form" *ngIf="isAdded && isCurrentRow(appointment)">
-          <form [formGroup]="itemForm">
-            <label class="form-label">Select new date & time</label>
-            <div class="reschedule-row">
-              <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                <input type="datetime-local" class="form-control" formControlName="time" />
-              </div>
-              <div class="reschedule-btns">
-                <button class="btn btn-save" type="button" (click)="onSubmit()">
-                  <i class="fas fa-save me-1"></i>Save
-                </button>
-                <button class="btn btn-cancel-form" type="button" (click)="cancelEdit()">
-                  <i class="fas fa-times me-1"></i>Cancel
-                </button>
+
+          <h5 class="reschedule-title">
+            <i class="fas fa-calendar-alt me-1"></i>Reschedule Appointment
+          </h5>
+
+          <!-- Date Cards -->
+          <label class="form-label">Select New Date</label>
+          <div class="date-cards-grid">
+            <div *ngFor="let dc of rescheduleDateCards"
+                 class="date-card"
+                 [class.date-selected]="rescheduleSelectedDate === dc.value"
+                 (click)="selectRescheduleDate(dc.value)">
+              <span class="date-day-name">{{ dc.dayName }}</span>
+              <span class="date-day-num">{{ dc.dayNum }}</span>
+              <span class="date-month">{{ dc.month }}</span>
+            </div>
+          </div>
+
+          <!-- Slot Selection -->
+          <div *ngIf="rescheduleSelectedDate">
+
+            <label class="form-label" style="margin-top: 12px;">
+              <i class="fas fa-clock me-1"></i>Select New Slot
+              <span class="slot-count" *ngIf="!rescheduleLoadingSlots">
+                ({{ getRescheduleAvailableCount() }} available)
+              </span>
+            </label>
+
+            <div *ngIf="rescheduleLoadingSlots" class="text-center py-2" style="color: #7a8fa5;">
+              <i class="fas fa-spinner fa-spin me-1"></i> Loading slots...
+            </div>
+
+            <div class="slot-grid" *ngIf="!rescheduleLoadingSlots">
+              <div *ngFor="let slot of allSlots"
+                   class="slot-card"
+                   [class.slot-available]="isRescheduleSlotAvailable(slot.value)"
+                   [class.slot-booked]="isRescheduleSlotBooked(slot.value)"
+                   [class.slot-past]="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)"
+                   [class.slot-selected]="rescheduleSelectedSlot === slot.value"
+                   (click)="selectRescheduleSlot(slot.value)">
+
+                <i class="fas"
+                   [ngClass]="{
+                     'fa-check-circle': rescheduleSelectedSlot === slot.value,
+                     'fa-clock': rescheduleSelectedSlot !== slot.value && isRescheduleSlotAvailable(slot.value),
+                     'fa-lock': isRescheduleSlotBooked(slot.value),
+                     'fa-hourglass-end': isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)
+                   }"></i>
+                <span>{{ slot.label }}</span>
+
+                <small *ngIf="isRescheduleSlotBooked(slot.value)" class="booked-label">Booked</small>
+                <small *ngIf="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)" class="past-label">Passed</small>
               </div>
             </div>
-            <small class="error-text"
-              *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('required')">
-              Time is required
-            </small>
-          </form>
+
+            <div *ngIf="!rescheduleLoadingSlots && getRescheduleAvailableCount() === 0" class="no-slots-msg">
+              <i class="fas fa-exclamation-circle me-1"></i>
+              No slots available. Try another date.
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="reschedule-btns" style="margin-top: 15px;">
+            <button class="btn btn-save" type="button"
+                    [disabled]="!rescheduleSelectedSlot"
+                    (click)="onSubmit()">
+              <i class="fas fa-save me-1"></i>Save
+            </button>
+            <button class="btn btn-cancel-form" type="button" (click)="cancelEdit()">
+              <i class="fas fa-times me-1"></i>Cancel
+            </button>
+          </div>
+
         </div>
 
       </div>
+    </div>
 
+    <!-- ✅ SUCCESS ANIMATION -->
+    <div class="success-overlay" *ngIf="showSuccess">
+      <div class="success-modal">
+        <div class="success-checkmark">
+          <div class="check-icon">
+            <span class="icon-line line-tip"></span>
+            <span class="icon-line line-long"></span>
+            <div class="icon-circle"></div>
+          </div>
+        </div>
+        <h3>Appointment Rescheduled!</h3>
+        <p>New slot has been confirmed ✅</p>
+        <p class="redirect-text">Redirecting to dashboard...</p>
+      </div>
     </div>
 
   </div>

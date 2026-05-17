@@ -24,7 +24,6 @@ export class HttpService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
-
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -74,45 +73,46 @@ export class HttpService {
     );
   }
 
-  ScheduleAppointment(details: any, patientId?: any, doctorId?: any): Observable<any> {
-    patientId = patientId || details.patientId;
-    doctorId = doctorId || details.doctorId;
-
+  // ✅ UPDATED: Slot-based booking
+  ScheduleAppointment(details: any): Observable<any> {
     const params = new HttpParams()
-      .set('patientId', patientId)
-      .set('doctorId', doctorId);
+      .set('patientId', details.patientId)
+      .set('doctorId', details.doctorId)
+      .set('date', details.date)
+      .set('slot', details.slot);
 
     return this.http.post(
       `${this.serverName}/api/patient/appointment`,
-      details,
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ NEW: Get available slots (patient)
+  getAvailableSlots(doctorId: any, date: string): Observable<any> {
+    const params = new HttpParams()
+      .set('doctorId', doctorId)
+      .set('date', date);
+
+    return this.http.get(
+      `${this.serverName}/api/patient/available-slots`,
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
   getAppointmentByPatient(patientId: any): Observable<any> {
     const params = new HttpParams().set('patientId', patientId);
-
     return this.http.get(
       `${this.serverName}/api/patient/appointments`,
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
   getMedicalRecords(patientId: any): Observable<any> {
     const params = new HttpParams().set('patientId', patientId);
-
     return this.http.get(
       `${this.serverName}/api/patient/medicalrecords`,
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
@@ -124,7 +124,6 @@ export class HttpService {
     );
   }
 
-  // ✅ ORIGINAL DELETE (with responseType: 'text')
   deletePatientById(patientId: any): Observable<any> {
     return this.http.delete(
       `${this.serverName}/api/patient/${patientId}`,
@@ -136,13 +135,9 @@ export class HttpService {
 
   getAppointmentByDoctor(doctorId: any): Observable<any> {
     const params = new HttpParams().set('doctorId', doctorId);
-
     return this.http.get(
       `${this.serverName}/api/doctor/appointments`,
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
@@ -150,14 +145,10 @@ export class HttpService {
     const params = new HttpParams()
       .set('doctorId', doctorId)
       .set('availability', availability);
-
     return this.http.put(
       `${this.serverName}/api/doctor/availability`,
       {},
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
@@ -183,7 +174,6 @@ export class HttpService {
     );
   }
 
-  // ✅ ORIGINAL DELETE (with responseType: 'text')
   deleteDoctorById(doctorId: any): Observable<any> {
     return this.http.delete(
       `${this.serverName}/api/doctors/${doctorId}`,
@@ -214,29 +204,43 @@ export class HttpService {
     );
   }
 
-  ScheduleAppointmentByReceptionist(details: any, patientId?: any, doctorId?: any): Observable<any> {
-    patientId = patientId || details.patientId;
-    doctorId = doctorId || details.doctorId;
-
+  // ✅ UPDATED: Slot-based booking (receptionist)
+  ScheduleAppointmentByReceptionist(details: any): Observable<any> {
     const params = new HttpParams()
-      .set('patientId', patientId)
-      .set('doctorId', doctorId);
+      .set('patientId', details.patientId)
+      .set('doctorId', details.doctorId)
+      .set('date', details.date)
+      .set('slot', details.slot);
 
     return this.http.post(
       `${this.serverName}/api/receptionist/appointment`,
-      details,
-      {
-        headers: this.getAuthHeaders(),
-        params
-      }
+      {},
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
+  // ✅ UPDATED: Slot-based reschedule
   reScheduleAppointment(appointmentId: any, formValue: any): Observable<any> {
+    const params = new HttpParams()
+      .set('date', formValue.date)
+      .set('slot', formValue.slot);
+
     return this.http.put(
       `${this.serverName}/api/receptionist/appointment-reschedule/${appointmentId}`,
-      formValue,
-      { headers: this.getAuthHeaders() }
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ NEW: Get available slots (receptionist)
+  getAvailableSlotsForReceptionist(doctorId: any, date: string): Observable<any> {
+    const params = new HttpParams()
+      .set('doctorId', doctorId)
+      .set('date', date);
+
+    return this.http.get(
+      `${this.serverName}/api/receptionist/available-slots`,
+      { headers: this.getAuthHeaders(), params }
     );
   }
 
@@ -248,7 +252,6 @@ export class HttpService {
     );
   }
 
-  // ✅ ORIGINAL DELETE (with responseType: 'text')
   deleteReceptionistById(receptionistId: any): Observable<any> {
     return this.http.delete(
       `${this.serverName}/api/receptionist/${receptionistId}`,
@@ -256,7 +259,6 @@ export class HttpService {
     );
   }
 
-  // ✅ DELETE by USER ID
   deleteUserById(userId: any): Observable<any> {
     return this.http.delete(
       `${this.serverName}/api/user/${userId}`,

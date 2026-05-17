@@ -29,37 +29,33 @@
 
     <!-- EMPTY -->
     <div class="empty-state" *ngIf="appointmentList.length === 0">
-      <div class="empty-icon">🩺</div>
-      <h3>No Appointments Found</h3>
-      <p>You don't have any appointments scheduled yet.</p>
+      <div class="empty-icon">📋</div>
+      <h3>No Appointments Yet</h3>
+      <p>You don't have any appointments assigned.</p>
     </div>
 
     <!-- ✅ APPOINTMENT CARDS -->
     <div class="appointments-container" *ngIf="appointmentList.length > 0">
 
-      <div class="appt-card"
-           *ngFor="let appointment of appointmentList; let i = index"
-           [style.animation-delay]="(i * 0.08) + 's'"
-           [ngClass]="getPaymentStatus(appointment.id) === 'PAID' ? 'card-paid' : 'card-unpaid'">
+      <div class="appt-card" *ngFor="let appointment of appointmentList; let i = index"
+           [style.animation-delay]="(i * 0.08) + 's'">
 
         <!-- TOP -->
         <div class="card-top">
-          <div class="card-id">#{{ appointment.id }}</div>
+          <div class="card-id">#{{ appointment.id || appointment.appointmentId }}</div>
           <div class="top-badges">
-            <!-- Payment Badge -->
             <span class="payment-badge"
-              [ngClass]="getPaymentStatus(appointment.id) === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
-              <i [class]="getPaymentStatus(appointment.id) === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'" class="me-1"></i>
-              {{ getPaymentStatus(appointment.id) }}
+                  [ngClass]="appointment.paymentStatus === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
+              <i [class]="appointment.paymentStatus === 'PAID' ? 'fas fa-check-circle me-1' : 'fas fa-times-circle me-1'"></i>
+              {{ appointment.paymentStatus || 'NOT PAID' }}
             </span>
-            <!-- Status Badge -->
             <span class="status-badge"
-              [ngClass]="{
-                'st-scheduled': appointment.status?.toLowerCase() === 'scheduled',
-                'st-completed': appointment.status?.toLowerCase() === 'completed',
-                'st-cancelled': appointment.status?.toLowerCase() === 'cancelled'
-              }">
-              {{ appointment.status }}
+                  [ngClass]="{
+                    'st-scheduled': appointment.status?.toLowerCase() === 'scheduled',
+                    'st-completed': appointment.status?.toLowerCase() === 'completed',
+                    'st-cancelled': appointment.status?.toLowerCase() === 'cancelled'
+                  }">
+              {{ appointment.status || 'Scheduled' }}
             </span>
           </div>
         </div>
@@ -67,69 +63,78 @@
         <!-- BODY -->
         <div class="card-body-content">
 
+          <!-- Patient + Doctor -->
           <div class="info-row">
-            <!-- Patient -->
             <div class="info-block">
               <div class="info-icon blue"><i class="fas fa-user"></i></div>
               <div>
                 <label>Patient</label>
-                <p>{{ appointment.patient?.username || 'N/A' }}</p>
+                <p>{{ appointment.patient?.username || appointment.patientName || 'N/A' }}</p>
                 <small>{{ appointment.patient?.email || '' }}</small>
               </div>
             </div>
 
-            <!-- Time -->
-            <div class="info-block">
-              <div class="info-icon purple"><i class="fas fa-clock"></i></div>
-              <div>
-                <label>Appointment Time</label>
-                <p>{{ appointment.appointmentTime | date:'dd MMM yyyy, hh:mm a' }}</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="info-row">
-            <!-- Doctor (self) -->
             <div class="info-block">
               <div class="info-icon green"><i class="fas fa-user-md"></i></div>
               <div>
                 <label>Doctor</label>
-                <p>{{ appointment.doctor?.username || 'N/A' }}</p>
+                <p>{{ appointment.doctor?.username || appointment.doctorName || 'N/A' }}</p>
                 <small>{{ appointment.doctor?.email || '' }}</small>
               </div>
             </div>
+          </div>
 
-            <!-- Payment Details -->
+          <!-- ✅ Date + Slot -->
+          <div class="info-row">
             <div class="info-block">
-              <div class="info-icon" [ngClass]="getPaymentStatus(appointment.id) === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
-                <i class="fas fa-rupee-sign"></i>
+              <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
+              <div>
+                <label>Appointment Date</label>
+                <p>{{ getReadableDate(appointment.appointmentDate) }}</p>
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+              <div>
+                <label>Time Slot</label>
+                <p>{{ getSlotLabel(appointment.slot) }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Info + Fees -->
+          <div class="info-row">
+            <div class="info-block">
+              <div class="info-icon"
+                   [ngClass]="appointment.paymentStatus === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
+                <i [class]="appointment.paymentStatus === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
               </div>
               <div>
                 <label>Payment Info</label>
-                <p class="fees-text">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
-                <small class="pay-mode-text">{{ getPaymentMode(appointment.id) }}</small>
+                <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
+                <small>{{ getPaymentMode(appointment.id || appointment.appointmentId) }}</small>
+              </div>
+            </div>
+
+            <div class="info-block">
+              <div class="info-icon orange"><i class="fas fa-stethoscope"></i></div>
+              <div>
+                <label>Specialty</label>
+                <p>{{ appointment.doctor?.specialty || 'General' }}</p>
               </div>
             </div>
           </div>
 
         </div>
 
-        <!-- ✅ ACTION BAR (only for PAID patients) -->
-        <div class="card-actions" *ngIf="getPaymentStatus(appointment.id) === 'PAID'">
-          <span class="proceed-badge">
-            <i class="fas fa-check-double me-1"></i>Ready to Proceed
-          </span>
-        </div>
-
-        <!-- ✅ UNPAID WARNING -->
-        <div class="card-actions unpaid-bar" *ngIf="getPaymentStatus(appointment.id) !== 'PAID'">
-          <span class="unpaid-warn">
-            <i class="fas fa-exclamation-triangle me-1"></i>Payment Pending — Cannot proceed
-          </span>
-        </div>
-
       </div>
 
+    </div>
+
+    <!-- RESPONSE -->
+    <div *ngIf="responseMessage" class="response-msg msg-error">
+      {{ responseMessage }}
     </div>
 
   </div>

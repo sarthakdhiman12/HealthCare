@@ -1,6 +1,5 @@
 <div class="page-wrapper">
 
-  <!-- BG ANIMATIONS -->
   <div class="page-bg">
     <div class="bg-circle c1"></div>
     <div class="bg-circle c2"></div>
@@ -16,15 +15,13 @@
 
   <div class="page-content">
 
-    <!-- HEADER -->
     <div class="page-header">
       <div>
         <h2><i class="fas fa-calendar-plus me-2"></i>Schedule Appointment</h2>
-        <p>Book appointment for patients — select patient, doctor, time & payment</p>
+        <p>Book appointment for patients — select patient, doctor, date & slot</p>
       </div>
     </div>
 
-    <!-- ✅ FORM CARD -->
     <div class="form-card">
 
       <div class="form-card-header">
@@ -37,7 +34,7 @@
 
           <div class="row">
 
-            <!-- Select Patient -->
+            <!-- Patient -->
             <div class="col-md-6">
               <div class="form-group">
                 <label class="form-label"><i class="fas fa-user me-1"></i>Select Patient</label>
@@ -50,14 +47,13 @@
                     </option>
                   </select>
                 </div>
-                <small class="error-text"
-                  *ngIf="itemForm.controls['patientId'].touched && itemForm.controls['patientId'].hasError('required')">
+                <small class="error-text" *ngIf="itemForm.controls['patientId'].touched && itemForm.controls['patientId'].hasError('required')">
                   Please select patient
                 </small>
               </div>
             </div>
 
-            <!-- Select Doctor -->
+            <!-- Doctor -->
             <div class="col-md-6">
               <div class="form-group">
                 <label class="form-label"><i class="fas fa-user-md me-1"></i>Select Doctor</label>
@@ -70,47 +66,23 @@
                     </option>
                   </select>
                 </div>
-                <small class="error-text"
-                  *ngIf="itemForm.controls['doctorId'].touched && itemForm.controls['doctorId'].hasError('required')">
+                <small class="error-text" *ngIf="itemForm.controls['doctorId'].touched && itemForm.controls['doctorId'].hasError('required')">
                   Please select doctor
                 </small>
               </div>
             </div>
 
-            <!-- Appointment Time -->
-            <div class="col-md-6">
-              <div class="form-group">
-                <label class="form-label"><i class="fas fa-clock me-1"></i>Appointment Time</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                  <input type="datetime-local" class="form-control" formControlName="time" />
-                </div>
-                <small class="error-text"
-                  *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('required')">
-                  Appointment time is required
-                </small>
-                <small class="error-text"
-                  *ngIf="itemForm.controls['time'].touched && itemForm.controls['time'].hasError('pastTime')">
-                  Time must be in the future
-                </small>
-              </div>
-            </div>
-
-            <!-- ✅ Payment Mode -->
-            <div class="col-md-6">
+            <!-- Payment -->
+            <div class="col-md-12">
               <div class="form-group">
                 <label class="form-label"><i class="fas fa-credit-card me-1"></i>Payment Mode</label>
                 <div class="payment-options">
-                  <div class="pay-option"
-                       [class.selected]="paymentMode === 'OFFLINE'"
-                       (click)="paymentMode = 'OFFLINE'">
+                  <div class="pay-option" [class.selected]="paymentMode === 'OFFLINE'" (click)="paymentMode = 'OFFLINE'">
                     <i class="fas fa-money-bill-wave"></i>
                     <span>Pay at Hospital (Offline)</span>
                     <div class="radio-dot" *ngIf="paymentMode === 'OFFLINE'"></div>
                   </div>
-                  <div class="pay-option"
-                       [class.selected]="paymentMode === 'ONLINE'"
-                       (click)="paymentMode = 'ONLINE'">
+                  <div class="pay-option" [class.selected]="paymentMode === 'ONLINE'" (click)="paymentMode = 'ONLINE'">
                     <i class="fas fa-laptop"></i>
                     <span>Pay Online</span>
                     <div class="radio-dot" *ngIf="paymentMode === 'ONLINE'"></div>
@@ -121,12 +93,58 @@
 
           </div>
 
-          <!-- ✅ DOCTOR INFO CARD (shows when doctor selected) -->
+          <!-- ✅ DATE CARDS -->
+          <div class="form-group" *ngIf="itemForm.get('doctorId')?.value">
+            <label class="form-label"><i class="fas fa-calendar-alt me-1"></i>Select Date</label>
+
+            <div class="date-cards-grid">
+              <div *ngFor="let dc of dateCards"
+                   class="date-card"
+                   [class.date-selected]="selectedDate === dc.value"
+                   (click)="selectDate(dc.value)">
+                <span class="date-day-name">{{ dc.dayName }}</span>
+                <span class="date-day-num">{{ dc.dayNum }}</span>
+                <span class="date-month">{{ dc.month }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ SLOT SELECTION -->
+          <div class="form-group" *ngIf="selectedDate && itemForm.get('doctorId')?.value">
+
+            <label class="form-label">
+              <i class="fas fa-clock me-1"></i>Select Time Slot
+              <span class="slot-count" *ngIf="!loadingSlots">({{ getAvailableCount() }} available)</span>
+            </label>
+
+            <div *ngIf="loadingSlots" class="text-center py-3">
+              <i class="fas fa-spinner fa-spin me-1"></i> Loading slots...
+            </div>
+
+            <div class="slot-grid" *ngIf="!loadingSlots">
+              <div *ngFor="let slot of allSlots"
+                   class="slot-card"
+                   [class.slot-available]="isSlotAvailable(slot.value)"
+                   [class.slot-booked]="isSlotBooked(slot.value)"
+                   [class.slot-past]="isSlotPast(slot.value) && !isSlotBooked(slot.value)"
+                   [class.slot-selected]="selectedSlot === slot.value"
+                   (click)="selectSlot(slot.value)">
+                <i class="fas" [ngClass]="{'fa-check-circle': selectedSlot === slot.value, 'fa-clock': selectedSlot !== slot.value && isSlotAvailable(slot.value), 'fa-lock': isSlotBooked(slot.value), 'fa-hourglass-end': isSlotPast(slot.value) && !isSlotBooked(slot.value)}"></i>
+                <span>{{ slot.label }}</span>
+                <small *ngIf="isSlotBooked(slot.value)" class="booked-label">Booked</small>
+                <small *ngIf="isSlotPast(slot.value) && !isSlotBooked(slot.value)" class="past-label">Passed</small>
+              </div>
+            </div>
+
+            <div *ngIf="!loadingSlots && getAvailableCount() === 0" class="no-slots-msg">
+              <i class="fas fa-exclamation-circle me-1"></i> No slots available. Try another date.
+            </div>
+          </div>
+
+          <!-- Doctor Info -->
           <div class="selected-doctor-card" *ngIf="selectedDoctor">
             <div class="sel-doc-left">
-              <div class="sel-doc-avatar">
-                <i class="fas fa-user-md"></i>
-              </div>
+              <div class="sel-doc-avatar"><i class="fas fa-user-md"></i></div>
               <div>
                 <h5>Dr. {{ selectedDoctor.username || selectedDoctor.name || selectedDoctor.doctorName }}</h5>
                 <p><i class="fas fa-stethoscope me-1"></i>{{ selectedDoctor.specialty || 'General' }}</p>
@@ -144,18 +162,28 @@
             </div>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" class="btn btn-submit" [disabled]="submitting">
+          <!-- Summary -->
+          <div class="booking-summary" *ngIf="selectedSlot">
+            <div class="summary-row">
+              <span>Selected Slot</span>
+              <strong>{{ getSlotLabel(selectedSlot) }}</strong>
+            </div>
+            <div class="summary-row">
+              <span>Date</span>
+              <strong>{{ getDateLabel(selectedDate) }}</strong>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-submit" [disabled]="submitting || !selectedSlot">
             <i class="fas fa-check-circle me-1"></i>
             {{ submitting ? 'Scheduling...' : 'Schedule Appointment' }}
           </button>
 
         </form>
-
       </div>
     </div>
 
-    <!-- ✅ SUCCESS ANIMATION -->
+    <!-- Success -->
     <div class="success-overlay" *ngIf="showSuccess">
       <div class="success-modal">
         <div class="success-checkmark">
@@ -171,9 +199,8 @@
       </div>
     </div>
 
-    <!-- Response Messages -->
     <div *ngIf="responseMessage && !showSuccess" class="response-msg"
-      [ngClass]="isAdded ? 'msg-success' : 'msg-error'">
+         [ngClass]="isAdded ? 'msg-success' : 'msg-error'">
       {{ responseMessage }}
     </div>
 

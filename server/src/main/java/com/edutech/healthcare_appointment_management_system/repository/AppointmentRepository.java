@@ -8,11 +8,14 @@ import com.edutech.healthcare_appointment_management_system.entity.Appointment;
 import java.util.List;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     List<Appointment> findByPatientId(Long patientId);
 
     List<Appointment> findByDoctorId(Long doctorId);
 
-    
+    // ✅ Slot system queries
+    boolean existsByDoctorIdAndAppointmentDateAndSlot(Long doctorId, String appointmentDate, String slot);
+
+    List<Appointment> findByDoctorIdAndAppointmentDate(Long doctorId, String appointmentDate);
 }
