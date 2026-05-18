@@ -152,16 +152,18 @@ export class HttpService {
     );
   }
 
+  // ✅ GET doctor by userId (FIXED URL)
   getDoctorByUserId(userId: any): Observable<any> {
     return this.http.get(
-      `${this.serverName}/api/doctors/user/${userId}`,
+      `${this.serverName}/api/doctor/user/${userId}`,
       { headers: this.getAuthHeaders() }
     );
   }
 
+  // ✅ GET doctor by doctorId (FIXED URL)
   getDoctorByDoctorId(doctorId: any): Observable<any> {
     return this.http.get(
-      `${this.serverName}/api/doctors/${doctorId}`,
+      `${this.serverName}/api/doctor/${doctorId}`,
       { headers: this.getAuthHeaders() }
     );
   }

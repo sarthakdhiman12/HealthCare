@@ -45,10 +45,9 @@ public ResponseEntity<Doctor> getDoctorById(@PathVariable Long doctorId) {
     return new ResponseEntity<>(doctorService.getDoctorById(doctorId), HttpStatus.OK);
 }
 
-// ✅ GET doctor by userId
 @GetMapping("/user/{userId}")
 public ResponseEntity<Doctor> getDoctorByUserId(@PathVariable Long userId) {
-    return new ResponseEntity<>(doctorService.getDoctorById(userId), HttpStatus.OK);
+    return new ResponseEntity<>(doctorService.getDoctorByUserId(userId), HttpStatus.OK);
 }
 
 

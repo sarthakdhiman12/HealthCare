@@ -26,10 +26,17 @@ public class DoctorService {
     @Transactional
     public Doctor updateAvailability(Long doctorId, String availability) {
         Doctor doctor = doctorRepository.findById(doctorId)
-        .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
         doctor.setAvailability(availability);
         return doctorRepository.save(doctor);
+    }
+
+    public Doctor getDoctorByUserId(Long userId) {
+        Doctor doctor = doctorRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        return doctor;
     }
 
 }
