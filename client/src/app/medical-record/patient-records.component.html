@@ -1,0 +1,119 @@
+<div class="page-wrapper">
+
+  <!-- BG -->
+  <div class="page-bg">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+    <div class="bg-circle c3"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <div>
+        <h2><i class="fas fa-file-medical me-2"></i>My Medical Reports</h2>
+        <p>View your medical history & download reports</p>
+      </div>
+      <div class="header-badge">
+        <i class="fas fa-notes-medical me-1"></i>{{ medicalRecords.length }} Reports
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loadingRecords" class="loading-state">
+      <i class="fas fa-spinner fa-spin me-2"></i>Loading medical reports...
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="errorMessage" class="error-state">
+      <i class="fas fa-exclamation-triangle me-2"></i>{{ errorMessage }}
+    </div>
+
+    <!-- EMPTY -->
+    <div class="empty-state" *ngIf="!loadingRecords && medicalRecords.length === 0 && !errorMessage">
+      <div class="empty-icon">📋</div>
+      <h3>No Medical Reports</h3>
+      <p>Your doctor hasn't added any reports yet.</p>
+      <a routerLink="/patient-appointment" class="btn btn-back">
+        <i class="fas fa-arrow-left me-1"></i>Back to Appointments
+      </a>
+    </div>
+
+    <!-- ✅ RECORDS LIST -->
+    <div class="records-container" *ngIf="!loadingRecords && medicalRecords.length > 0">
+
+      <div class="record-card" *ngFor="let record of medicalRecords; let i = index"
+           [style.animation-delay]="(i * 0.08) + 's'">
+
+        <!-- Record Header -->
+        <div class="record-header">
+          <div class="record-id">
+            <i class="fas fa-file-alt me-1"></i>Report #MR-{{ record.id }}
+          </div>
+          <div class="record-date-badge">
+            <i class="fas fa-calendar me-1"></i>{{ getRecordDate(record) }}
+          </div>
+        </div>
+
+        <!-- Record Body -->
+        <div class="record-body">
+
+          <div class="record-info-row">
+            <div class="record-info-block">
+              <div class="record-icon doctor-icon"><i class="fas fa-user-md"></i></div>
+              <div>
+                <label>Doctor</label>
+                <p>{{ record.doctor?.username || 'N/A' }}</p>
+                <small>{{ record.doctor?.specialty || 'General' }}</small>
+              </div>
+            </div>
+
+            <div class="record-info-block">
+              <div class="record-icon patient-icon"><i class="fas fa-user"></i></div>
+              <div>
+                <label>Patient</label>
+                <p>{{ record.patient?.username || 'N/A' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="record-detail-box diagnosis-box">
+            <label><i class="fas fa-search me-1"></i>Diagnosis</label>
+            <p>{{ record.diagnosis || 'N/A' }}</p>
+          </div>
+
+          <div class="record-detail-box treatment-box">
+            <label><i class="fas fa-pills me-1"></i>Treatment</label>
+            <p>{{ record.treatment || 'N/A' }}</p>
+          </div>
+
+        </div>
+
+        <!-- Record Actions -->
+        <div class="record-actions">
+          <button class="btn btn-download-pdf" (click)="downloadPDF(record)">
+            <i class="fas fa-file-pdf me-2"></i>Download PDF
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-btn-container" *ngIf="!loadingRecords && medicalRecords.length > 0">
+      <a routerLink="/dashboard" class="btn btn-back">
+        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+      </a>
+    </div>
+
+  </div>
+</div>

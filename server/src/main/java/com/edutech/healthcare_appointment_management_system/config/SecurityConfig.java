@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(auth -> auth
 
-                        // ✅ PREFLIGHT — must be first
+                        // ✅ PREFLIGHT
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // ✅ DELETE — FULLY OPEN
@@ -54,7 +54,8 @@ public class SecurityConfig {
                                 "/api/receptionist/register",
                                 "/api/user/login",
                                 "/api/delete/**",
-                                "/api/payment/**"      // ✅ POST delete workaround
+                                "/api/payment/**",
+                                "/api/otp/**"
                         ).permitAll()
 
                         // ================= PATIENT =================
@@ -68,7 +69,11 @@ public class SecurityConfig {
                         // ================= DOCTOR =================
                         .antMatchers(
                                 "/api/doctor/appointments",
-                                "/api/doctor/availability"
+                                "/api/doctor/availability",
+                                "/api/doctor/medical-record",
+                                "/api/doctor/medical-record/**",
+                                "/api/doctor/medical-records",
+                                "/api/doctor/medical-records/**"
                         ).hasAuthority("DOCTOR")
 
                         // ================= RECEPTIONIST =================

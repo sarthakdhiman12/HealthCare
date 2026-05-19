@@ -18,6 +18,7 @@ import { DoctorAvailabilityComponent } from './doctor-availability/doctor-availa
 import { ReceptionistAppointmentsComponent } from './receptionist-appointments/receptionist-appointments.component';
 import { ReceptionistScheduleAppointmentsComponent } from './receptionist-schedule-appointments/receptionist-schedule-appointments.component';
 import { ChatbotComponent } from './chat-bot/chatbot.component';
+import { PatientRecordsComponent } from './medical-record/patient-records.component';
 
 
 
@@ -34,7 +35,8 @@ import { ChatbotComponent } from './chat-bot/chatbot.component';
     DoctorAppointmentComponent,
     ReceptionistAppointmentsComponent,
     ReceptionistScheduleAppointmentsComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    PatientRecordsComponent
 
     
   ],

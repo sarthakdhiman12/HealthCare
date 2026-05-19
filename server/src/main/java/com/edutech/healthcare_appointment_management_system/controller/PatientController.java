@@ -65,6 +65,6 @@ public class PatientController {
 
     @GetMapping("/medicalrecords")
     public ResponseEntity<List<MedicalRecord>> getMedicalRecordsByPatient(@RequestParam Long patientId) {
-        return new ResponseEntity<>(medicalRecordService.getMedicalRecordByPatientId(patientId), HttpStatus.OK);
+        return new ResponseEntity<>(medicalRecordService.getRecordsByPatient(patientId), HttpStatus.OK);
     }
 }

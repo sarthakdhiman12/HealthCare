@@ -64,6 +64,20 @@ export class HttpService {
     );
   }
 
+  // ================= OTP =================
+
+  sendOtp(email: string): Observable<any> {
+    const params = new HttpParams().set('email', email);
+    return this.http.post(`${this.serverName}/api/otp/send`, {}, { params });
+  }
+
+  verifyOtp(email: string, otp: string): Observable<any> {
+    const params = new HttpParams()
+      .set('email', email)
+      .set('otp', otp);
+    return this.http.post(`${this.serverName}/api/otp/verify`, {}, { params });
+  }
+
   // ================= PATIENT =================
 
   getDoctors(): Observable<any> {
@@ -73,7 +87,6 @@ export class HttpService {
     );
   }
 
-  // ✅ UPDATED: Slot-based booking
   ScheduleAppointment(details: any): Observable<any> {
     const params = new HttpParams()
       .set('patientId', details.patientId)
@@ -88,7 +101,6 @@ export class HttpService {
     );
   }
 
-  // ✅ NEW: Get available slots (patient)
   getAvailableSlots(doctorId: any, date: string): Observable<any> {
     const params = new HttpParams()
       .set('doctorId', doctorId)
@@ -152,7 +164,6 @@ export class HttpService {
     );
   }
 
-  // ✅ GET doctor by userId (FIXED URL)
   getDoctorByUserId(userId: any): Observable<any> {
     return this.http.get(
       `${this.serverName}/api/doctor/user/${userId}`,
@@ -160,7 +171,6 @@ export class HttpService {
     );
   }
 
-  // ✅ GET doctor by doctorId (FIXED URL)
   getDoctorByDoctorId(doctorId: any): Observable<any> {
     return this.http.get(
       `${this.serverName}/api/doctor/${doctorId}`,
@@ -206,7 +216,6 @@ export class HttpService {
     );
   }
 
-  // ✅ UPDATED: Slot-based booking (receptionist)
   ScheduleAppointmentByReceptionist(details: any): Observable<any> {
     const params = new HttpParams()
       .set('patientId', details.patientId)
@@ -221,7 +230,6 @@ export class HttpService {
     );
   }
 
-  // ✅ UPDATED: Slot-based reschedule
   reScheduleAppointment(appointmentId: any, formValue: any): Observable<any> {
     const params = new HttpParams()
       .set('date', formValue.date)
@@ -234,7 +242,6 @@ export class HttpService {
     );
   }
 
-  // ✅ NEW: Get available slots (receptionist)
   getAvailableSlotsForReceptionist(doctorId: any, date: string): Observable<any> {
     const params = new HttpParams()
       .set('doctorId', doctorId)
@@ -270,7 +277,6 @@ export class HttpService {
 
   // ================= PAYMENT =================
 
-  // ✅ Create Razorpay order
   createPaymentOrder(amount: number, appointmentId: number): Observable<any> {
     const params = new HttpParams()
       .set('amount', amount.toString())
@@ -283,7 +289,6 @@ export class HttpService {
     );
   }
 
-  // ✅ Verify payment
   verifyPayment(razorpayPaymentId: string, razorpayOrderId: string, appointmentId: number): Observable<any> {
     const params = new HttpParams()
       .set('razorpayPaymentId', razorpayPaymentId)
@@ -294,6 +299,63 @@ export class HttpService {
       `${this.serverName}/api/payment/verify`,
       {},
       { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ================= MEDICAL RECORDS =================
+
+  // ✅ Doctor creates record
+  createMedicalRecord(patientId: number, doctorId: number, diagnosis: string, treatment: string): Observable<any> {
+    const params = new HttpParams()
+      .set('patientId', patientId.toString())
+      .set('doctorId', doctorId.toString())
+      .set('diagnosis', diagnosis)
+      .set('treatment', treatment);
+
+    return this.http.post(
+      `${this.serverName}/api/doctor/medical-record`,
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ Doctor gets all records they created
+  getMedicalRecordsByDoctor(doctorId: number): Observable<any> {
+    const params = new HttpParams().set('doctorId', doctorId.toString());
+    return this.http.get(
+      `${this.serverName}/api/doctor/medical-records`,
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ Doctor gets records for a specific patient
+  getMedicalRecordsByPatientAndDoctor(patientId: number, doctorId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('patientId', patientId.toString())
+      .set('doctorId', doctorId.toString());
+    return this.http.get(
+      `${this.serverName}/api/doctor/medical-records/patient`,
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ Update medical record
+  updateMedicalRecord(recordId: number, diagnosis: string, treatment: string): Observable<any> {
+    const params = new HttpParams()
+      .set('diagnosis', diagnosis)
+      .set('treatment', treatment);
+    return this.http.put(
+      `${this.serverName}/api/doctor/medical-record/${recordId}`,
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ Delete medical record
+  deleteMedicalRecord(recordId: number): Observable<any> {
+    return this.http.delete(
+      `${this.serverName}/api/doctor/medical-record/${recordId}`,
+      { headers: this.getAuthHeaders() }
     );
   }
 }

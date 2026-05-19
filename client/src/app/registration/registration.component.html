@@ -67,13 +67,33 @@
             </small>
           </div>
 
-          <!-- Email -->
+          <!-- Email + Send OTP -->
           <div class="form-group">
             <label class="form-label">Email</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-              <input type="email" class="form-control" formControlName="email" placeholder="Enter email" />
+            <div class="email-otp-row">
+              <div class="input-group email-input-group">
+                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                <input type="email" class="form-control" formControlName="email"
+                       placeholder="Enter email"
+                       (input)="onEmailChange()"
+                       [readonly]="otpVerified" />
+              </div>
+
+              <!-- Send OTP Button -->
+              <button type="button" class="btn btn-send-otp"
+                      *ngIf="!otpVerified"
+                      [disabled]="otpSending || otpTimer > 0 || itemForm.get('email')?.invalid"
+                      (click)="sendOtp()">
+                <i class="fas" [ngClass]="otpSending ? 'fa-spinner fa-spin' : 'fa-paper-plane'"></i>
+                <span>{{ otpSending ? 'Sending...' : otpTimer > 0 ? otpTimer + 's' : otpSent ? 'Resend' : 'Send OTP' }}</span>
+              </button>
+
+              <!-- Verified Badge -->
+              <div class="verified-badge" *ngIf="otpVerified">
+                <i class="fas fa-check-circle"></i> Verified
+              </div>
             </div>
+
             <small class="error-text"
               *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('required')">
               Email is required
@@ -82,6 +102,55 @@
               *ngIf="itemForm.get('email')?.touched && itemForm.get('email')?.hasError('email')">
               Enter a valid email
             </small>
+          </div>
+
+          <!-- ✅ OTP VERIFICATION SECTION (below email) -->
+          <div class="otp-section" *ngIf="otpSent && !otpVerified">
+
+            <div class="otp-box">
+              <label class="form-label">
+                <i class="fas fa-shield-alt me-1"></i>Enter OTP sent to your email
+              </label>
+
+              <div class="otp-input-row">
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-key"></i></span>
+                  <input type="text" class="form-control otp-input"
+                         [(ngModel)]="otpValue"
+                         [ngModelOptions]="{standalone: true}"
+                         placeholder="Enter 6-digit OTP"
+                         maxlength="6" />
+                </div>
+
+                <button type="button" class="btn btn-verify-otp"
+                        [disabled]="otpVerifying || !otpValue || otpValue.length !== 6"
+                        (click)="verifyOtp()">
+                  <i class="fas" [ngClass]="otpVerifying ? 'fa-spinner fa-spin' : 'fa-check'"></i>
+                  <span>{{ otpVerifying ? 'Verifying...' : 'Verify' }}</span>
+                </button>
+              </div>
+
+              <!-- OTP Timer -->
+              <div class="otp-timer" *ngIf="otpTimer > 0">
+                <i class="fas fa-clock me-1"></i>Resend OTP in <strong>{{ otpTimer }}s</strong>
+              </div>
+
+              <!-- OTP Success -->
+              <div class="otp-success-msg" *ngIf="otpSuccess && !otpError">
+                <i class="fas fa-check-circle me-1"></i>{{ otpSuccess }}
+              </div>
+
+              <!-- OTP Error -->
+              <div class="otp-error-msg" *ngIf="otpError">
+                <i class="fas fa-exclamation-triangle me-1"></i>{{ otpError }}
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ✅ OTP Error (when not sent yet but trying to register) -->
+          <div class="otp-error-msg" *ngIf="otpError && !otpSent" style="margin-bottom: 12px;">
+            <i class="fas fa-exclamation-triangle me-1"></i>{{ otpError }}
           </div>
 
           <!-- Password -->
@@ -154,8 +223,11 @@
           </div>
 
           <!-- Register Button -->
-          <button type="submit" class="btn register-btn w-100">
-            <i class="fas fa-user-plus me-2"></i>Register
+          <button type="submit" class="btn register-btn w-100"
+                  [disabled]="!otpVerified"
+                  [class.btn-disabled]="!otpVerified">
+            <i class="fas fa-user-plus me-2"></i>
+            {{ otpVerified ? 'Register' : '🔒 Verify Email to Register' }}
           </button>
 
         </form>

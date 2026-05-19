@@ -2,13 +2,9 @@
   <div class="container-fluid">
 
     <a class="navbar-brand fw-bold brand-logo" [routerLink]="isLoggedin ? '/dashboard' : '/login'">
-
       <i class="fas fa-heartbeat me-2 brand-icon"></i>
       HAM System
-
     </a>
-
-
 
     <!-- Mobile Toggle -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -48,6 +44,13 @@
         <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
           <a class="nav-link" routerLink="/schedule-appointment" routerLinkActive="active">
             <i class="fas fa-calendar-plus me-1"></i>Book Appointment
+          </a>
+        </li>
+
+        <!-- ✅ NEW: Medical Records (Patient only) -->
+        <li class="nav-item" *ngIf="isLoggedin && roleName === 'PATIENT'">
+          <a class="nav-link" routerLink="/patient-records" routerLinkActive="active">
+            <i class="fas fa-file-medical me-1"></i>Medical Records
           </a>
         </li>
 

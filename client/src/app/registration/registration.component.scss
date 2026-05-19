@@ -346,7 +346,7 @@
     animation: shimmer 3s ease-in-out infinite;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 20px rgba(13,110,253,0.5);
     color: #fff;
@@ -376,7 +376,210 @@
   }
 }
 
-/* ===== RESPONSIVE ===== */
+
+/* =============================================
+   ✅ OTP STYLES
+   ============================================= */
+
+/* Email + Send OTP row */
+.email-otp-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.email-input-group {
+  flex: 1;
+}
+
+.btn-send-otp {
+  background: linear-gradient(135deg, #0d6efd, #084298);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 42px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(13,110,253,0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.verified-badge {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 42px;
+  animation: verifiedPop 0.4s ease;
+
+  i { font-size: 14px; }
+}
+
+@keyframes verifiedPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* OTP Section */
+.otp-section {
+  margin-bottom: 18px;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.otp-box {
+  background: rgba(13,110,253,0.05);
+  border: 1px solid rgba(13,110,253,0.15);
+  border-radius: 12px;
+  padding: 16px;
+
+  .form-label {
+    color: #8ab4f8;
+    font-size: 13px;
+    margin-bottom: 10px;
+
+    i { color: #0d6efd; }
+  }
+}
+
+.otp-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.otp-input {
+  letter-spacing: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.btn-verify-otp {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 42px;
+  transition: all 0.3s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Timer */
+.otp-timer {
+  color: #f59e0b;
+  font-size: 12px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+
+  i { color: #f59e0b; }
+  strong { margin-left: 2px; }
+}
+
+/* Success message */
+.otp-success-msg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  background: linear-gradient(135deg, #10b981, #059669);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+  animation: fadeInOtp 0.3s ease;
+
+  i { font-size: 14px; }
+}
+
+/* Error message */
+.otp-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+  animation: shakeOtp 0.4s ease, fadeInOtp 0.3s ease;
+  box-shadow: 0 4px 12px rgba(239,68,68,0.25);
+
+  i { font-size: 14px; }
+}
+
+@keyframes fadeInOtp {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shakeOtp {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}
+
+/* Register button disabled state */
+.btn-disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+
+  &:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
 @media (max-width: 576px) {
   .register-container {
     padding: 20px 15px;
@@ -388,5 +591,28 @@
 
   .register-header h4 {
     font-size: 19px;
+  }
+
+  .email-otp-row {
+    flex-direction: column;
+  }
+
+  .btn-send-otp {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .otp-input-row {
+    flex-direction: column;
+  }
+
+  .btn-verify-otp {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .verified-badge {
+    width: 100%;
+    justify-content: center;
   }
 }

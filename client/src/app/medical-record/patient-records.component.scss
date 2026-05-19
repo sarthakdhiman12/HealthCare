@@ -1,0 +1,206 @@
+/* ===== PAGE WRAPPER ===== */
+.page-wrapper {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #060d19, #0a1628, #0d2137, #0b1e36, #060d19);
+}
+
+/* ===== BG ===== */
+.page-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+.grid-overlay {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(13,110,253,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13,110,253,0.02) 1px, transparent 1px);
+  background-size: 50px 50px; animation: gridMove 25s linear infinite;
+}
+@keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 50px 50px; } }
+
+.bg-circle { position: absolute; border-radius: 50%; opacity: 0; animation: floatC 14s ease-in-out infinite; }
+.c1 { width: 220px; height: 220px; background: radial-gradient(circle, rgba(13,110,253,0.08) 0%, transparent 70%); top: 5%; left: 5%; }
+.c2 { width: 180px; height: 180px; background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%); bottom: 10%; right: 10%; animation-delay: 3s; }
+.c3 { width: 250px; height: 250px; background: radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%); top: 40%; right: 20%; animation-delay: 5s; }
+
+@keyframes floatC {
+  0% { opacity: 0; transform: scale(0.8); } 25% { opacity: 0.7; }
+  50% { opacity: 0.5; transform: translate(20px,-15px) scale(1.1); } 100% { opacity: 0; transform: scale(0.8); }
+}
+
+.particle { position: absolute; width: 3px; height: 3px; background: rgba(13,110,253,0.4); border-radius: 50%; bottom: -10px; animation: rise 9s ease-in infinite; }
+.p1 { left: 8%; } .p2 { left: 22%; animation-delay: 1.5s; } .p3 { left: 40%; animation-delay: 0.8s; }
+.p4 { left: 58%; animation-delay: 2.5s; } .p5 { left: 75%; animation-delay: 1s; } .p6 { left: 90%; animation-delay: 3s; }
+@keyframes rise { 0% { opacity: 0; } 10% { opacity: 0.6; } 100% { opacity: 0; transform: translateY(-100vh); } }
+
+/* ===== CONTENT ===== */
+.page-content { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+
+/* ===== HEADER ===== */
+.page-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 30px; flex-wrap: wrap; gap: 15px; animation: fadeIn 0.6s ease;
+}
+.page-header h2 { color: #fff; font-size: 26px; font-weight: 700; margin: 0; }
+.page-header h2 i { color: #10b981; }
+.page-header p { color: #7a8fa5; font-size: 14px; margin: 4px 0 0; }
+
+.header-badge {
+  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);
+  color: #34d399; padding: 8px 16px; border-radius: 10px; font-size: 14px; font-weight: 600;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== LOADING ===== */
+.loading-state {
+  text-align: center; padding: 40px; color: #7a8fa5; font-size: 16px;
+  animation: fadeIn 0.4s ease;
+}
+
+/* ===== ERROR ===== */
+.error-state {
+  text-align: center; padding: 20px;
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 12px; color: #f87171; font-weight: 600;
+  animation: fadeIn 0.4s ease;
+}
+
+/* ===== EMPTY ===== */
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px; animation: fadeIn 0.5s ease;
+}
+.empty-state .empty-icon { font-size: 50px; margin-bottom: 15px; }
+.empty-state h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+.empty-state p { color: #7a8fa5; margin-bottom: 20px; }
+
+/* ===== RECORD CARD ===== */
+.record-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(16,185,129,0.1);
+  border-left: 3px solid rgba(16,185,129,0.5);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+  animation: fadeUp 0.5s ease both;
+}
+.record-card:hover {
+  border-color: rgba(16,185,129,0.25);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* Record Header */
+.record-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px;
+  background: rgba(16,185,129,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.record-id { color: #34d399; font-weight: 700; font-size: 15px; }
+.record-id i { color: #10b981; }
+
+.record-date-badge {
+  background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2);
+  color: #a78bfa; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+/* Record Body */
+.record-body { padding: 20px; }
+
+.record-info-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 16px;
+}
+
+.record-info-block {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px; padding: 14px; transition: all 0.3s;
+}
+.record-info-block:hover { border-color: rgba(16,185,129,0.15); }
+.record-info-block label { color: #7a8fa5; font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; }
+.record-info-block p { color: #e0e6ed; font-size: 14px; font-weight: 600; margin: 2px 0 0; }
+.record-info-block small { color: #5a6a7a; font-size: 12px; }
+
+.record-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.record-icon i { font-size: 15px; color: #fff; }
+
+.doctor-icon { background: linear-gradient(135deg, #0d6efd, #084298); }
+.patient-icon { background: linear-gradient(135deg, #10b981, #059669); }
+
+/* Detail Boxes */
+.record-detail-box {
+  padding: 16px; border-radius: 12px; margin-bottom: 12px;
+}
+.record-detail-box label { font-size: 12px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 8px; }
+.record-detail-box p { color: #e0e6ed; font-size: 14px; line-height: 1.7; margin: 0; white-space: pre-wrap; }
+
+.diagnosis-box {
+  background: rgba(13,110,253,0.05); border: 1px solid rgba(13,110,253,0.12);
+}
+.diagnosis-box label { color: #6db3f8; }
+.diagnosis-box label i { color: #0d6efd; }
+
+.treatment-box {
+  background: rgba(16,185,129,0.05); border: 1px solid rgba(16,185,129,0.12);
+}
+.treatment-box label { color: #34d399; }
+.treatment-box label i { color: #10b981; }
+
+/* Record Actions */
+.record-actions {
+  display: flex; gap: 10px; padding: 14px 20px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.btn-download-pdf {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 10px 22px; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.btn-download-pdf::before {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+.btn-download-pdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(239,68,68,0.4);
+  color: #fff;
+}
+@keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
+
+/* ===== BACK BUTTON ===== */
+.back-btn-container {
+  text-align: center; margin-top: 25px;
+}
+
+.btn-back {
+  background: rgba(13,110,253,0.1); border: 1px solid rgba(13,110,253,0.25);
+  color: #6db3f8; padding: 10px 24px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  display: inline-flex; align-items: center; transition: all 0.3s;
+}
+.btn-back:hover {
+  background: rgba(13,110,253,0.2); color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .page-content { padding: 20px 15px; }
+  .page-header { flex-direction: column; text-align: center; }
+  .record-info-row { grid-template-columns: 1fr; }
+  .record-actions { flex-direction: column; }
+  .btn-download-pdf { width: 100%; justify-content: center; }
+}

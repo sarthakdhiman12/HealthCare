@@ -34,6 +34,11 @@
       <p>You don't have any upcoming appointments.</p>
     </div>
 
+    <!-- ✅ SUCCESS MESSAGE (global) -->
+    <div class="report-success-global" *ngIf="reportSuccess">
+      <i class="fas fa-check-circle me-2"></i>{{ reportSuccess }}
+    </div>
+
     <!-- ✅ UPCOMING APPOINTMENTS -->
     <div class="section-label" *ngIf="upcomingAppointments.length > 0">
       <i class="fas fa-calendar-check me-2"></i>Upcoming & Today's Appointments
@@ -131,6 +136,135 @@
               </div>
             </div>
           </div>
+
+          <!-- ✅ MEDICAL REPORT SECTION -->
+          <div class="report-section">
+
+            <!-- ✅ Report Action Buttons -->
+            <div class="report-actions"
+                 *ngIf="reportAppointmentId !== (appointment.id || appointment.appointmentId)">
+
+              <!-- No report → Add button -->
+              <button class="btn btn-add-report"
+                      *ngIf="!hasReport(appointment.id || appointment.appointmentId)"
+                      (click)="openAddReport(appointment)">
+                <i class="fas fa-file-medical me-2"></i>Add Report
+              </button>
+
+              <!-- Has report → View button -->
+              <button class="btn btn-view-report"
+                      *ngIf="hasReport(appointment.id || appointment.appointmentId)"
+                      (click)="openViewReport(appointment)">
+                <i class="fas fa-file-alt me-2"></i>View Report
+              </button>
+            </div>
+
+            <!-- ✅ ADD / EDIT FORM -->
+            <div class="report-form"
+                 *ngIf="reportAppointmentId === (appointment.id || appointment.appointmentId)
+                        && (reportMode === 'add' || reportMode === 'edit')">
+
+              <div class="report-form-header">
+                <i class="fas fa-file-medical me-2"></i>
+                {{ reportMode === 'add' ? 'Add Medical Report' : 'Edit Medical Report' }}
+              </div>
+
+              <div class="report-form-body">
+                <div class="report-field">
+                  <label><i class="fas fa-search me-1"></i>Diagnosis</label>
+                  <textarea class="form-control report-textarea"
+                            [(ngModel)]="reportDiagnosis"
+                            placeholder="Enter diagnosis details..."
+                            rows="3"></textarea>
+                </div>
+
+                <div class="report-field">
+                  <label><i class="fas fa-pills me-1"></i>Treatment</label>
+                  <textarea class="form-control report-textarea"
+                            [(ngModel)]="reportTreatment"
+                            placeholder="Enter treatment details..."
+                            rows="3"></textarea>
+                </div>
+
+                <!-- Error -->
+                <div class="report-error" *ngIf="reportError">
+                  <i class="fas fa-exclamation-triangle me-1"></i>{{ reportError }}
+                </div>
+
+                <div class="report-form-actions">
+                  <button class="btn btn-save-report"
+                          [disabled]="reportSaving"
+                          (click)="reportMode === 'add' ? saveReport(appointment) : updateReport()">
+                    <i class="fas" [ngClass]="reportSaving ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                    <span>{{ reportSaving ? 'Saving...' : reportMode === 'add' ? 'Save Report' : 'Update Report' }}</span>
+                  </button>
+
+                  <button class="btn btn-cancel-report" (click)="closeReport()">
+                    <i class="fas fa-times me-1"></i>Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ VIEW REPORT -->
+            <div class="report-view"
+                 *ngIf="reportAppointmentId === (appointment.id || appointment.appointmentId)
+                        && reportMode === 'view'
+                        && hasReport(appointment.id || appointment.appointmentId)">
+
+              <div class="report-view-header">
+                <div>
+                  <i class="fas fa-file-alt me-2"></i>Medical Report
+                </div>
+                <button class="btn btn-close-report" (click)="closeReport()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="report-view-body">
+                <div class="report-detail">
+                  <div class="report-detail-icon diagnosis-icon">
+                    <i class="fas fa-search"></i>
+                  </div>
+                  <div>
+                    <label>Diagnosis</label>
+                    <p>{{ getReport(appointment.id || appointment.appointmentId)?.diagnosis || 'N/A' }}</p>
+                  </div>
+                </div>
+
+                <div class="report-detail">
+                  <div class="report-detail-icon treatment-icon">
+                    <i class="fas fa-pills"></i>
+                  </div>
+                  <div>
+                    <label>Treatment</label>
+                    <p>{{ getReport(appointment.id || appointment.appointmentId)?.treatment || 'N/A' }}</p>
+                  </div>
+                </div>
+
+                <div class="report-detail">
+                  <div class="report-detail-icon date-icon">
+                    <i class="fas fa-calendar"></i>
+                  </div>
+                  <div>
+                    <label>Record Date</label>
+                    <p>{{ getRecordDate(getReport(appointment.id || appointment.appointmentId)) }}</p>
+                  </div>
+                </div>
+
+                <div class="report-view-actions">
+                  <button class="btn btn-edit-report" (click)="openEditReport(appointment)">
+                    <i class="fas fa-edit me-1"></i>Edit
+                  </button>
+                  <button class="btn btn-delete-report" (click)="deleteReport(appointment)">
+                    <i class="fas fa-trash me-1"></i>Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- END REPORT SECTION -->
 
         </div>
 
@@ -239,6 +373,122 @@
                   <p>{{ appointment.doctor?.specialty || 'General' }}</p>
                 </div>
               </div>
+            </div>
+
+            <!-- ✅ REPORT SECTION (Past appointments too) -->
+            <div class="report-section">
+
+              <div class="report-actions"
+                   *ngIf="reportAppointmentId !== (appointment.id || appointment.appointmentId)">
+
+                <button class="btn btn-add-report"
+                        *ngIf="!hasReport(appointment.id || appointment.appointmentId)"
+                        (click)="openAddReport(appointment)">
+                  <i class="fas fa-file-medical me-2"></i>Add Report
+                </button>
+
+                <button class="btn btn-view-report"
+                        *ngIf="hasReport(appointment.id || appointment.appointmentId)"
+                        (click)="openViewReport(appointment)">
+                  <i class="fas fa-file-alt me-2"></i>View Report
+                </button>
+              </div>
+
+              <!-- ADD/EDIT FORM (same as above) -->
+              <div class="report-form"
+                   *ngIf="reportAppointmentId === (appointment.id || appointment.appointmentId)
+                          && (reportMode === 'add' || reportMode === 'edit')">
+
+                <div class="report-form-header">
+                  <i class="fas fa-file-medical me-2"></i>
+                  {{ reportMode === 'add' ? 'Add Medical Report' : 'Edit Medical Report' }}
+                </div>
+
+                <div class="report-form-body">
+                  <div class="report-field">
+                    <label><i class="fas fa-search me-1"></i>Diagnosis</label>
+                    <textarea class="form-control report-textarea"
+                              [(ngModel)]="reportDiagnosis"
+                              placeholder="Enter diagnosis details..."
+                              rows="3"></textarea>
+                  </div>
+
+                  <div class="report-field">
+                    <label><i class="fas fa-pills me-1"></i>Treatment</label>
+                    <textarea class="form-control report-textarea"
+                              [(ngModel)]="reportTreatment"
+                              placeholder="Enter treatment details..."
+                              rows="3"></textarea>
+                  </div>
+
+                  <div class="report-error" *ngIf="reportError">
+                    <i class="fas fa-exclamation-triangle me-1"></i>{{ reportError }}
+                  </div>
+
+                  <div class="report-form-actions">
+                    <button class="btn btn-save-report"
+                            [disabled]="reportSaving"
+                            (click)="reportMode === 'add' ? saveReport(appointment) : updateReport()">
+                      <i class="fas" [ngClass]="reportSaving ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+                      <span>{{ reportSaving ? 'Saving...' : reportMode === 'add' ? 'Save Report' : 'Update Report' }}</span>
+                    </button>
+
+                    <button class="btn btn-cancel-report" (click)="closeReport()">
+                      <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VIEW REPORT (same as above) -->
+              <div class="report-view"
+                   *ngIf="reportAppointmentId === (appointment.id || appointment.appointmentId)
+                          && reportMode === 'view'
+                          && hasReport(appointment.id || appointment.appointmentId)">
+
+                <div class="report-view-header">
+                  <div><i class="fas fa-file-alt me-2"></i>Medical Report</div>
+                  <button class="btn btn-close-report" (click)="closeReport()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+
+                <div class="report-view-body">
+                  <div class="report-detail">
+                    <div class="report-detail-icon diagnosis-icon"><i class="fas fa-search"></i></div>
+                    <div>
+                      <label>Diagnosis</label>
+                      <p>{{ getReport(appointment.id || appointment.appointmentId)?.diagnosis || 'N/A' }}</p>
+                    </div>
+                  </div>
+
+                  <div class="report-detail">
+                    <div class="report-detail-icon treatment-icon"><i class="fas fa-pills"></i></div>
+                    <div>
+                      <label>Treatment</label>
+                      <p>{{ getReport(appointment.id || appointment.appointmentId)?.treatment || 'N/A' }}</p>
+                    </div>
+                  </div>
+
+                  <div class="report-detail">
+                    <div class="report-detail-icon date-icon"><i class="fas fa-calendar"></i></div>
+                    <div>
+                      <label>Record Date</label>
+                      <p>{{ getRecordDate(getReport(appointment.id || appointment.appointmentId)) }}</p>
+                    </div>
+                  </div>
+
+                  <div class="report-view-actions">
+                    <button class="btn btn-edit-report" (click)="openEditReport(appointment)">
+                      <i class="fas fa-edit me-1"></i>Edit
+                    </button>
+                    <button class="btn btn-delete-report" (click)="deleteReport(appointment)">
+                      <i class="fas fa-trash me-1"></i>Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>

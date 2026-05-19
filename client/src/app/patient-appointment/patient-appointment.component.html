@@ -46,7 +46,7 @@
     <div class="appointments-container" *ngIf="upcomingAppointments.length > 0">
 
       <div class="appointment-card" *ngFor="let appointment of upcomingAppointments; let i = index"
-           [style.animation-delay]="(i * 0.1) + 's'">
+        [style.animation-delay]="(i * 0.1) + 's'">
 
         <!-- TOP ROW -->
         <div class="card-top">
@@ -56,8 +56,7 @@
               <i class="fas fa-bolt me-1"></i>Today
             </span>
           </div>
-          <span class="status-badge"
-            [ngClass]="{
+          <span class="status-badge" [ngClass]="{
               'status-scheduled': appointment.status?.toLowerCase() === 'scheduled',
               'status-completed': appointment.status?.toLowerCase() === 'completed',
               'status-cancelled': appointment.status?.toLowerCase() === 'cancelled'
@@ -120,7 +119,8 @@
               <div class="info-icon gold"><i class="fas fa-rupee-sign"></i></div>
               <div>
                 <label>Consultation Fees</label>
-                <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
+                <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}
+                </p>
               </div>
             </div>
           </div>
@@ -145,21 +145,19 @@
         <!-- ✅ ACTION BUTTONS -->
         <div class="card-actions">
 
-          <!-- ✅ Razorpay Pay Now Button -->
-          <button *ngIf="appointment.paymentStatus !== 'PAID'"
-                  class="btn btn-pay"
-                  [disabled]="processingPayment"
-                  (click)="payNow(appointment)">
+          <button *ngIf="appointment.paymentStatus !== 'PAID'" class="btn btn-pay" [disabled]="processingPayment"
+            (click)="payNow(appointment)">
             <i class="fas fa-credit-card me-1"></i>
-            {{ processingPayment ? 'Processing...' : 'Pay ₹' + (appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty)) }}
+            {{ processingPayment ? 'Processing...' : 'Pay ₹' + (appointment.doctor?.fees ||
+            getDoctorFees(appointment.doctor?.specialty)) }}
           </button>
 
           <span *ngIf="appointment.paymentStatus === 'PAID'" class="paid-text">
             <i class="fas fa-check-circle me-1"></i>Payment Done
           </span>
 
-          <button *ngIf="appointment.status?.toLowerCase() === 'scheduled'"
-                  class="btn btn-reschedule" (click)="openReschedule(appointment)">
+          <button *ngIf="appointment.status?.toLowerCase() === 'scheduled'" class="btn btn-reschedule"
+            (click)="openReschedule(appointment)">
             <i class="fas fa-calendar-alt me-1"></i>Reschedule
           </button>
         </div>
@@ -171,10 +169,8 @@
 
           <label class="form-label">Select New Date</label>
           <div class="date-cards-grid">
-            <div *ngFor="let dc of rescheduleDateCards"
-                 class="date-card"
-                 [class.date-selected]="rescheduleSelectedDate === dc.value"
-                 (click)="selectRescheduleDate(dc.value)">
+            <div *ngFor="let dc of rescheduleDateCards" class="date-card"
+              [class.date-selected]="rescheduleSelectedDate === dc.value" (click)="selectRescheduleDate(dc.value)">
               <span class="date-day-name">{{ dc.dayName }}</span>
               <span class="date-day-num">{{ dc.dayNum }}</span>
               <span class="date-month">{{ dc.month }}</span>
@@ -194,16 +190,14 @@
             </div>
 
             <div class="slot-grid" *ngIf="!rescheduleLoadingSlots">
-              <div *ngFor="let slot of allSlots"
-                   class="slot-card"
-                   [class.slot-available]="isRescheduleSlotAvailable(slot.value)"
-                   [class.slot-booked]="isRescheduleSlotBooked(slot.value)"
-                   [class.slot-past]="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)"
-                   [class.slot-selected]="rescheduleSelectedSlot === slot.value"
-                   (click)="selectRescheduleSlot(slot.value)">
+              <div *ngFor="let slot of allSlots" class="slot-card"
+                [class.slot-available]="isRescheduleSlotAvailable(slot.value)"
+                [class.slot-booked]="isRescheduleSlotBooked(slot.value)"
+                [class.slot-past]="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)"
+                [class.slot-selected]="rescheduleSelectedSlot === slot.value"
+                (click)="selectRescheduleSlot(slot.value)">
 
-                <i class="fas"
-                   [ngClass]="{
+                <i class="fas" [ngClass]="{
                      'fa-check-circle': rescheduleSelectedSlot === slot.value,
                      'fa-clock': rescheduleSelectedSlot !== slot.value && isRescheduleSlotAvailable(slot.value),
                      'fa-lock': isRescheduleSlotBooked(slot.value),
@@ -212,7 +206,8 @@
                 <span>{{ slot.label }}</span>
 
                 <small *ngIf="isRescheduleSlotBooked(slot.value)" class="booked-label">Booked</small>
-                <small *ngIf="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)" class="past-label">Passed</small>
+                <small *ngIf="isRescheduleSlotPast(slot.value) && !isRescheduleSlotBooked(slot.value)"
+                  class="past-label">Passed</small>
               </div>
             </div>
 
@@ -223,9 +218,8 @@
           </div>
 
           <div class="reschedule-btns" style="margin-top: 15px;">
-            <button class="btn btn-save" type="button"
-                    [disabled]="!rescheduleSelectedSlot"
-                    (click)="submitReschedule()">
+            <button class="btn btn-save" type="button" [disabled]="!rescheduleSelectedSlot"
+              (click)="submitReschedule()">
               <i class="fas fa-save me-1"></i>Save
             </button>
             <button class="btn btn-cancel-form" type="button" (click)="cancelReschedule()">
@@ -257,12 +251,11 @@
       <div class="appointments-container">
 
         <div class="appointment-card past-card" *ngFor="let appointment of pastAppointments; let i = index"
-             [style.animation-delay]="(i * 0.08) + 's'">
+          [style.animation-delay]="(i * 0.08) + 's'">
 
           <div class="card-top past-top">
             <div class="card-id">#{{ appointment.id }}</div>
-            <span class="status-badge"
-              [ngClass]="{
+            <span class="status-badge" [ngClass]="{
                 'status-scheduled': appointment.status?.toLowerCase() === 'scheduled',
                 'status-completed': appointment.status?.toLowerCase() === 'completed',
                 'status-cancelled': appointment.status?.toLowerCase() === 'cancelled'
@@ -322,7 +315,8 @@
                 <div class="info-icon gold"><i class="fas fa-rupee-sign"></i></div>
                 <div>
                   <label>Fees</label>
-                  <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
+                  <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -350,27 +344,76 @@
 
     </div>
 
-    <!-- ✅ RESPONSE MESSAGE -->
-    <div *ngIf="responseMessage && !showSuccess" class="response-msg"
-         [ngClass]="isSuccess ? 'msg-success' : 'msg-error'">
-      {{ responseMessage }}
+    <!-- ============================================================ -->
+    <!-- ✅ MEDICAL REPORTS SECTION -->
+    <!-- ============================================================ -->
+    <div class="records-btn-container" *ngIf="medicalRecords.length > 0">
+      <button class="btn btn-records" (click)="toggleRecords()">
+        <i [class]="showRecords ? 'fas fa-chevron-up me-2' : 'fas fa-file-medical me-2'"></i>
+        {{ showRecords ? 'Hide Medical Reports' : 'My Medical Reports (' + medicalRecords.length + ')' }}
+      </button>
     </div>
 
-    <!-- ✅ SUCCESS ANIMATION (Reschedule) -->
-    <div class="success-overlay" *ngIf="showSuccess">
-      <div class="success-modal">
-        <div class="success-checkmark">
-          <div class="check-icon">
-            <span class="icon-line line-tip"></span>
-            <span class="icon-line line-long"></span>
-            <div class="icon-circle"></div>
-          </div>
-        </div>
-        <h3>Appointment Rescheduled!</h3>
-        <p>New slot has been confirmed ✅</p>
-        <p class="redirect-text">Redirecting to dashboard...</p>
+    <!-- Loading -->
+    <div *ngIf="loadingRecords" class="text-center py-3" style="color: #7a8fa5;">
+      <i class="fas fa-spinner fa-spin me-1"></i> Loading medical reports...
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!loadingRecords && medicalRecords.length === 0 && showRecords" class="empty-state"
+      style="margin-top: 20px;">
+      <div class="empty-icon">📋</div>
+      <h3>No Medical Reports</h3>
+      <p>Your doctor hasn't added any reports yet.</p>
+    </div>
+
+    <!-- ✅ RECORDS LIST -->
+    <div *ngIf="showRecords && medicalRecords.length > 0" class="records-section">
+
+      <div class="section-label records-label">
+        <i class="fas fa-file-medical me-2"></i>My Medical Reports
       </div>
-    </div>
 
+      <div class="records-container">
+
+        <div class="record-card" *ngFor="let record of medicalRecords; let i = index"
+          [style.animation-delay]="(i * 0.08) + 's'">
+
+          <!-- Record Header -->
+          <div class="record-header">
+            <div class="record-id">
+              <i class="fas fa-file-alt me-1"></i>Report #MR-{{ record.id }}
+            </div>
+            <div class="record-date-badge">
+              <i class="fas fa-calendar me-1"></i>{{ getRecordDate(record) }}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ✅ RESPONSE MESSAGE -->
+      <div *ngIf="responseMessage && !showSuccess" class="response-msg"
+        [ngClass]="isSuccess ? 'msg-success' : 'msg-error'">
+        {{ responseMessage }}
+      </div>
+
+      <!-- ✅ SUCCESS ANIMATION (Reschedule) -->
+      <div class="success-overlay" *ngIf="showSuccess">
+        <div class="success-modal">
+          <div class="success-checkmark">
+            <div class="check-icon">
+              <span class="icon-line line-tip"></span>
+              <span class="icon-line line-long"></span>
+              <div class="icon-circle"></div>
+            </div>
+          </div>
+          <h3>Appointment Rescheduled!</h3>
+          <p>New slot has been confirmed ✅</p>
+          <p class="redirect-text">Redirecting to dashboard...</p>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
