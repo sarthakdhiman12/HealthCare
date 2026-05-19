@@ -22,7 +22,7 @@
         <p>Manage and reschedule all patient appointments</p>
       </div>
       <div class="header-badge">
-        <i class="fas fa-calendar me-1"></i>{{ appointmentList.length }} Total
+        <i class="fas fa-calendar me-1"></i>{{ upcomingAppointments.length }} Upcoming
       </div>
     </div>
 
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Empty -->
-    <div class="empty-state" *ngIf="!isLoading && appointmentList.length === 0 && emptyMessage">
+    <div class="empty-state" *ngIf="!isLoading && upcomingAppointments.length === 0 && pastAppointments.length === 0 && emptyMessage">
       <div class="empty-icon">📋</div>
       <h3>{{ emptyMessage }}</h3>
       <p>No appointments have been scheduled yet.</p>
@@ -45,15 +45,25 @@
       {{ responseMessage }}
     </div>
 
-    <!-- ✅ APPOINTMENT CARDS -->
-    <div class="appointments-container" *ngIf="appointmentList.length > 0 && !isLoading">
+    <!-- ✅ UPCOMING SECTION LABEL -->
+    <div class="section-label" *ngIf="upcomingAppointments.length > 0 && !isLoading">
+      <i class="fas fa-calendar-check me-2"></i>Upcoming & Today's Appointments
+    </div>
 
-      <div class="appt-card" *ngFor="let appointment of appointmentList; let i = index"
+    <!-- ✅ UPCOMING APPOINTMENT CARDS -->
+    <div class="appointments-container" *ngIf="upcomingAppointments.length > 0 && !isLoading">
+
+      <div class="appt-card" *ngFor="let appointment of upcomingAppointments; let i = index"
            [style.animation-delay]="(i * 0.08) + 's'">
 
         <!-- TOP -->
         <div class="card-top">
-          <div class="card-id">#{{ appointment.appointmentId }}</div>
+          <div class="card-id-row">
+            <span class="card-id">#{{ appointment.appointmentId }}</span>
+            <span class="today-badge" *ngIf="isToday(appointment.appointmentDate)">
+              <i class="fas fa-bolt me-1"></i>Today
+            </span>
+          </div>
           <span class="status-badge"
             [ngClass]="{
               'st-scheduled': appointment.status?.toLowerCase() === 'scheduled',
@@ -87,7 +97,6 @@
             </div>
           </div>
 
-          <!-- Date + Slot -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
@@ -106,7 +115,6 @@
             </div>
           </div>
 
-          <!-- Payment -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon"
@@ -141,7 +149,6 @@
             <i class="fas fa-calendar-alt me-1"></i>Reschedule Appointment
           </h5>
 
-          <!-- Date Cards -->
           <label class="form-label">Select New Date</label>
           <div class="date-cards-grid">
             <div *ngFor="let dc of rescheduleDateCards"
@@ -154,7 +161,6 @@
             </div>
           </div>
 
-          <!-- Slot Selection -->
           <div *ngIf="rescheduleSelectedDate">
 
             <label class="form-label" style="margin-top: 12px;">
@@ -197,7 +203,6 @@
             </div>
           </div>
 
-          <!-- Buttons -->
           <div class="reschedule-btns" style="margin-top: 15px;">
             <button class="btn btn-save" type="button"
                     [disabled]="!rescheduleSelectedSlot"
@@ -212,6 +217,104 @@
         </div>
 
       </div>
+    </div>
+
+    <!-- ✅ VIEW HISTORY BUTTON -->
+    <div class="history-btn-container" *ngIf="pastAppointments.length > 0 && !isLoading">
+      <button class="btn btn-history" (click)="toggleHistory()">
+        <i [class]="showHistory ? 'fas fa-chevron-up me-2' : 'fas fa-history me-2'"></i>
+        {{ showHistory ? 'Hide History' : 'View History (' + pastAppointments.length + ')' }}
+      </button>
+    </div>
+
+    <!-- ✅ PAST APPOINTMENTS (HISTORY) -->
+    <div *ngIf="showHistory && pastAppointments.length > 0" class="history-section">
+
+      <div class="section-label history-label">
+        <i class="fas fa-history me-2"></i>Past Appointments
+      </div>
+
+      <div class="appointments-container">
+
+        <div class="appt-card past-card" *ngFor="let appointment of pastAppointments; let i = index"
+             [style.animation-delay]="(i * 0.08) + 's'">
+
+          <div class="card-top past-top">
+            <div class="card-id">#{{ appointment.appointmentId }}</div>
+            <span class="status-badge"
+              [ngClass]="{
+                'st-scheduled': appointment.status?.toLowerCase() === 'scheduled',
+                'st-completed': appointment.status?.toLowerCase() === 'completed',
+                'st-cancelled': appointment.status?.toLowerCase() === 'cancelled'
+              }">
+              {{ appointment.status || 'Scheduled' }}
+            </span>
+          </div>
+
+          <div class="card-body-content">
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon blue"><i class="fas fa-user"></i></div>
+                <div>
+                  <label>Patient</label>
+                  <p>{{ appointment.patientName }}</p>
+                  <small>ID: {{ appointment.patientId }}</small>
+                </div>
+              </div>
+
+              <div class="info-block">
+                <div class="info-icon green"><i class="fas fa-user-md"></i></div>
+                <div>
+                  <label>Doctor</label>
+                  <p>{{ appointment.doctorName }}</p>
+                  <small>ID: {{ appointment.doctorId }}</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
+                <div>
+                  <label>Appointment Date</label>
+                  <p>{{ getReadableDate(appointment.appointmentDate) }}</p>
+                </div>
+              </div>
+
+              <div class="info-block">
+                <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+                <div>
+                  <label>Time Slot</label>
+                  <p>{{ getSlotLabel(appointment.slot) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon"
+                     [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
+                  <i [class]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                </div>
+                <div>
+                  <label>Payment</label>
+                  <span class="payment-badge"
+                        [ngClass]="getPaymentStatus(appointment.appointmentId) === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
+                    {{ getPaymentStatus(appointment.appointmentId) }}
+                  </span>
+                  <br>
+                  <small class="pay-mode-text">{{ getPaymentMode(appointment.appointmentId) }}</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
     <!-- ✅ SUCCESS ANIMATION -->

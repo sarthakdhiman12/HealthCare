@@ -8,7 +8,11 @@ import { HttpService } from '../../services/http.service';
 })
 export class DoctorAppointmentComponent implements OnInit {
 
-  appointmentList: any[] = [];
+  allAppointments: any[] = [];
+  upcomingAppointments: any[] = [];
+  pastAppointments: any[] = [];
+
+  showHistory: boolean = false;
   responseMessage: string = '';
 
   // ✅ Slot labels
@@ -39,7 +43,7 @@ export class DoctorAppointmentComponent implements OnInit {
       next: (data: any) => {
         const list = data?.data || data || [];
 
-        this.appointmentList = list.map((a: any) => {
+        this.allAppointments = list.map((a: any) => {
           const appointmentId = a.id || a.appointmentId;
           const paymentKey = 'payment_' + appointmentId;
           const savedPayment = localStorage.getItem(paymentKey);
@@ -49,13 +53,79 @@ export class DoctorAppointmentComponent implements OnInit {
             paymentStatus: savedPayment || a.paymentStatus || 'NOT PAID'
           };
         });
+
+        // ✅ Sort by date (newest first)
+        this.allAppointments.sort((a, b) => {
+          const dateA = new Date(a.appointmentDate + 'T00:00:00').getTime();
+          const dateB = new Date(b.appointmentDate + 'T00:00:00').getTime();
+          return dateB - dateA;
+        });
+
+        // ✅ Split into upcoming & past
+        this.splitAppointments();
       },
       error: (err: any) => {
         console.error('Error loading appointments:', err);
-        this.appointmentList = [];
+        this.allAppointments = [];
+        this.upcomingAppointments = [];
+        this.pastAppointments = [];
         this.responseMessage = 'Failed to load appointments';
       }
     });
+  }
+
+  // ✅ Split appointments into upcoming (today + future) and past
+  splitAppointments(): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    this.upcomingAppointments = this.allAppointments.filter(a => {
+      const d = this.parseDate(a.appointmentDate);
+      return d !== null && d >= today;
+    });
+
+    this.pastAppointments = this.allAppointments.filter(a => {
+      const d = this.parseDate(a.appointmentDate);
+      return d !== null && d < today;
+    });
+
+    // ✅ Upcoming: ASCENDING (date + slot)
+    this.upcomingAppointments.sort((a, b) => {
+      const dateA = this.parseDate(a.appointmentDate)?.getTime() || 0;
+      const dateB = this.parseDate(b.appointmentDate)?.getTime() || 0;
+
+      if (dateA !== dateB) return dateA - dateB;
+
+      // ✅ Same date → sort by slot time
+      const slotA = this.getSlotStartHour(a.slot);
+      const slotB = this.getSlotStartHour(b.slot);
+      return slotA - slotB;
+    });
+
+    // ✅ Past: ASCENDING (date + slot)
+    this.pastAppointments.sort((a, b) => {
+      const dateA = this.parseDate(a.appointmentDate)?.getTime() || 0;
+      const dateB = this.parseDate(b.appointmentDate)?.getTime() || 0;
+
+      if (dateA !== dateB) return dateA - dateB;
+
+      const slotA = this.getSlotStartHour(a.slot);
+      const slotB = this.getSlotStartHour(b.slot);
+      return slotA - slotB;
+    });
+
+    console.log('UPCOMING:', this.upcomingAppointments.length);
+    console.log('PAST:', this.pastAppointments.length);
+  }
+  // ✅ Extract start hour from slot like "10:00-11:00" → 10
+  getSlotStartHour(slot: string): number {
+    if (!slot) return 0;
+    const hour = parseInt(slot.split(':')[0]);
+    return isNaN(hour) ? 0 : hour;
+  }
+  // ✅ Toggle history
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
   }
 
   getSlotLabel(slot: string): string {
@@ -81,18 +151,10 @@ export class DoctorAppointmentComponent implements OnInit {
 
   getDoctorFees(specialty: string): number {
     const feesMap: any = {
-      'cardiology': 1500,
-      'cardio': 1500,
-      'cardiac': 1500,
-      'cardic': 1500,
-      'neurology': 2000,
-      'neuro': 2000,
-      'orthopedics': 1200,
-      'dermatology': 800,
-      'pediatrics': 700,
-      'general': 500,
-      'webing': 600,
-      'ent': 900
+      'cardiology': 1500, 'cardio': 1500, 'cardiac': 1500, 'cardic': 1500,
+      'neurology': 2000, 'neuro': 2000, 'orthopedics': 1200,
+      'dermatology': 800, 'pediatrics': 700, 'general': 500,
+      'webing': 600, 'ent': 900
     };
     return feesMap[(specialty || 'general').toLowerCase()] || 500;
   }
@@ -108,5 +170,30 @@ export class DoctorAppointmentComponent implements OnInit {
     if (mode === 'ONLINE') return '💻 Online';
     if (mode === 'OFFLINE') return '🏥 Cash/Hospital';
     return '—';
+  }
+
+  // ✅ Check if date is today
+  isToday(dateStr: string): boolean {
+    if (!dateStr) return false;
+    const d = new Date(dateStr + 'T00:00:00');
+    const today = new Date();
+    return d.toDateString() === today.toDateString();
+  }
+  parseDate(dateStr: string): Date | null {
+    if (!dateStr) return null;
+
+    try {
+      if (dateStr.includes('T')) {
+        const d = new Date(dateStr);
+        d.setHours(0, 0, 0, 0);
+        return isNaN(d.getTime()) ? null : d;
+      }
+
+      const d = new Date(dateStr + 'T00:00:00');
+      return isNaN(d.getTime()) ? null : d;
+
+    } catch (e) {
+      return null;
+    }
   }
 }

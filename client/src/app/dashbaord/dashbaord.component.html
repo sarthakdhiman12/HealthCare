@@ -1,20 +1,50 @@
 <div class="dashboard-wrapper">
 
-  <!-- ✅ BACKGROUND ANIMATIONS -->
+  <!-- ✅ HOSPITAL BACKGROUND ANIMATIONS -->
   <div class="dash-bg-animations">
-    <div class="bg-circle c1"></div>
-    <div class="bg-circle c2"></div>
-    <div class="bg-circle c3"></div>
-    <div class="bg-circle c4"></div>
-    <div class="particle p1"></div>
-    <div class="particle p2"></div>
-    <div class="particle p3"></div>
-    <div class="particle p4"></div>
-    <div class="particle p5"></div>
-    <div class="particle p6"></div>
-    <div class="particle p7"></div>
-    <div class="particle p8"></div>
-    <div class="grid-overlay"></div>
+
+    <!-- Circles -->
+    <div class="med-circle c1"></div>
+    <div class="med-circle c2"></div>
+    <div class="med-circle c3"></div>
+    <div class="med-circle c4"></div>
+    <div class="med-circle c5"></div>
+
+    <!-- Particles -->
+    <div class="med-particle p1"></div>
+    <div class="med-particle p2"></div>
+    <div class="med-particle p3"></div>
+    <div class="med-particle p4"></div>
+    <div class="med-particle p5"></div>
+    <div class="med-particle p6"></div>
+    <div class="med-particle p7"></div>
+    <div class="med-particle p8"></div>
+
+    <!-- Floating Medical Icons -->
+    <span class="med-icon i1">🩺</span>
+    <span class="med-icon i2">💊</span>
+    <span class="med-icon i3">🏥</span>
+    <span class="med-icon i4">❤️</span>
+    <span class="med-icon i5">🧬</span>
+    <span class="med-icon i6">💉</span>
+
+    <!-- Heartbeat -->
+    <div class="heartbeat-line">
+      <svg viewBox="0 0 1200 100" preserveAspectRatio="none">
+        <polyline class="heartbeat-path"
+          points="0,50 200,50 240,50 280,10 320,90 360,50 500,50 600,50 700,50 740,50 780,15 820,85 860,50 1000,50 1200,50">
+        </polyline>
+      </svg>
+    </div>
+
+    <!-- Glow Lines -->
+    <div class="glow-line gl1"></div>
+    <div class="glow-line gl2"></div>
+
+    <!-- Pulse Rings -->
+    <div class="pulse-ring pr1"></div>
+    <div class="pulse-ring pr2"></div>
+
   </div>
 
   <!-- ✅ DASHBOARD CONTENT -->
@@ -265,7 +295,7 @@
 
       <div class="action-grid">
 
-        <div class="action-card blue-glow">
+        <div class="action-card green-glow">
           <div class="action-icon">📅</div>
           <h4>My Appointments</h4>
           <p>View your scheduled appointments.</p>
@@ -274,7 +304,7 @@
           </a>
         </div>
 
-        <div class="action-card green-glow">
+        <div class="action-card teal-glow">
           <div class="action-icon">➕</div>
           <h4>Schedule Appointment</h4>
           <p>Book a new appointment with a doctor.</p>
@@ -283,20 +313,20 @@
           </a>
         </div>
 
-        <div class="action-card purple-glow">
+        <div class="action-card emerald-glow">
           <div class="action-icon">📋</div>
           <h4>Medical Records</h4>
           <p>View your medical history & reports.</p>
-          <button class="btn btn-action-purple" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-lock me-1"></i>Coming Soon
           </button>
         </div>
 
-        <div class="action-card orange-glow">
+        <div class="action-card mint-glow">
           <div class="action-icon">🔔</div>
           <h4>Notifications</h4>
           <p>Check your appointment reminders.</p>
-          <button class="btn btn-action-orange" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-bell me-1"></i>Coming Soon
           </button>
         </div>
@@ -315,7 +345,7 @@
 
       <div class="action-grid">
 
-        <div class="action-card blue-glow">
+        <div class="action-card green-glow">
           <div class="action-icon">🩺</div>
           <h4>Doctor Appointments</h4>
           <p>View appointments assigned to you.</p>
@@ -324,7 +354,7 @@
           </a>
         </div>
 
-        <div class="action-card green-glow">
+        <div class="action-card teal-glow">
           <div class="action-icon">✅</div>
           <h4>Doctor Availability</h4>
           <p>Update your availability status.</p>
@@ -333,20 +363,20 @@
           </a>
         </div>
 
-        <div class="action-card purple-glow">
+        <div class="action-card emerald-glow">
           <div class="action-icon">📊</div>
           <h4>Patient History</h4>
           <p>View patient records & reports.</p>
-          <button class="btn btn-action-purple" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-lock me-1"></i>Coming Soon
           </button>
         </div>
 
-        <div class="action-card orange-glow">
+        <div class="action-card mint-glow">
           <div class="action-icon">💬</div>
           <h4>Messages</h4>
           <p>Chat with patients & staff.</p>
-          <button class="btn btn-action-orange" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-lock me-1"></i>Coming Soon
           </button>
         </div>
@@ -365,7 +395,7 @@
 
       <div class="action-grid">
 
-        <div class="action-card blue-glow">
+        <div class="action-card green-glow">
           <div class="action-icon">📋</div>
           <h4>All Appointments</h4>
           <p>View and manage all appointments.</p>
@@ -374,7 +404,7 @@
           </a>
         </div>
 
-        <div class="action-card green-glow">
+        <div class="action-card teal-glow">
           <div class="action-icon">📝</div>
           <h4>Schedule Appointment</h4>
           <p>Schedule appointment for patients.</p>
@@ -383,20 +413,20 @@
           </a>
         </div>
 
-        <div class="action-card purple-glow">
+        <div class="action-card emerald-glow">
           <div class="action-icon">👥</div>
           <h4>Manage Patients</h4>
           <p>View all registered patients.</p>
-          <button class="btn btn-action-purple" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-lock me-1"></i>Coming Soon
           </button>
         </div>
 
-        <div class="action-card orange-glow">
+        <div class="action-card mint-glow">
           <div class="action-icon">📞</div>
           <h4>Contact Doctors</h4>
           <p>Quick contact with doctors.</p>
-          <button class="btn btn-action-orange" disabled>
+          <button class="btn btn-action-disabled" disabled>
             <i class="fas fa-lock me-1"></i>Coming Soon
           </button>
         </div>

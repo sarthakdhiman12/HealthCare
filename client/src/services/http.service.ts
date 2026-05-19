@@ -267,4 +267,33 @@ export class HttpService {
       { headers: this.getAuthHeaders(), responseType: 'text' }
     );
   }
+
+  // ================= PAYMENT =================
+
+  // ✅ Create Razorpay order
+  createPaymentOrder(amount: number, appointmentId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('amount', amount.toString())
+      .set('appointmentId', appointmentId.toString());
+
+    return this.http.post(
+      `${this.serverName}/api/payment/create-order`,
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
+
+  // ✅ Verify payment
+  verifyPayment(razorpayPaymentId: string, razorpayOrderId: string, appointmentId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('razorpayPaymentId', razorpayPaymentId)
+      .set('razorpayOrderId', razorpayOrderId)
+      .set('appointmentId', appointmentId.toString());
+
+    return this.http.post(
+      `${this.serverName}/api/payment/verify`,
+      {},
+      { headers: this.getAuthHeaders(), params }
+    );
+  }
 }

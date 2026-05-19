@@ -23,19 +23,39 @@
         <p>View and manage your scheduled appointments</p>
       </div>
       <div class="header-badge">
-        <i class="fas fa-list me-1"></i>{{ appointmentList.length }} Appointments
+        <i class="fas fa-list me-1"></i>{{ upcomingAppointments.length }} Upcoming
       </div>
     </div>
 
-    <!-- ✅ APPOINTMENT CARDS -->
-    <div class="appointments-container" *ngIf="appointmentList && appointmentList.length > 0">
+    <!-- ✅ EMPTY -->
+    <div class="empty-state" *ngIf="upcomingAppointments.length === 0 && !showHistory">
+      <div class="empty-icon">📅</div>
+      <h3>No Upcoming Appointments</h3>
+      <p>You haven't booked any upcoming appointments yet.</p>
+      <a routerLink="/schedule-appointment" class="btn btn-action-primary">
+        <i class="fas fa-plus me-1"></i>Book Appointment
+      </a>
+    </div>
 
-      <div class="appointment-card" *ngFor="let appointment of appointmentList; let i = index"
+    <!-- ✅ UPCOMING SECTION LABEL -->
+    <div class="section-label" *ngIf="upcomingAppointments.length > 0">
+      <i class="fas fa-calendar-check me-2"></i>Upcoming & Today's Appointments
+    </div>
+
+    <!-- ✅ UPCOMING APPOINTMENTS -->
+    <div class="appointments-container" *ngIf="upcomingAppointments.length > 0">
+
+      <div class="appointment-card" *ngFor="let appointment of upcomingAppointments; let i = index"
            [style.animation-delay]="(i * 0.1) + 's'">
 
         <!-- TOP ROW -->
         <div class="card-top">
-          <div class="card-id">#{{ appointment.id }}</div>
+          <div class="card-id-row">
+            <span class="card-id">#{{ appointment.id }}</span>
+            <span class="today-badge" *ngIf="isToday(appointment.appointmentDate)">
+              <i class="fas fa-bolt me-1"></i>Today
+            </span>
+          </div>
           <span class="status-badge"
             [ngClass]="{
               'status-scheduled': appointment.status?.toLowerCase() === 'scheduled',
@@ -49,7 +69,6 @@
         <!-- CARD BODY -->
         <div class="card-body-content">
 
-          <!-- Doctor + Patient -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon blue"><i class="fas fa-user-md"></i></div>
@@ -70,7 +89,6 @@
             </div>
           </div>
 
-          <!-- Date + Slot -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
@@ -89,7 +107,6 @@
             </div>
           </div>
 
-          <!-- Specialty + Fees -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon orange"><i class="fas fa-stethoscope"></i></div>
@@ -108,7 +125,6 @@
             </div>
           </div>
 
-          <!-- Payment Status -->
           <div class="info-row">
             <div class="info-block">
               <div class="info-icon" [ngClass]="appointment.paymentStatus === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
@@ -126,12 +142,16 @@
 
         </div>
 
-        <!-- ACTION BUTTONS -->
+        <!-- ✅ ACTION BUTTONS -->
         <div class="card-actions">
 
+          <!-- ✅ Razorpay Pay Now Button -->
           <button *ngIf="appointment.paymentStatus !== 'PAID'"
-                  class="btn btn-pay" (click)="payNow(appointment)">
-            <i class="fas fa-credit-card me-1"></i>Pay Now
+                  class="btn btn-pay"
+                  [disabled]="processingPayment"
+                  (click)="payNow(appointment)">
+            <i class="fas fa-credit-card me-1"></i>
+            {{ processingPayment ? 'Processing...' : 'Pay ₹' + (appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty)) }}
           </button>
 
           <span *ngIf="appointment.paymentStatus === 'PAID'" class="paid-text">
@@ -142,7 +162,6 @@
                   class="btn btn-reschedule" (click)="openReschedule(appointment)">
             <i class="fas fa-calendar-alt me-1"></i>Reschedule
           </button>
-
         </div>
 
         <!-- ✅ RESCHEDULE FORM -->
@@ -150,7 +169,6 @@
 
           <h5 class="reschedule-title"><i class="fas fa-calendar-alt me-1"></i>Reschedule Appointment</h5>
 
-          <!-- Date Cards -->
           <label class="form-label">Select New Date</label>
           <div class="date-cards-grid">
             <div *ngFor="let dc of rescheduleDateCards"
@@ -163,9 +181,7 @@
             </div>
           </div>
 
-          <!-- Slot Selection -->
           <div *ngIf="rescheduleSelectedDate">
-
             <label class="form-label" style="margin-top: 12px;">
               <i class="fas fa-clock me-1"></i>Select New Slot
               <span class="slot-count" *ngIf="!rescheduleLoadingSlots">
@@ -206,7 +222,6 @@
             </div>
           </div>
 
-          <!-- Buttons -->
           <div class="reschedule-btns" style="margin-top: 15px;">
             <button class="btn btn-save" type="button"
                     [disabled]="!rescheduleSelectedSlot"
@@ -224,14 +239,115 @@
 
     </div>
 
-    <!-- ✅ EMPTY STATE -->
-    <div class="empty-state" *ngIf="!appointmentList || appointmentList.length === 0">
-      <div class="empty-icon">📅</div>
-      <h3>No Appointments Found</h3>
-      <p>You haven't booked any appointments yet.</p>
-      <a routerLink="/schedule-appointment" class="btn btn-action-primary">
-        <i class="fas fa-plus me-1"></i>Book Appointment
-      </a>
+    <!-- ✅ VIEW HISTORY BUTTON -->
+    <div class="history-btn-container" *ngIf="pastAppointments.length > 0">
+      <button class="btn btn-history" (click)="toggleHistory()">
+        <i [class]="showHistory ? 'fas fa-chevron-up me-2' : 'fas fa-history me-2'"></i>
+        {{ showHistory ? 'Hide History' : 'View History (' + pastAppointments.length + ')' }}
+      </button>
+    </div>
+
+    <!-- ✅ PAST APPOINTMENTS (HISTORY) -->
+    <div *ngIf="showHistory && pastAppointments.length > 0" class="history-section">
+
+      <div class="section-label history-label">
+        <i class="fas fa-history me-2"></i>Past Appointments
+      </div>
+
+      <div class="appointments-container">
+
+        <div class="appointment-card past-card" *ngFor="let appointment of pastAppointments; let i = index"
+             [style.animation-delay]="(i * 0.08) + 's'">
+
+          <div class="card-top past-top">
+            <div class="card-id">#{{ appointment.id }}</div>
+            <span class="status-badge"
+              [ngClass]="{
+                'status-scheduled': appointment.status?.toLowerCase() === 'scheduled',
+                'status-completed': appointment.status?.toLowerCase() === 'completed',
+                'status-cancelled': appointment.status?.toLowerCase() === 'cancelled'
+              }">
+              {{ appointment.status }}
+            </span>
+          </div>
+
+          <div class="card-body-content">
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon blue"><i class="fas fa-user-md"></i></div>
+                <div>
+                  <label>Doctor</label>
+                  <p>{{ appointment.doctor?.username || 'N/A' }}</p>
+                </div>
+              </div>
+
+              <div class="info-block">
+                <div class="info-icon green"><i class="fas fa-user"></i></div>
+                <div>
+                  <label>Patient</label>
+                  <p>{{ appointment.patient?.username || 'N/A' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon purple"><i class="fas fa-calendar-alt"></i></div>
+                <div>
+                  <label>Appointment Date</label>
+                  <p>{{ getReadableDate(appointment.appointmentDate) }}</p>
+                </div>
+              </div>
+
+              <div class="info-block">
+                <div class="info-icon purple"><i class="fas fa-clock"></i></div>
+                <div>
+                  <label>Time Slot</label>
+                  <p>{{ getSlotLabel(appointment.slot) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon orange"><i class="fas fa-stethoscope"></i></div>
+                <div>
+                  <label>Specialty</label>
+                  <p>{{ appointment.doctor?.specialty || 'General' }}</p>
+                </div>
+              </div>
+
+              <div class="info-block">
+                <div class="info-icon gold"><i class="fas fa-rupee-sign"></i></div>
+                <div>
+                  <label>Fees</label>
+                  <p class="fees-amount">₹{{ appointment.doctor?.fees || getDoctorFees(appointment.doctor?.specialty) }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <div class="info-block">
+                <div class="info-icon" [ngClass]="appointment.paymentStatus === 'PAID' ? 'paid-icon' : 'unpaid-icon'">
+                  <i [class]="appointment.paymentStatus === 'PAID' ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                </div>
+                <div>
+                  <label>Payment</label>
+                  <span class="payment-badge"
+                    [ngClass]="appointment.paymentStatus === 'PAID' ? 'badge-paid' : 'badge-unpaid'">
+                    {{ appointment.paymentStatus || 'NOT PAID' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
     <!-- ✅ RESPONSE MESSAGE -->
@@ -240,7 +356,7 @@
       {{ responseMessage }}
     </div>
 
-    <!-- ✅ SUCCESS ANIMATION -->
+    <!-- ✅ SUCCESS ANIMATION (Reschedule) -->
     <div class="success-overlay" *ngIf="showSuccess">
       <div class="success-modal">
         <div class="success-checkmark">
@@ -253,79 +369,6 @@
         <h3>Appointment Rescheduled!</h3>
         <p>New slot has been confirmed ✅</p>
         <p class="redirect-text">Redirecting to dashboard...</p>
-      </div>
-    </div>
-
-    <!-- ✅ PAYMENT MODAL -->
-    <div class="payment-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
-      <div class="payment-modal" (click)="$event.stopPropagation()">
-
-        <div class="payment-header">
-          <h4><i class="fas fa-credit-card me-2"></i>Payment</h4>
-          <button class="close-btn" (click)="closePaymentModal()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-
-        <div class="payment-body">
-
-          <div class="payment-info">
-            <div class="pay-row">
-              <span>Doctor</span>
-              <strong>{{ selectedPaymentAppointment?.doctor?.username }}</strong>
-            </div>
-            <div class="pay-row">
-              <span>Specialty</span>
-              <strong>{{ selectedPaymentAppointment?.doctor?.specialty || 'General' }}</strong>
-            </div>
-            <div class="pay-row">
-              <span>Date</span>
-              <strong>{{ getReadableDate(selectedPaymentAppointment?.appointmentDate) }}</strong>
-            </div>
-            <div class="pay-row">
-              <span>Time Slot</span>
-              <strong>{{ getSlotLabel(selectedPaymentAppointment?.slot) }}</strong>
-            </div>
-            <div class="pay-divider"></div>
-            <div class="pay-row total-row">
-              <span>Total Amount</span>
-              <strong class="total-amount">₹{{ selectedPaymentAppointment?.doctor?.fees || getDoctorFees(selectedPaymentAppointment?.doctor?.specialty) }}</strong>
-            </div>
-          </div>
-
-          <div class="payment-options">
-            <h5>Select Payment Method</h5>
-
-            <div class="pay-option" [class.selected]="selectedPayMethod === 'card'" (click)="selectedPayMethod = 'card'">
-              <i class="fas fa-credit-card"></i>
-              <span>Credit / Debit Card</span>
-              <div class="radio-dot" *ngIf="selectedPayMethod === 'card'"></div>
-            </div>
-
-            <div class="pay-option" [class.selected]="selectedPayMethod === 'upi'" (click)="selectedPayMethod = 'upi'">
-              <i class="fas fa-mobile-alt"></i>
-              <span>UPI Payment</span>
-              <div class="radio-dot" *ngIf="selectedPayMethod === 'upi'"></div>
-            </div>
-
-            <div class="pay-option" [class.selected]="selectedPayMethod === 'netbanking'" (click)="selectedPayMethod = 'netbanking'">
-              <i class="fas fa-university"></i>
-              <span>Net Banking</span>
-              <div class="radio-dot" *ngIf="selectedPayMethod === 'netbanking'"></div>
-            </div>
-          </div>
-
-          <button class="btn btn-confirm-pay w-100" (click)="confirmPayment()" [disabled]="processingPayment">
-            <i class="fas fa-lock me-1"></i>
-            {{ processingPayment ? 'Processing...' : 'Pay ₹' + (selectedPaymentAppointment?.doctor?.fees || getDoctorFees(selectedPaymentAppointment?.doctor?.specialty)) }}
-          </button>
-
-          <p class="pay-note">
-            <i class="fas fa-shield-alt me-1"></i>
-            Secure payment · Razorpay integration coming soon
-          </p>
-
-        </div>
       </div>
     </div>
 

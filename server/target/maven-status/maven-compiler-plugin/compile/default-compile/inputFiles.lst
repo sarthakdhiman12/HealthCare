@@ -1,3 +1,4 @@
+/home/coder/app/server/src/main/java/com/edutech/healthcare_appointment_management_system/controller/PaymentController.java
 /home/coder/app/server/src/main/java/com/edutech/healthcare_appointment_management_system/entity/MedicalRecord.java
 /home/coder/app/server/src/main/java/com/edutech/healthcare_appointment_management_system/entity/Patient.java
 /home/coder/app/server/src/main/java/com/edutech/healthcare_appointment_management_system/repository/DoctorRepository.java

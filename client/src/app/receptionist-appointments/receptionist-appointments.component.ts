@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 export class ReceptionistAppointmentsComponent implements OnInit {
 
   appointmentList: any[] = [];
+  upcomingAppointments: any[] = [];
+  pastAppointments: any[] = [];
 
   isLoading: boolean = false;
   emptyMessage: string = '';
@@ -23,6 +25,7 @@ export class ReceptionistAppointmentsComponent implements OnInit {
   itemForm!: FormGroup;
   isAdded: boolean = false;
   showSuccess: boolean = false;
+  showHistory: boolean = false;
 
   // ✅ Slot labels
   slotLabels: any = {
@@ -104,11 +107,21 @@ export class ReceptionistAppointmentsComponent implements OnInit {
 
   getReadableDate(dateStr: string): string {
     if (!dateStr) return 'N/A';
-    const d = new Date(dateStr + 'T00:00:00');
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit', month: 'short', year: 'numeric'
-    };
-    return d.toLocaleDateString('en-IN', options);
+    try {
+      let d: Date;
+      if (dateStr.includes('T')) {
+        d = new Date(dateStr);
+      } else {
+        d = new Date(dateStr + 'T00:00:00');
+      }
+      if (isNaN(d.getTime())) return dateStr;
+      const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit', month: 'short', year: 'numeric'
+      };
+      return d.toLocaleDateString('en-IN', options);
+    } catch (e) {
+      return dateStr;
+    }
   }
 
   getPaymentStatus(appointmentId: any): string {
@@ -177,6 +190,9 @@ export class ReceptionistAppointmentsComponent implements OnInit {
           };
         });
 
+        // ✅ Split + Sort
+        this.splitAppointments();
+
         this.isLoading = false;
         if (this.appointmentList.length === 0) {
           this.emptyMessage = 'No appointments found';
@@ -188,6 +204,78 @@ export class ReceptionistAppointmentsComponent implements OnInit {
         this.emptyMessage = 'Unable to load appointments';
       }
     });
+  }
+
+  // ✅ Split + Sort (ascending date + slot)
+  splitAppointments(): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    this.upcomingAppointments = this.appointmentList.filter(a => {
+      const d = this.parseDate(a.appointmentDate);
+      return d !== null && d >= today;
+    });
+
+    this.pastAppointments = this.appointmentList.filter(a => {
+      const d = this.parseDate(a.appointmentDate);
+      return d !== null && d < today;
+    });
+
+    // ✅ Upcoming: ASCENDING (date + slot)
+    this.upcomingAppointments.sort((a, b) => {
+      const dateA = this.parseDate(a.appointmentDate)?.getTime() || 0;
+      const dateB = this.parseDate(b.appointmentDate)?.getTime() || 0;
+      if (dateA !== dateB) return dateA - dateB;
+      return this.getSlotStartHour(a.slot) - this.getSlotStartHour(b.slot);
+    });
+
+    // ✅ Past: ASCENDING (date + slot)
+    this.pastAppointments.sort((a, b) => {
+      const dateA = this.parseDate(a.appointmentDate)?.getTime() || 0;
+      const dateB = this.parseDate(b.appointmentDate)?.getTime() || 0;
+      if (dateA !== dateB) return dateA - dateB;
+      return this.getSlotStartHour(a.slot) - this.getSlotStartHour(b.slot);
+    });
+
+    console.log('UPCOMING:', this.upcomingAppointments.length);
+    console.log('PAST:', this.pastAppointments.length);
+  }
+
+  // ✅ Safe date parser
+  parseDate(dateStr: string): Date | null {
+    if (!dateStr) return null;
+    try {
+      if (dateStr.includes('T')) {
+        const d = new Date(dateStr);
+        d.setHours(0, 0, 0, 0);
+        return isNaN(d.getTime()) ? null : d;
+      }
+      const d = new Date(dateStr + 'T00:00:00');
+      return isNaN(d.getTime()) ? null : d;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ✅ Slot start hour extract
+  getSlotStartHour(slot: string): number {
+    if (!slot) return 0;
+    const hour = parseInt(slot.split(':')[0]);
+    return isNaN(hour) ? 0 : hour;
+  }
+
+  // ✅ Toggle history
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
+  }
+
+  // ✅ Check if today
+  isToday(dateStr: string): boolean {
+    if (!dateStr) return false;
+    const d = this.parseDate(dateStr);
+    if (!d) return false;
+    const today = new Date();
+    return d.toDateString() === today.toDateString();
   }
 
   isCurrentRow(appointment: any): boolean {

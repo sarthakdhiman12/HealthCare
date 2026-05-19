@@ -1,151 +1,138 @@
 <!-- ============================================
-     SECTION 1: HERO — LOGIN (full screen)
+     SECTION 1: HERO
      ============================================ -->
-<div class="login-wrapper" id="home">
+<div class="hero-section" id="hero">
 
-  <!-- FULL PAGE BACKGROUND ANIMATIONS -->
-  <div class="full-bg-animations">
-    <div class="bg-circle circle-1"></div>
-    <div class="bg-circle circle-2"></div>
-    <div class="bg-circle circle-3"></div>
-    <div class="bg-circle circle-4"></div>
-    <div class="bg-circle circle-5"></div>
-    <div class="bg-circle circle-6"></div>
-    <div class="bg-circle circle-7"></div>
+  <!-- ✅ HOSPITAL BACKGROUND ANIMATIONS -->
+  <div class="hospital-bg">
+    <div class="med-circle c1"></div>
+    <div class="med-circle c2"></div>
+    <div class="med-circle c3"></div>
+    <div class="med-circle c4"></div>
 
-    <div class="particle particle-1"></div>
-    <div class="particle particle-2"></div>
-    <div class="particle particle-3"></div>
-    <div class="particle particle-4"></div>
-    <div class="particle particle-5"></div>
-    <div class="particle particle-6"></div>
-    <div class="particle particle-7"></div>
-    <div class="particle particle-8"></div>
-    <div class="particle particle-9"></div>
-    <div class="particle particle-10"></div>
-    <div class="particle particle-11"></div>
-    <div class="particle particle-12"></div>
-
-    <div class="glow-line line-1"></div>
-    <div class="glow-line line-2"></div>
-    <div class="glow-line line-3"></div>
-
-    <div class="pulse-ring ring-1"></div>
-    <div class="pulse-ring ring-2"></div>
-    <div class="pulse-ring ring-3"></div>
+    <span class="med-icon i1">🩺</span>
+    <span class="med-icon i2">💉</span>
+    <span class="med-icon i3">💊</span>
+    <span class="med-icon i4">❤️</span>
+    <span class="med-icon i5">🧬</span>
 
     <div class="heartbeat-line">
-      <svg viewBox="0 0 1200 100" class="heartbeat-svg" preserveAspectRatio="none">
-        <polyline
-          class="heartbeat-path"
-          points="0,50 200,50 240,50 280,10 320,90 360,50 500,50 600,50 700,50 740,50 780,15 820,85 860,50 1000,50 1200,50"
-          fill="none"
-          stroke-width="2"
-        />
+      <svg viewBox="0 0 1200 100" preserveAspectRatio="none">
+        <polyline class="heartbeat-path"
+          points="0,50 200,50 240,50 280,10 320,90 360,50 500,50 600,50 700,50 740,50 780,15 820,85 860,50 1000,50 1200,50">
+        </polyline>
       </svg>
     </div>
 
-    <span class="icon icon-1">🩺</span>
-    <span class="icon icon-2">💊</span>
-    <span class="icon icon-3">🏥</span>
-    <span class="icon icon-4">❤️</span>
-    <span class="icon icon-5">🩻</span>
-    <span class="icon icon-6">💉</span>
-    <span class="icon icon-7">🧬</span>
-    <span class="icon icon-8">🫀</span>
-    <span class="icon icon-9">🩺</span>
-    <span class="icon icon-10">💊</span>
-
-    <div class="grid-overlay"></div>
+    <div class="med-particle p1"></div>
+    <div class="med-particle p2"></div>
+    <div class="med-particle p3"></div>
+    <div class="med-particle p4"></div>
   </div>
 
-  <!-- LEFT SIDE — Brand Content -->
-  <div class="left-panel">
-    <div class="left-content">
-      <div class="brand-section">
-        <div class="pulse-circle"></div>
-        <h1 class="brand-title">HAM System</h1>
-        <p class="brand-subtitle typing-text">Healthcare Appointment Management</p>
-        <div class="features-list">
-          <div class="feature-item fade-in-up delay-1">
-            <span class="feature-icon">📅</span>
-            <span>Easy Appointment Booking</span>
-          </div>
-          <div class="feature-item fade-in-up delay-2">
-            <span class="feature-icon">👨‍⚕️</span>
-            <span>Find Doctors Instantly</span>
-          </div>
-          <div class="feature-item fade-in-up delay-3">
-            <span class="feature-icon">📋</span>
-            <span>Track Medical Records</span>
-          </div>
-          <div class="feature-item fade-in-up delay-4">
-            <span class="feature-icon">🔔</span>
-            <span>Smart Reminders</span>
-          </div>
-        </div>
+  <!-- ✅ CONTENT -->
+  <div class="hero-container">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <span class="hero-tag">Welcome to HAM System</span>
+      <h1>Your Health, <br><span class="green-text">Our Priority</span></h1>
+      <p class="hero-desc">
+        Dedicated to compassionate & clinically excellent healthcare.
+        Book appointments with expert doctors across multiple specialties.
+      </p>
+
+      <div class="hero-btns">
+        <a routerLink="/registration" class="btn btn-book">
+          <i class="fas fa-calendar-check me-2"></i>Book Appointment
+        </a>
+        <a (click)="scrollTo('about-us')" class="btn btn-outline-learn">
+          Learn More <i class="fas fa-arrow-right ms-2"></i>
+        </a>
       </div>
 
-      <div class="dna-helix">
-        <div class="dna-strand" *ngFor="let i of [1,2,3,4,5,6,7,8]">
-          <div class="dna-dot left-dot"></div>
-          <div class="dna-line"></div>
-          <div class="dna-dot right-dot"></div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <h3>500+</h3>
+          <p>Expert Doctors</p>
+        </div>
+        <div class="hero-stat">
+          <h3>10K+</h3>
+          <p>Happy Patients</p>
+        </div>
+        <div class="hero-stat">
+          <h3>50K+</h3>
+          <p>Appointments</p>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- RIGHT SIDE — Login Form -->
-  <div class="right-panel">
-    <div class="form-container">
-      <div class="card shadow-lg login-card">
-        <div class="card-header text-white text-center">
-          <h4><i class="fas fa-user-lock me-2"></i>Login</h4>
-        </div>
-        <div class="card-body">
-          <div class="alert alert-danger" *ngIf="showError">
-            {{ errorMessage }}
+    <!-- RIGHT — Login -->
+    <div class="hero-right">
+      <div class="login-card">
+
+        <div class="login-card-header">
+          <div class="login-icon-circle">
+            <i class="fas fa-user-lock"></i>
           </div>
+          <h4>Login to Your Account</h4>
+          <p>Access your dashboard</p>
+        </div>
+
+        <div class="login-card-body">
+
+          <div class="alert-msg" *ngIf="showError">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+          </div>
+
           <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Username</label>
+
+            <div class="form-group">
+              <label>Username</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                 <input type="text" class="form-control" formControlName="username" placeholder="Enter username" />
               </div>
-              <small class="text-danger"
+              <small class="error-text"
                 *ngIf="itemForm.get('username')?.touched && itemForm.get('username')?.hasError('required')">
                 Username is required
               </small>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Password</label>
+
+            <div class="form-group">
+              <label>Password</label>
               <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" placeholder="Enter password" />
-                <button type="button" class="btn btn-outline-secondary eye-btn" (click)="togglePassword()">
+                <button type="button" class="btn eye-btn" (click)="togglePassword()">
                   <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
               </div>
-              <small class="text-danger"
+              <small class="error-text"
                 *ngIf="itemForm.get('password')?.touched && itemForm.get('password')?.hasError('required')">
                 Password is required
               </small>
             </div>
-            <button type="submit" class="btn btn-primary w-100 login-btn">Login</button>
+
+            <button type="submit" class="btn login-btn w-100">
+              <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+
           </form>
-          <div class="text-center mt-3">
+
+          <div class="login-footer">
             <span>New user? </span>
             <a routerLink="/registration" class="register-link">Register here</a>
           </div>
+
         </div>
       </div>
     </div>
+
   </div>
 
-  <!-- Scroll Down Arrow -->
-  <div class="scroll-indicator" (click)="scrollTo('about-us')">
+  <!-- Scroll -->
+  <div class="scroll-indicator" (click)="scrollTo('why-trust')">
     <i class="fas fa-chevron-down"></i>
     <i class="fas fa-chevron-down"></i>
   </div>
@@ -154,279 +141,275 @@
 
 
 <!-- ============================================
-     SECTION 2: ABOUT US
+     SECTION 2: WHY TRUST US
      ============================================ -->
-<section class="section-dark" id="about-us">
-  <div class="container py-5">
+<section class="trust-section" id="why-trust">
+  <div class="container">
 
-    <div class="section-header text-center mb-5">
-      <h2 class="section-title">
-        <i class="fas fa-info-circle me-2 title-icon"></i>About Us
-      </h2>
-      <div class="title-underline"></div>
-      <p class="section-subtitle">Transforming healthcare through technology</p>
+    <div class="trust-card">
+      <h2>Why Trust HAM System for Your Health?</h2>
+      <div class="trust-divider"></div>
+
+      <div class="trust-grid">
+
+        <div class="trust-item">
+          <div class="trust-icon-circle">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <p>Expert Doctors &<br>Modern Facilities</p>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-circle">
+            <i class="fas fa-hand-holding-heart"></i>
+          </div>
+          <p>Accessible,<br>Compassionate Care</p>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-circle">
+            <i class="fas fa-award"></i>
+          </div>
+          <p>Affordable &<br>Quality Healthcare</p>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-circle">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <p>Specialised<br>Women's Wellness</p>
+        </div>
+
+        <div class="trust-item">
+          <div class="trust-icon-circle">
+            <i class="fas fa-bone"></i>
+          </div>
+          <p>Advanced Orthopaedic<br>& Joint Care</p>
+        </div>
+
+      </div>
     </div>
 
-    <div class="row align-items-center">
+  </div>
+</section>
 
-      <!-- Left — Image/Icon -->
-      <div class="col-md-5 text-center mb-4 mb-md-0">
+
+<!-- ============================================
+     SECTION 3: ABOUT US + WHY CHOOSE US
+     ============================================ -->
+<section class="about-section" id="about-us">
+  <div class="container">
+
+    <!-- PART A: About with Image -->
+    <div class="row align-items-center mb-5">
+
+      <!-- Left — Doctor Image -->
+      <div class="col-lg-5 mb-4 mb-lg-0">
         <div class="about-image-wrapper">
-          <div class="about-icon-circle">
-            <i class="fas fa-hospital fa-3x"></i>
-          </div>
-          <div class="about-stats">
-            <div class="stat-item">
-              <h3 class="stat-number">500+</h3>
-              <p class="stat-label">Doctors</p>
-            </div>
-            <div class="stat-item">
-              <h3 class="stat-number">10K+</h3>
-              <p class="stat-label">Patients</p>
-            </div>
-            <div class="stat-item">
-              <h3 class="stat-number">50K+</h3>
-              <p class="stat-label">Appointments</p>
-            </div>
-          </div>
+          <img src="assets/images/doctor-patient.png" alt="Doctor with Patient" />
         </div>
       </div>
 
       <!-- Right — Text -->
-      <div class="col-md-7">
+      <div class="col-lg-7">
         <div class="about-content">
-          <h3 class="about-heading">Who We Are</h3>
-          <p class="about-text">
-            HAM System (Healthcare Appointment Management) is a cutting-edge digital platform
-            designed to simplify the healthcare experience for patients, doctors, and medical
-            staff. We believe that accessing quality healthcare should be effortless and stress-free.
+          <span class="about-tag">About HAM System</span>
+          <h2>Dedicated to Compassionate & Clinically Excellent Healthcare</h2>
+          <p>
+            HAM System is a modern multispeciality healthcare platform committed to providing
+            ethical, affordable, and high-quality healthcare. With leading departments in
+            Cardiology, Neurology, Orthopedics, and cutting-edge technology, we ensure the
+            best outcomes for patients.
           </p>
-          <p class="about-text">
-            Our platform connects patients with qualified healthcare professionals, enabling
-            seamless appointment scheduling, real-time availability tracking, and comprehensive
-            medical record management — all in one secure place.
+          <p>
+            Pioneers in digital healthcare appointment management — connecting patients with
+            the right doctors at the right time.
           </p>
 
-          <div class="about-features">
-            <div class="about-feature-item">
-              <i class="fas fa-check-circle"></i>
-              <span>HIPAA Compliant & Secure</span>
-            </div>
-            <div class="about-feature-item">
-              <i class="fas fa-check-circle"></i>
-              <span>24/7 Online Booking</span>
-            </div>
-            <div class="about-feature-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Multi-Role Access (Patient, Doctor, Receptionist)</span>
-            </div>
-            <div class="about-feature-item">
-              <i class="fas fa-check-circle"></i>
-              <span>Real-Time Doctor Availability</span>
-            </div>
-          </div>
+          <a routerLink="/registration" class="btn btn-book-green">
+            <i class="fas fa-calendar-check me-2"></i>Book Appointment
+          </a>
         </div>
       </div>
 
     </div>
+
+    <!-- PART B: Why Choose Us -->
+    <div class="why-choose-section">
+      <div class="text-center mb-4">
+        <span class="why-tag">Why Choose Us</span>
+        <h2 class="why-heading">Advanced Healthcare You Can Trust</h2>
+        <p class="why-subtext">
+          HAM System is proud to be at the forefront of healthcare innovation.
+          Our groundbreaking technology ensures:
+        </p>
+      </div>
+
+      <div class="why-grid">
+
+        <div class="why-card">
+          <div class="why-icon blue-icon">
+            <i class="fas fa-crosshairs"></i>
+          </div>
+          <div class="why-text">
+            <h5>Enhanced Accuracy</h5>
+            <p>Advanced diagnostics and precise treatment plans tailored to your unique health needs.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon green-icon">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <div class="why-text">
+            <h5>Faster Recovery</h5>
+            <p>Minimally invasive techniques result in less pain, reduced blood loss, and quicker rehabilitation.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon teal-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="why-text">
+            <h5>Optimal Outcomes</h5>
+            <p>Experience better health outcomes with our expert team and cutting-edge medical technology.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon emerald-icon">
+            <i class="fas fa-hand-holding-usd"></i>
+          </div>
+          <div class="why-text">
+            <h5>Unmatched Affordability</h5>
+            <p>We are committed to making advanced healthcare accessible without compromising on quality.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </section>
 
 
 <!-- ============================================
-     SECTION 3: SERVICES
+     SECTION 4: SPECIALTIES
      ============================================ -->
-<section class="section-darker" id="services">
-  <div class="container py-5">
+<section class="specialties-section" id="services">
+  <div class="container">
 
-    <div class="section-header text-center mb-5">
-      <h2 class="section-title">
-        <i class="fas fa-briefcase-medical me-2 title-icon"></i>Our Services
-      </h2>
-      <div class="title-underline"></div>
-      <p class="section-subtitle">Comprehensive healthcare solutions at your fingertips</p>
+    <div class="text-center mb-5">
+      <span class="section-tag">Specialties & Treatments</span>
+      <h2 class="section-heading">Bringing the Best of Healthcare</h2>
+      <p class="section-subtext">
+        We combine advanced medical expertise with a personal touch. Our wide range of specialties
+        ensures complete care for every stage of life.
+      </p>
     </div>
 
-    <div class="row g-4">
+    <div class="specialties-grid">
 
-      <!-- Service Card 1 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-calendar-check fa-2x"></i>
-          </div>
-          <h4 class="service-title">Online Appointment Booking</h4>
-          <p class="service-desc">
-            Book appointments with your preferred doctors anytime, anywhere.
-            Choose your convenient date and time slot with just a few clicks.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-heartbeat"></i></div>
+        <h4>Cardiology</h4>
+        <p>Our Cardiology department offers advanced heart care including diagnostics, interventional procedures, and preventive cardiology.</p>
       </div>
 
-      <!-- Service Card 2 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-user-md fa-2x"></i>
-          </div>
-          <h4 class="service-title">Find Specialist Doctors</h4>
-          <p class="service-desc">
-            Search and connect with specialist doctors across multiple departments
-            including Cardiology, Neurology, Orthopedics, and more.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-brain"></i></div>
+        <h4>Neurology</h4>
+        <p>Expert neurologists provide comprehensive care for brain, spine, and nervous system disorders with advanced diagnostic tools.</p>
       </div>
 
-      <!-- Service Card 3 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-notes-medical fa-2x"></i>
-          </div>
-          <h4 class="service-title">Medical Records</h4>
-          <p class="service-desc">
-            Access your complete medical history, prescriptions, and lab reports
-            securely from your personal dashboard anytime.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-bone"></i></div>
+        <h4>Orthopedics</h4>
+        <p>Our Orthopedics department provides expert bone, joint, and spine care with advanced robotic surgery ensuring faster recovery.</p>
       </div>
 
-      <!-- Service Card 4 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-bell fa-2x"></i>
-          </div>
-          <h4 class="service-title">Smart Reminders</h4>
-          <p class="service-desc">
-            Never miss an appointment again. Get automated reminders via
-            notifications before your scheduled visits.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-lungs"></i></div>
+        <h4>Pulmonology</h4>
+        <p>Our Pulmonology experts specialize in diagnosing and treating lung and respiratory conditions with advanced care.</p>
       </div>
 
-      <!-- Service Card 5 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-clock fa-2x"></i>
-          </div>
-          <h4 class="service-title">Doctor Availability</h4>
-          <p class="service-desc">
-            Check real-time doctor availability and schedules. Doctors can
-            manage their own availability slots through their dashboard.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-head-side-virus"></i></div>
+        <h4>E.N.T.</h4>
+        <p>Our ENT department offers advanced treatment for ear, nose, and throat conditions using modern diagnostic tools.</p>
       </div>
 
-      <!-- Service Card 6 -->
-      <div class="col-md-4">
-        <div class="service-card">
-          <div class="service-icon-wrapper">
-            <i class="fas fa-shield-alt fa-2x"></i>
-          </div>
-          <h4 class="service-title">Secure & Private</h4>
-          <p class="service-desc">
-            Your health data is protected with enterprise-grade security.
-            Role-based access ensures only authorized users see your information.
-          </p>
-        </div>
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-allergies"></i></div>
+        <h4>Dermatology</h4>
+        <p>Our Dermatology specialists provide advanced skincare treatments, cosmetic procedures, and solutions for chronic skin conditions.</p>
+      </div>
+
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-capsules"></i></div>
+        <h4>General Medicine</h4>
+        <p>Our General Medicine department specializes in diagnosing and managing chronic illnesses, lifestyle diseases, and preventive healthcare.</p>
+        
+      </div>
+
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-baby"></i></div>
+        <h4>Pediatrics</h4>
+        <p>Specialized child healthcare from newborn care to adolescent medicine with compassionate pediatric experts.</p>
       </div>
 
     </div>
+
   </div>
 </section>
 
 
 <!-- ============================================
-     SECTION 4: CONTACT
+     SECTION 5: CONTACT
      ============================================ -->
-<section class="section-dark" id="contact">
-  <div class="container py-5">
+<section class="contact-section" id="contact">
+  <div class="container">
 
-    <div class="section-header text-center mb-5">
-      <h2 class="section-title">
-        <i class="fas fa-envelope me-2 title-icon"></i>Contact Us
-      </h2>
-      <div class="title-underline"></div>
-      <p class="section-subtitle">We'd love to hear from you</p>
+    <div class="text-center mb-5">
+      <span class="section-tag">Get in Touch</span>
+      <h2 class="section-heading">Contact Us</h2>
+      <p class="section-subtext">We'd love to hear from you</p>
     </div>
 
     <div class="row g-4">
 
-      <!-- Contact Info Cards -->
       <div class="col-md-4">
         <div class="contact-card">
-          <div class="contact-icon">
-            <i class="fas fa-map-marker-alt fa-2x"></i>
-          </div>
-          <h5 class="contact-title">Our Location</h5>
-          <p class="contact-text">
-            HAM Healthcare Tower<br>
-            123 Medical Avenue, Suite 500<br>
-            Mumbai, Maharashtra 400001
-          </p>
+          <div class="contact-icon-circle"><i class="fas fa-map-marker-alt"></i></div>
+          <h5>Our Location</h5>
+          <p>HAM Healthcare Tower<br>123 Medical Avenue, Suite 500<br>Mumbai, Maharashtra 400001</p>
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="contact-card">
-          <div class="contact-icon">
-            <i class="fas fa-phone-alt fa-2x"></i>
-          </div>
-          <h5 class="contact-title">Phone & Support</h5>
-          <p class="contact-text">
-            General: +91 98765 43210<br>
-            Emergency: +91 98765 43211<br>
-            Toll Free: 1800-HAM-CARE
-          </p>
+          <div class="contact-icon-circle"><i class="fas fa-phone-alt"></i></div>
+          <h5>Phone & Support</h5>
+          <p>General: +91 98765 43210<br>Emergency: +91 98765 43211<br>Toll Free: 1800-HAM-CARE</p>
         </div>
       </div>
 
       <div class="col-md-4">
         <div class="contact-card">
-          <div class="contact-icon">
-            <i class="fas fa-envelope-open-text fa-2x"></i>
-          </div>
-          <h5 class="contact-title">Email Us</h5>
-          <p class="contact-text">
-            General: info@hamsystem.com<br>
-            Support: support@hamsystem.com<br>
-            Careers: careers@hamsystem.com
-          </p>
+          <div class="contact-icon-circle"><i class="fas fa-envelope-open-text"></i></div>
+          <h5>Email Us</h5>
+          <p>General: info&#64;hamsystem.com<br>Support: support&#64;hamsystem.com<br>Careers: careers&#64;hamsystem.com</p>
         </div>
       </div>
 
     </div>
 
-    <!-- Contact Form -->
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-8">
-        <div class="contact-form-card">
-          <h4 class="text-center mb-4 contact-form-title">Send Us a Message</h4>
-          <form>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <input type="text" class="form-control contact-input" placeholder="Your Name" />
-              </div>
-              <div class="col-md-6">
-                <input type="email" class="form-control contact-input" placeholder="Your Email" />
-              </div>
-              <div class="col-12">
-                <input type="text" class="form-control contact-input" placeholder="Subject" />
-              </div>
-              <div class="col-12">
-                <textarea class="form-control contact-input" rows="4" placeholder="Your Message"></textarea>
-              </div>
-              <div class="col-12 text-center">
-                <button type="button" class="btn btn-primary contact-submit-btn">
-                  <i class="fas fa-paper-plane me-2"></i>Send Message
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div class="text-center mt-5">
+      <a routerLink="/registration" class="btn btn-book-green btn-lg">
+        <i class="fas fa-calendar-check me-2"></i>Book Appointment — Register Now
+      </a>
     </div>
 
   </div>
@@ -439,21 +422,22 @@
 <footer class="site-footer">
   <div class="container">
     <div class="row">
+
       <div class="col-md-4 mb-3">
         <h5 class="footer-brand"><i class="fas fa-heartbeat me-2"></i>HAM System</h5>
-        <p class="footer-text">
-          Simplifying healthcare appointments for everyone. Your health, our priority.
-        </p>
+        <p class="footer-text">Simplifying healthcare appointments for everyone. Your health, our priority.</p>
       </div>
+
       <div class="col-md-4 mb-3">
         <h6 class="footer-heading">Quick Links</h6>
         <ul class="footer-links">
-          <li><a (click)="scrollTo('home')">Home</a></li>
+          <li><a (click)="scrollTo('hero')">Home</a></li>
           <li><a (click)="scrollTo('about-us')">About Us</a></li>
-          <li><a (click)="scrollTo('services')">Services</a></li>
+          <li><a (click)="scrollTo('services')">Specialties</a></li>
           <li><a (click)="scrollTo('contact')">Contact</a></li>
         </ul>
       </div>
+
       <div class="col-md-4 mb-3">
         <h6 class="footer-heading">Follow Us</h6>
         <div class="social-icons">
@@ -463,7 +447,9 @@
           <a href="#"><i class="fab fa-linkedin-in"></i></a>
         </div>
       </div>
+
     </div>
+
     <div class="footer-bottom">
       <p>&copy; 2026 HAM System. All rights reserved.</p>
     </div>

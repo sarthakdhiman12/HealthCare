@@ -53,7 +53,8 @@ public class SecurityConfig {
                                 "/api/doctors/register",
                                 "/api/receptionist/register",
                                 "/api/user/login",
-                                "/api/delete/**"       // ✅ POST delete workaround
+                                "/api/delete/**",
+                                "/api/payment/**"      // ✅ POST delete workaround
                         ).permitAll()
 
                         // ================= PATIENT =================

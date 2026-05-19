@@ -1,0 +1,84 @@
+<!-- ✅ FLOATING CHAT BUTTON -->
+<div class="chat-fab" (click)="toggleChat()" [class.active]="isChatOpen">
+  <i [class]="isChatOpen ? 'fas fa-times' : 'fas fa-robot'"></i>
+  <span class="fab-badge" *ngIf="!isChatOpen">AI</span>
+</div>
+
+<!-- ✅ CHAT WINDOW -->
+<div class="chat-window" [class.open]="isChatOpen">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="bot-avatar">
+        <i class="fas fa-robot"></i>
+      </div>
+      <div>
+        <h5>HAM Assistant</h5>
+        <span class="online-badge"><span class="dot"></span> Online</span>
+      </div>
+    </div>
+    <button class="close-btn" (click)="toggleChat()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="chat-tabs">
+    <button [class.active]="activeTab === 'chat'" (click)="switchTab('chat')">
+      <i class="fas fa-comment-dots me-1"></i>Chat
+    </button>
+    <button [class.active]="activeTab === 'faq'" (click)="switchTab('faq')">
+      <i class="fas fa-question-circle me-1"></i>FAQ
+    </button>
+  </div>
+
+  <!-- ✅ CHAT TAB -->
+  <div class="chat-body" *ngIf="activeTab === 'chat'">
+    <div class="messages-container">
+      <div *ngFor="let msg of chatMessages"
+           [class]="msg.sender === 'user' ? 'msg user-msg' : 'msg bot-msg'">
+        <div class="msg-avatar" *ngIf="msg.sender === 'bot'">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="msg-bubble">{{ msg.text }}</div>
+      </div>
+    </div>
+
+    <!-- Quick Questions -->
+    <div class="quick-questions">
+      <button (click)="userInput = 'How to book appointment?'; sendMessage()">📅 Book Appointment</button>
+      <button (click)="userInput = 'What are consultation fees?'; sendMessage()">💰 Fees</button>
+      <button (click)="userInput = 'What specialties available?'; sendMessage()">🩺 Specialties</button>
+      <button (click)="userInput = 'Contact info'; sendMessage()">📞 Contact</button>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input">
+      <input type="text"
+             [(ngModel)]="userInput"
+             (keypress)="onKeyPress($event)"
+             placeholder="Type your question..." />
+      <button (click)="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ FAQ TAB -->
+  <div class="faq-body" *ngIf="activeTab === 'faq'">
+    <div class="faq-list">
+      <div class="faq-item" *ngFor="let faq of faqs; let i = index"
+           [class.open]="faq.open">
+        <div class="faq-question" (click)="toggleFaq(i)">
+          <span>{{ i + 1 }}. {{ faq.question }}</span>
+          <i [class]="faq.open ? 'fas fa-minus' : 'fas fa-plus'"></i>
+        </div>
+        <div class="faq-answer" *ngIf="faq.open">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
