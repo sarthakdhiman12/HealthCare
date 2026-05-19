@@ -18,6 +18,12 @@ export class LoginComponent implements OnInit {
   isLoggedin: boolean = false;
   roleName: string = '';
 
+  // ✅ CAPTCHA
+  captchaNum1: number = 0;
+  captchaNum2: number = 0;
+  captchaAnswer: any = '';
+  captchaError: string = '';
+
   constructor(
     private fb: FormBuilder,
     private httpService: HttpService,
@@ -36,6 +42,16 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.generateCaptcha();
+  }
+
+  // ✅ Generate captcha — does NOT clear captchaError anymore
+  generateCaptcha(): void {
+    this.captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    this.captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    this.captchaAnswer = '';
+    // ❌ REMOVED: this.captchaError = '';  ← this was clearing the error!
   }
 
   togglePassword(): void {
@@ -50,10 +66,32 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    if (this.itemForm.invalid) {
-      this.itemForm.markAllAsTouched();
+    // ✅ Mark all fields touched (shows username/password errors)
+    this.itemForm.markAllAsTouched();
+
+    // ✅ CAPTCHA validation FIRST (runs every time)
+    const correctAnswer = this.captchaNum1 + this.captchaNum2;
+    let captchaValid = true;
+
+    if (this.captchaAnswer === '' || this.captchaAnswer === null || this.captchaAnswer === undefined) {
+      this.captchaError = 'Please solve the captcha';
+      captchaValid = false;
+    } else if (Number(this.captchaAnswer) !== correctAnswer) {
+      this.generateCaptcha();
+      this.captchaError = 'Wrong captcha! Try again.'; // ✅ SET AFTER generateCaptcha
+      captchaValid = false;
+    } else {
+      this.captchaError = '';
+    }
+
+    // ✅ Stop if form invalid OR captcha wrong
+    if (this.itemForm.invalid || !captchaValid) {
       return;
     }
+
+    // ✅ Both valid → proceed with login
+    this.captchaError = '';
+    this.showError = false;
 
     this.httpService.Login(this.itemForm.value).subscribe({
       next: (response: any) => {
@@ -73,6 +111,8 @@ export class LoginComponent implements OnInit {
       error: () => {
         this.showError = true;
         this.errorMessage = 'Invalid username or password';
+        this.generateCaptcha();
+        this.captchaError = ''; // ✅ Clear captcha error on login fail (new captcha shown)
       }
     });
   }

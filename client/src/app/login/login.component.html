@@ -114,6 +114,40 @@
               </small>
             </div>
 
+            <!-- ✅ CAPTCHA -->
+            <div class="form-group captcha-group">
+              <label>
+                <i class="fas fa-shield-alt me-1"></i>Security Check
+              </label>
+
+              <div class="captcha-box">
+                <div class="captcha-question">
+                  <span class="captcha-num">{{ captchaNum1 }}</span>
+                  <span class="captcha-operator">+</span>
+                  <span class="captcha-num">{{ captchaNum2 }}</span>
+                  <span class="captcha-equals">=</span>
+                  <span class="captcha-qmark">?</span>
+                </div>
+
+                <button type="button" class="captcha-refresh" (click)="generateCaptcha()" title="New captcha">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calculator"></i></span>
+                <input type="number" class="form-control"
+                       [(ngModel)]="captchaAnswer"
+                       [ngModelOptions]="{standalone: true}"
+                       placeholder="Enter answer" />
+              </div>
+
+              <!-- ✅ CAPTCHA ERROR MESSAGE (UPDATED) -->
+              <div class="captcha-error-msg" *ngIf="captchaError">
+                <i class="fas fa-exclamation-triangle me-1"></i>{{ captchaError }}
+              </div>
+            </div>
+
             <button type="submit" class="btn login-btn w-100">
               <i class="fas fa-sign-in-alt me-2"></i>Login
             </button>
@@ -200,17 +234,14 @@
 <section class="about-section" id="about-us">
   <div class="container">
 
-    <!-- PART A: About with Image -->
     <div class="row align-items-center mb-5">
 
-      <!-- Left — Doctor Image -->
       <div class="col-lg-5 mb-4 mb-lg-0">
         <div class="about-image-wrapper">
           <img src="assets/images/doctor-patient.png" alt="Doctor with Patient" />
         </div>
       </div>
 
-      <!-- Right — Text -->
       <div class="col-lg-7">
         <div class="about-content">
           <span class="about-tag">About HAM System</span>
@@ -234,7 +265,6 @@
 
     </div>
 
-    <!-- PART B: Why Choose Us -->
     <div class="why-choose-section">
       <div class="text-center mb-4">
         <span class="why-tag">Why Choose Us</span>
@@ -351,7 +381,6 @@
         <div class="specialty-icon"><i class="fas fa-capsules"></i></div>
         <h4>General Medicine</h4>
         <p>Our General Medicine department specializes in diagnosing and managing chronic illnesses, lifestyle diseases, and preventive healthcare.</p>
-        
       </div>
 
       <div class="specialty-card">
