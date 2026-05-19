@@ -1,11 +1,11 @@
 /* =============================================
-   DARK NAVBAR — matches full site dark theme
+   GREEN HOSPITAL NAVBAR — SEAWOODS STYLE
    ============================================= */
 
 .ham-navbar {
-  background: linear-gradient(90deg, #060d19 0%, #0a1628 50%, #0d2137 100%) !important;
-  border-bottom: 1px solid rgba(13, 110, 253, 0.15);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(13, 110, 253, 0.03);
+  background: linear-gradient(90deg, #04261a 0%, #062e1f 30%, #0a3d2a 60%, #0d4a33 100%) !important;
+  border-bottom: 1px solid rgba(5, 150, 105, 0.2);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(5, 150, 105, 0.05);
   padding: 10px 20px;
   min-height: 60px;
 }
@@ -21,12 +21,12 @@
   align-items: center;
 
   &:hover {
-    text-shadow: 0 0 15px rgba(13, 110, 253, 0.5);
+    text-shadow: 0 0 15px rgba(5, 150, 105, 0.5);
   }
 }
 
 .brand-icon {
-  color: #0d6efd;
+  color: #10b981;
   font-size: 1.3rem;
   animation: heartPulse 1.5s ease-in-out infinite;
 }
@@ -38,7 +38,7 @@
 
 /* ===== NAV LINKS ===== */
 .nav-link {
-  color: rgba(200, 215, 230, 0.8) !important;
+  color: rgba(200, 230, 215, 0.8) !important;
   font-size: 0.9rem;
   font-weight: 500;
   padding: 8px 14px !important;
@@ -55,18 +55,18 @@
 
   &:hover {
     color: #fff !important;
-    background: rgba(13, 110, 253, 0.1);
+    background: rgba(5, 150, 105, 0.15);
 
     i {
       opacity: 1;
-      color: #0d6efd;
+      color: #10b981;
     }
   }
 
   /* Active link underline glow */
   &.active {
     color: #fff !important;
-    background: rgba(13, 110, 253, 0.12);
+    background: rgba(5, 150, 105, 0.15);
 
     &::after {
       content: '';
@@ -75,14 +75,14 @@
       left: 14px;
       right: 14px;
       height: 2px;
-      background: #0d6efd;
+      background: #10b981;
       border-radius: 2px;
-      box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
     }
 
     i {
       opacity: 1;
-      color: #0d6efd;
+      color: #10b981;
     }
   }
 }
@@ -91,26 +91,26 @@
 .nav-divider {
   width: 1px;
   height: 24px;
-  background: rgba(13, 110, 253, 0.2);
+  background: rgba(5, 150, 105, 0.25);
   margin: auto 10px;
   align-self: center;
 }
 
 /* ===== LOGIN LINK ===== */
 .login-link {
-  color: #0d6efd !important;
+  color: #10b981 !important;
   font-weight: 600;
 
   &:hover {
     color: #fff !important;
-    background: rgba(13, 110, 253, 0.15);
+    background: rgba(5, 150, 105, 0.2);
   }
 }
 
 /* ===== REGISTER BUTTON ===== */
 .register-btn {
-  border-color: rgba(13, 202, 240, 0.4);
-  color: #0dcaf0;
+  border-color: rgba(52, 211, 153, 0.4);
+  color: #34d399;
   font-weight: 600;
   font-size: 0.85rem;
   padding: 5px 14px;
@@ -118,18 +118,18 @@
   transition: all 0.3s;
 
   &:hover {
-    background: rgba(13, 202, 240, 0.15);
-    border-color: #0dcaf0;
+    background: rgba(52, 211, 153, 0.15);
+    border-color: #34d399;
     color: #fff;
-    box-shadow: 0 0 15px rgba(13, 202, 240, 0.2);
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.2);
   }
 }
 
 /* ===== ROLE BADGE ===== */
 .role-badge {
-  background: rgba(13, 110, 253, 0.15);
-  border: 1px solid rgba(13, 110, 253, 0.3);
-  color: #6db3f8;
+  background: rgba(5, 150, 105, 0.15);
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  color: #6ee7b7;
   font-size: 0.8rem;
   font-weight: 500;
   padding: 5px 12px;
@@ -157,11 +157,11 @@
 
 /* ===== TOGGLER (mobile) ===== */
 .navbar-toggler {
-  border-color: rgba(13, 110, 253, 0.3);
+  border-color: rgba(5, 150, 105, 0.3);
   padding: 4px 8px;
 
   &:focus {
-    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
   }
 }
 

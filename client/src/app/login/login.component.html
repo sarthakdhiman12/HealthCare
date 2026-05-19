@@ -28,6 +28,36 @@
     <div class="med-particle p2"></div>
     <div class="med-particle p3"></div>
     <div class="med-particle p4"></div>
+
+    <!-- ✅ AMBULANCE ANIMATION (FIXED — cabin leads →) -->
+    <div class="ambulance">
+      <div class="ambulance-body">
+        <div class="amb-box">
+          <div class="amb-cross">+</div>
+          <div class="amb-text">HAM</div>
+        </div>
+        <div class="amb-cabin">
+          <div class="amb-window"></div>
+        </div>
+        <div class="amb-wheel w1">
+          <div class="wheel-inner"></div>
+        </div>
+        <div class="amb-wheel w2">
+          <div class="wheel-inner"></div>
+        </div>
+        <div class="amb-light">
+          <div class="light-red"></div>
+          <div class="light-blue"></div>
+        </div>
+      </div>
+      <div class="dust d1"></div>
+      <div class="dust d2"></div>
+      <div class="dust d3"></div>
+    </div>
+
+    <!-- Road line -->
+    <div class="road-line"></div>
+
   </div>
 
   <!-- ✅ CONTENT -->
@@ -142,7 +172,6 @@
                        placeholder="Enter answer" />
               </div>
 
-              <!-- ✅ CAPTCHA ERROR MESSAGE (UPDATED) -->
               <div class="captcha-error-msg" *ngIf="captchaError">
                 <i class="fas fa-exclamation-triangle me-1"></i>{{ captchaError }}
               </div>
@@ -229,7 +258,7 @@
 
 
 <!-- ============================================
-     SECTION 3: ABOUT US + WHY CHOOSE US
+     SECTION 3: ABOUT US + WHY CHOOSE US (6 CARDS)
      ============================================ -->
 <section class="about-section" id="about-us">
   <div class="container">
@@ -265,6 +294,7 @@
 
     </div>
 
+    <!-- ✅ WHY CHOOSE US — 6 CARDS -->
     <div class="why-choose-section">
       <div class="text-center mb-4">
         <span class="why-tag">Why Choose Us</span>
@@ -317,6 +347,26 @@
           </div>
         </div>
 
+        <div class="why-card">
+          <div class="why-icon purple-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="why-text">
+            <h5>24/7 Appointment Access</h5>
+            <p>Book appointments anytime from anywhere. Our digital platform is available round the clock for your convenience.</p>
+          </div>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon navy-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="why-text">
+            <h5>Secure & Private</h5>
+            <p>Your health data is protected with JWT authentication, role-based access, and end-to-end encryption.</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -325,7 +375,7 @@
 
 
 <!-- ============================================
-     SECTION 4: SPECIALTIES
+     SECTION 4: SPECIALTIES (9 CARDS — 3×3 GRID)
      ============================================ -->
 <section class="specialties-section" id="services">
   <div class="container">
@@ -387,6 +437,12 @@
         <div class="specialty-icon"><i class="fas fa-baby"></i></div>
         <h4>Pediatrics</h4>
         <p>Specialized child healthcare from newborn care to adolescent medicine with compassionate pediatric experts.</p>
+      </div>
+
+      <div class="specialty-card">
+        <div class="specialty-icon"><i class="fas fa-tooth"></i></div>
+        <h4>Dental Care</h4>
+        <p>Comprehensive dental services including preventive care, cosmetic dentistry, root canals, and advanced oral surgery.</p>
       </div>
 
     </div>

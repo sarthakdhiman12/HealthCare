@@ -285,7 +285,7 @@
     </div>
 
     <!-- ================================================ -->
-    <!-- PATIENT DASHBOARD -->
+    <!-- PATIENT DASHBOARD (✅ 3 CARDS — Notifications removed) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'PATIENT'">
       <div class="section-title">
@@ -313,7 +313,6 @@
           </a>
         </div>
 
-        <!-- ✅ UPDATED: Medical Records — SEPARATE COMPONENT -->
         <div class="action-card emerald-glow">
           <div class="action-icon">📋</div>
           <h4>Medical Records</h4>
@@ -323,20 +322,11 @@
           </a>
         </div>
 
-        <div class="action-card mint-glow">
-          <div class="action-icon">🔔</div>
-          <h4>Notifications</h4>
-          <p>Check your appointment reminders.</p>
-          <button class="btn btn-action-disabled" disabled>
-            <i class="fas fa-bell me-1"></i>Coming Soon
-          </button>
-        </div>
-
       </div>
     </div>
 
     <!-- ================================================ -->
-    <!-- DOCTOR DASHBOARD -->
+    <!-- DOCTOR DASHBOARD (✅ 3 CARDS — Messages removed) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'DOCTOR'">
       <div class="section-title">
@@ -364,7 +354,6 @@
           </a>
         </div>
 
-        <!-- ✅ UPDATED: Patient Reports — NOW ACTIVE -->
         <div class="action-card emerald-glow">
           <div class="action-icon">📊</div>
           <h4>Patient Reports</h4>
@@ -374,20 +363,11 @@
           </a>
         </div>
 
-        <div class="action-card mint-glow">
-          <div class="action-icon">💬</div>
-          <h4>Messages</h4>
-          <p>Chat with patients & staff.</p>
-          <button class="btn btn-action-disabled" disabled>
-            <i class="fas fa-lock me-1"></i>Coming Soon
-          </button>
-        </div>
-
       </div>
     </div>
 
     <!-- ================================================ -->
-    <!-- RECEPTIONIST DASHBOARD -->
+    <!-- RECEPTIONIST DASHBOARD (unchanged — 4 cards) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'RECEPTIONIST'">
       <div class="section-title">

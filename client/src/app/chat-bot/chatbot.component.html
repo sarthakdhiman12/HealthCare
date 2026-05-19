@@ -1,7 +1,10 @@
-<!-- ✅ FLOATING CHAT BUTTON -->
+<!-- ✅ FLOATING CHAT BUTTON — HOSPITAL STYLE -->
 <div class="chat-fab" (click)="toggleChat()" [class.active]="isChatOpen">
-  <i [class]="isChatOpen ? 'fas fa-times' : 'fas fa-robot'"></i>
-  <span class="fab-badge" *ngIf="!isChatOpen">AI</span>
+  <div class="fab-inner">
+    <i [class]="isChatOpen ? 'fas fa-times' : 'fas fa-headset'"></i>
+  </div>
+  <span class="fab-pulse" *ngIf="!isChatOpen"></span>
+  <span class="fab-label" *ngIf="!isChatOpen">Need Help?</span>
 </div>
 
 <!-- ✅ CHAT WINDOW -->
@@ -11,25 +14,26 @@
   <div class="chat-header">
     <div class="chat-header-left">
       <div class="bot-avatar">
-        <i class="fas fa-robot"></i>
+        <i class="fas fa-user-nurse"></i>
+        <span class="avatar-status"></span>
       </div>
       <div>
-        <h5>HAM Assistant</h5>
-        <span class="online-badge"><span class="dot"></span> Online</span>
+        <h5>HAM Health Assistant</h5>
+        <span class="online-badge"><span class="dot"></span> Always here to help</span>
       </div>
     </div>
     <button class="close-btn" (click)="toggleChat()">
-      <i class="fas fa-times"></i>
+      <i class="fas fa-chevron-down"></i>
     </button>
   </div>
 
   <!-- Tabs -->
   <div class="chat-tabs">
     <button [class.active]="activeTab === 'chat'" (click)="switchTab('chat')">
-      <i class="fas fa-comment-dots me-1"></i>Chat
+      <i class="fas fa-comment-medical me-1"></i>Chat
     </button>
     <button [class.active]="activeTab === 'faq'" (click)="switchTab('faq')">
-      <i class="fas fa-question-circle me-1"></i>FAQ
+      <i class="fas fa-notes-medical me-1"></i>FAQ
     </button>
   </div>
 
@@ -39,7 +43,7 @@
       <div *ngFor="let msg of chatMessages"
            [class]="msg.sender === 'user' ? 'msg user-msg' : 'msg bot-msg'">
         <div class="msg-avatar" *ngIf="msg.sender === 'bot'">
-          <i class="fas fa-robot"></i>
+          <i class="fas fa-user-nurse"></i>
         </div>
         <div class="msg-bubble">{{ msg.text }}</div>
       </div>
@@ -47,10 +51,21 @@
 
     <!-- Quick Questions -->
     <div class="quick-questions">
-      <button (click)="userInput = 'How to book appointment?'; sendMessage()">📅 Book Appointment</button>
-      <button (click)="userInput = 'What are consultation fees?'; sendMessage()">💰 Fees</button>
-      <button (click)="userInput = 'What specialties available?'; sendMessage()">🩺 Specialties</button>
-      <button (click)="userInput = 'Contact info'; sendMessage()">📞 Contact</button>
+      <span class="quick-label">Quick Actions:</span>
+      <div class="quick-btns">
+        <button (click)="userInput = 'How to book appointment?'; sendMessage()">
+          <i class="fas fa-calendar-check me-1"></i>Book
+        </button>
+        <button (click)="userInput = 'What are consultation fees?'; sendMessage()">
+          <i class="fas fa-rupee-sign me-1"></i>Fees
+        </button>
+        <button (click)="userInput = 'What specialties available?'; sendMessage()">
+          <i class="fas fa-stethoscope me-1"></i>Specialties
+        </button>
+        <button (click)="userInput = 'Contact info'; sendMessage()">
+          <i class="fas fa-phone-alt me-1"></i>Contact
+        </button>
+      </div>
     </div>
 
     <!-- Input -->
@@ -58,7 +73,7 @@
       <input type="text"
              [(ngModel)]="userInput"
              (keypress)="onKeyPress($event)"
-             placeholder="Type your question..." />
+             placeholder="Ask about appointments, doctors..." />
       <button (click)="sendMessage()">
         <i class="fas fa-paper-plane"></i>
       </button>
@@ -71,7 +86,7 @@
       <div class="faq-item" *ngFor="let faq of faqs; let i = index"
            [class.open]="faq.open">
         <div class="faq-question" (click)="toggleFaq(i)">
-          <span>{{ i + 1 }}. {{ faq.question }}</span>
+          <span><i class="fas fa-heartbeat me-2 faq-icon"></i>{{ faq.question }}</span>
           <i [class]="faq.open ? 'fas fa-minus' : 'fas fa-plus'"></i>
         </div>
         <div class="faq-answer" *ngIf="faq.open">
