@@ -46,12 +46,10 @@ export class LoginComponent implements OnInit {
     this.generateCaptcha();
   }
 
-  // ✅ Generate captcha — does NOT clear captchaError anymore
   generateCaptcha(): void {
     this.captchaNum1 = Math.floor(Math.random() * 10) + 1;
     this.captchaNum2 = Math.floor(Math.random() * 10) + 1;
     this.captchaAnswer = '';
-    // ❌ REMOVED: this.captchaError = '';  ← this was clearing the error!
   }
 
   togglePassword(): void {
@@ -66,10 +64,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    // ✅ Mark all fields touched (shows username/password errors)
     this.itemForm.markAllAsTouched();
 
-    // ✅ CAPTCHA validation FIRST (runs every time)
     const correctAnswer = this.captchaNum1 + this.captchaNum2;
     let captchaValid = true;
 

@@ -285,7 +285,7 @@
     </div>
 
     <!-- ================================================ -->
-    <!-- PATIENT DASHBOARD (✅ 3 CARDS — Notifications removed) -->
+    <!-- PATIENT DASHBOARD (✅ 3 CARDS) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'PATIENT'">
       <div class="section-title">
@@ -316,7 +316,7 @@
         <div class="action-card emerald-glow">
           <div class="action-icon">📋</div>
           <h4>Medical Records</h4>
-          <p>View your medical history & download reports.</p>
+          <p>View your medical history &amp; download reports.</p>
           <a routerLink="/patient-records" class="btn btn-action-emerald">
             <i class="fas fa-file-medical me-1"></i>View Records
           </a>
@@ -326,7 +326,7 @@
     </div>
 
     <!-- ================================================ -->
-    <!-- DOCTOR DASHBOARD (✅ 3 CARDS — Messages removed) -->
+    <!-- DOCTOR DASHBOARD (✅ 2 CARDS — Equal Spacing) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'DOCTOR'">
       <div class="section-title">
@@ -334,7 +334,7 @@
         <p>Welcome Dr. {{ userData?.username || 'Doctor' }} to your doctor dashboard.</p>
       </div>
 
-      <div class="action-grid">
+      <div class="action-grid two-cards">
 
         <div class="action-card green-glow">
           <div class="action-icon">🩺</div>
@@ -354,20 +354,11 @@
           </a>
         </div>
 
-        <div class="action-card emerald-glow">
-          <div class="action-icon">📊</div>
-          <h4>Patient Reports</h4>
-          <p>Add & manage medical reports for patients.</p>
-          <a routerLink="/doctor-appointment" class="btn btn-action-emerald">
-            <i class="fas fa-notes-medical me-1"></i>Manage Reports
-          </a>
-        </div>
-
       </div>
     </div>
 
     <!-- ================================================ -->
-    <!-- RECEPTIONIST DASHBOARD (unchanged — 4 cards) -->
+    <!-- RECEPTIONIST DASHBOARD (✅ 2 CARDS — Equal Spacing) -->
     <!-- ================================================ -->
     <div class="role-section" *ngIf="roleName === 'RECEPTIONIST'">
       <div class="section-title">
@@ -375,7 +366,8 @@
         <p>Welcome {{ userData?.username || 'Receptionist' }} to your receptionist dashboard.</p>
       </div>
 
-      <div class="action-grid">
+      <!-- ✅ "two-cards" class for equal spacing -->
+      <div class="action-grid two-cards">
 
         <div class="action-card green-glow">
           <div class="action-icon">📋</div>
@@ -395,23 +387,8 @@
           </a>
         </div>
 
-        <div class="action-card emerald-glow">
-          <div class="action-icon">👥</div>
-          <h4>Manage Patients</h4>
-          <p>View all registered patients.</p>
-          <button class="btn btn-action-disabled" disabled>
-            <i class="fas fa-lock me-1"></i>Coming Soon
-          </button>
-        </div>
-
-        <div class="action-card mint-glow">
-          <div class="action-icon">📞</div>
-          <h4>Contact Doctors</h4>
-          <p>Quick contact with doctors.</p>
-          <button class="btn btn-action-disabled" disabled>
-            <i class="fas fa-lock me-1"></i>Coming Soon
-          </button>
-        </div>
+        <!-- ❌ Manage Patients card REMOVED -->
+        <!-- ❌ Contact Doctors card REMOVED -->
 
       </div>
     </div>

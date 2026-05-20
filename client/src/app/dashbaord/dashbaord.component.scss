@@ -358,11 +358,18 @@
   p { color: #64748b; font-size: 15px; margin-top: 5px; }
 }
 
-/* ===== ACTION GRID (✅ FIXED: 3 columns) ===== */
+/* ===== ACTION GRID (default 3 columns) ===== */
 .action-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+}
+
+/* ✅ Equal spacing for 2 cards (Doctor Dashboard) */
+.action-grid.two-cards {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 100%;
+  gap: 30px;
 }
 
 .action-card {
@@ -452,6 +459,9 @@
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
   .action-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* ✅ 2-card grid stays 2 columns on tablet */
+  .action-grid.two-cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -460,6 +470,9 @@
   .welcome-left h2 { font-size: 22px; }
   .info-grid { grid-template-columns: 1fr; }
   .action-grid { grid-template-columns: 1fr; }
+
+  /* ✅ Stack to 1 column on mobile */
+  .action-grid.two-cards { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
